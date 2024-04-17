@@ -1,0 +1,14 @@
+{
+  "id": "per3",
+  "name": "virtual_alarm",
+  "rt": "eddie.r.virtual.alarm",
+  "if": [
+    "eddie.if.a",
+    "eddie.d.baseline"
+  ],
+  "position": "room",
+  "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+  "connection": {
+    "type": "virtual"
+  }
+}

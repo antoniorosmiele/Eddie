@@ -1,0 +1,79 @@
+default:
+  interruptible: true
+
+stages:
+  - compliance
+  - build
+  - test
+  - deploy
+
+include:
+  - project: 'eclipse/oniro-core/oniro'
+    file: '.oniro-ci/dco.yaml'
+  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
+  - remote: 'https://gitlab.com/zygoon/zephyr-ci-pipelines/-/raw/db83d176cdb5369c7393db6c85ef8ddac1514124/zephyr.yml'
+  - project: 'eclipsefdn/it/releng/gitlab-ci-templates'
+    file: '/jobs/eca.gitlab-ci.yml'
+
+dco:
+  extends: .dco
+
+eca:
+  extends: .eca
+  
+build:
+  stage: build
+  image: francescopham/eddie-docker:latest
+  script:
+    - mkdir build && cd build
+    - cmake .. && make
+
+eddie-zephyr:
+  extends: .zephyr
+  variables:
+    CI_ZEPHYR_BOARD: arduino_nano_33_ble
+    CI_ZEPHYR_SDK_TOOLCHAIN: arm-zephyr-eabi
+  needs:
+    - job: zephyr-cache
+      optional: true
+  script:
+    - west build -p auto -b "$CI_ZEPHYR_BOARD" -s ${CI_PROJECT_DIR}/zephyr
+
+test:
+  stage: test
+  image: francescopham/eddie-docker:latest
+  variables:
+    CFLAGS: "--coverage"
+    CXXFLAGS: "--coverage"
+    LDFLAGS: "--coverage"
+  script:
+    - mkdir build && cd build
+    - cmake .. && make && make install
+    - CTEST_OUTPUT_ON_FAILURE=1 make test
+    - gcovr --print-summary --root ${CI_PROJECT_DIR}
+  coverage: /^\s*lines:\s*\d+.\d+\%/
+
+docs_deploy:
+  stage: deploy
+  image: francescopham/eddie-docker:latest
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_REF_PROTECTED == "true"'
+  script:
+    # build docs
+    - cd docs
+    - doxygen Doxyfile
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    # Use SSH passphrase stored in $SSH_PASSPHRASE if defined
+    - if [[ -z $SSH_PASSPHRASE ]]; then
+    -   echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None ssh-add - >/dev/null
+    - else
+    -   echo 'echo $SSH_PASSPHRASE' > ~/.ssh_askpass && chmod +x ~/.ssh_askpass
+    -   echo "$SSH_PRIVATE_KEY" | tr -d '\r' | DISPLAY=None SSH_ASKPASS=~/.ssh_askpass ssh-add - >/dev/null
+    - fi
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    # upload html artifacts into remote server
+    - scp -r html/* docs@docs.svc.ostc-eu.dev:~/content/html/

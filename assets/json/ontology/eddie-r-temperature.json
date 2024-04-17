@@ -1,0 +1,58 @@
+{
+  "id": "00002",
+  "name": "TemperatureSensor",
+  "parameters": {
+    "interface": {
+      "in": "query",
+      "name": "if",
+      "type": "string",
+      "enum": [
+        "eddie.if.s",
+        "eddie.d.baseline"
+      ]
+    }
+  },
+  "properties": {
+    "rt": {
+      "description": "Resource Type",
+      "value": "eddie.r.temperature",
+      "type": "string",
+      "readOnly": true
+    },
+    "temperature": {
+      "description": "Current registered temperature",
+      "type": "integer",
+      "readOnly": true
+    },
+    "unit": {
+      "description": "Temperature measurement unit in use",
+      "type": "string",
+      "readOnly": true
+    },
+    "range": {
+      "description": "Temperature range valid for the sensor",
+      "type": "JSONObject",
+      "readOnly": true
+    },
+    "accuracy": {
+      "description": "Accuracy of the sensor",
+      "type": "string",
+      "readOnly": true
+    },
+    "position": {
+      "description": "String representing the location of the peripheral",
+      "type": "string",
+      "readOnly": true
+    },
+    "json": {
+      "description": "The JSON description of this resource",
+      "type": "string",
+      "readOnly": true
+    }
+  },
+  "paths": {
+    "get": {
+      "parameters": {"$ref": "#/properties"}
+    }
+  }
+}

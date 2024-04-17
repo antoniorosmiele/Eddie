@@ -1,0 +1,17 @@
+{
+  "id": "per1",
+  "name": "blinking_light",
+  "rt": "eddie.r.blinking.lamp",
+  "if": [
+    "eddie.if.a",
+    "eddie.d.baseline"
+  ],
+  "color": "red",
+  "position": "person",
+  "descriptor": "/json/ontology/eddie-r-blinking-lamp.json",
+  "connection": {
+    "type": "wired",
+    "method": "GPIO",
+    "data_pin": 27
+  }
+}

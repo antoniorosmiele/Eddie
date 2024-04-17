@@ -1,0 +1,34 @@
+{
+  "alarm": {
+    "method": "POST",
+    "query": "status=true&blinking=true",
+    "cardinality": 1
+  },
+  "reset": {
+    "method": "POST",
+    "query": "status=false&blinking=false",
+    "cardinality": -1
+  },
+  "eddie.r.alarm": {
+    "filter": "rt",
+    "value": ["eddie.r.virtual.alarm", "eddie.r.blinking.lamp"]
+  },
+  "person": {
+    "key": "position",
+    "rt": [
+      "eddie.r.virtual.alarm",
+      "eddie.r.blinking.lamp"
+    ],
+    "query": "position=true",
+    "result": "person"
+  },
+  "silent": {
+    "key": "rt",
+    "rt": [
+      "eddie.r.virtual.alarm",
+      "eddie.r.blinking.lamp"
+    ],
+    "query": "rt=true",
+    "result": "eddie.r.blinking.lamp"
+  }
+}

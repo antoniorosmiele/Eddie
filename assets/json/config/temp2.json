@@ -1,0 +1,23 @@
+{
+  "id": "per2",
+  "name": "temperature_sensor",
+  "rt": "eddie.r.temperature",
+  "range": {
+    "low": "-55",
+    "high": "125"
+  },
+  "unit": "C",
+  "accuracy": "+-0.5",
+  "if": [
+    "eddie.if.s",
+    "eddie.d.baseline"
+  ],
+  "position": "room",
+  "descriptor": "/json/ontology/eddie-r-temperature.json",
+  "connection": {
+    "type": "wired",
+    "method": "w1",
+    "data_pin": 4,
+    "device_id": "28-3c01f09582ff"
+  }
+}

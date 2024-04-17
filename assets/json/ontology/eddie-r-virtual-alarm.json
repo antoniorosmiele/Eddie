@@ -1,0 +1,49 @@
+{
+  "id": "00003",
+  "name": "VirtualAlarm",
+  "parameters": {
+    "interface": {
+      "in": "query",
+      "name": "if",
+      "type": "string",
+      "enum": [
+        "eddie.if.a",
+        "eddie.d.baseline"
+      ]
+    }
+  },
+  "properties": {
+    "rt": {
+      "description": "Resource Type",
+      "value": "eddie.r.virtual.alarm",
+      "type": "string",
+      "readOnly": true
+    },
+    "status": {
+      "description": "Whether the alarm is on or off",
+      "type": "boolean"
+    },
+    "position": {
+      "description": "String representing the location of the peripheral",
+      "type": "string",
+      "readOnly": true
+    },
+    "json": {
+      "description": "The JSON description of this resource",
+      "type": "string",
+      "readOnly": true
+    }
+  },
+  "paths": {
+    "get": {
+      "parameters": {
+        "$ref": "#/properties"
+      }
+    },
+    "post": {
+      "parameters": [
+        "status"
+      ]
+    }
+  }
+}

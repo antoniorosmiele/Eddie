@@ -1,0 +1,74 @@
+{
+  "id": "00001",
+  "name": "BlinkingLight",
+  "parameters": {
+    "interface": {
+      "in": "query",
+      "name": "if",
+      "type": "string",
+      "enum": [
+        "eddie.if.a",
+        "eddie.d.baseline"
+      ]
+    }
+  },
+  "properties": {
+    "rt": {
+      "description": "Resource Type",
+      "value": "eddie.r.blinking.lamp",
+      "type": "string",
+      "readOnly": true
+    },
+    "color": {
+      "description": "The color of the light",
+      "value": "red",
+      "type": "string",
+      "readOnly": true
+    },
+    "status": {
+      "description": "The status of the light",
+      "type": "boolean"
+    },
+    "blinking": {
+      "description": "Whether the light is blinking or not",
+      "type": "boolean"
+    },
+    "on_time": {
+      "description": "How many seconds the light is on when blinking",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "off_time": {
+      "description": "How many seconds the light is off when blinking",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "position": {
+      "description": "String representing the location of the peripheral",
+      "type": "string",
+      "readOnly": true
+    },
+    "json": {
+      "description": "The JSON description of this resource",
+      "type": "string",
+      "readOnly": true
+    }
+  },
+  "paths": {
+    "get": {
+      "parameters": {
+        "$ref": "#/properties"
+      }
+    },
+    "post": {
+      "parameters": [
+        "value",
+        "blinking",
+        "on_time",
+        "off_time"
+      ]
+    }
+  }
+}
