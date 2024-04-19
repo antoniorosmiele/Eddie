@@ -17,6 +17,8 @@ on a unified pool of virtual resources
 - allow the user to compose a request to request specific types of resources
   with constraints on features of these resources through the definition of a DCOP problem. (Distributed constraint optimization) 
 
+- solve the DCOP problem using the MGM algorithm by finding if possible a local optimal selection of services and resources available in the network.
+  Such a solution can be exploited for an efficient execution of any application or composite service required by the user.
 
 
 ## Contributing
