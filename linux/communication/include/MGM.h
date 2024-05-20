@@ -7,22 +7,42 @@
 
 #include <coap3/coap.h>
 #include <map>
+#include <mutex>
+
+#define SECONDS_TIMEOUT 5
 
 class MGM
 {
 private:
+    //Communication
     coap_context_t *context;
     CoapServer *commAndRes;
+    std::string base_address;
+    std::string base_port;
 
+    //Variables of the algorithm
     std::vector<Link> variablesHandled;
     std::vector<int> indexOfVariablesHandled;
 
     std::vector<std::string> allVariables;
     std::vector<bool> valuesVariables;
 
+    std::vector<std::string> allNeighbors;
+
+    long gain;
+
+    //For the constraints
+
+
+    //For the values received by all the agents
+    std::mutex mtx;
+    std::condition_variable cv;
+    std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector;
+
     //For the timer
     struct timeval tv;
     struct timezone tz;
+    long double start_time;
 
     //Threads
     std::thread mgm_thread;
@@ -42,13 +62,19 @@ private:
     
     static void
     MGM_delete(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request,
-                const coap_string_t *query, coap_pdu_t *response);                                                
-
+                const coap_string_t *query, coap_pdu_t *response);
+    
+    //Send the current values of the variables handled to all the agents
+    bool SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled);                                                            
+    bool getValueMessages(std::vector<bool> * valuesVariables, std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector);
+    long BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled);
 public:
     MGM(coap_context_t *server_context,CoapServer *server);
     ~MGM();
     void executeAlgo();
     void mgmAlgo();
+    void saveSomeValuesOfVariables(std::unordered_map<std::string, std::string> values_map);
+    
 };
 
 
