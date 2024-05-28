@@ -12,6 +12,7 @@
 #include "VirtualizationReceiver.h"
 #include "argparse.hpp"
 #include "EddieVirtualAlarm.h"
+#include "FakeResource.h"
 
 using namespace std;
 
@@ -66,6 +67,23 @@ int main(int argc, char *argv[]) {
                                          root,
                                          false);
         resources.push_back(res);
+
+        ifstream ifs_alarm(base_path + "/json/config/fakeresource.json");
+        Json::CharReaderBuilder builder;
+        Json::Value root;
+        builder["collectComments"] = true;
+        builder["indentation"] = "";
+        JSONCPP_STRING errs;
+        if (!Json::parseFromStream(builder, ifs_alarm, &root, &errs)) {
+            LOG_DBG("Error parsing json file: %s, %s", errs.c_str(), string(base_path + "alarm.json").c_str());
+            exit(-1);
+        }        
+
+        for (size_t i = 0; i < 10; i++)
+        {
+            resources.push_back(new FakeResource("fake" + i,"rt=eddie.r.fake",root,false,i));
+        }
+        
     }
 
     receiver.run(resources);
