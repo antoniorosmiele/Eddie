@@ -42,6 +42,7 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     std::unordered_map<std::string, std::string> query_map_constraint;
     std::vector<std::string> ids;
     std::vector<std::string> neighbors;
+    bool maxOrMin;
 
     unsigned char tmp_buf[64];
     char str_buff[20];
@@ -72,7 +73,14 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
                 neighbors.emplace_back(ipAndPort[0] + ":" + ipAndPort[1]);
             }
             
-        }           
+        }
+        else if (sub_query[0].compare("max/min") == 0) //For the type of optimisation (max/min=type)
+        {
+            if (sub_query[1].compare(MGM_MAX) == 0)
+                maxOrMin =true;
+            else
+                maxOrMin = false;
+        }
         else
             query_map_constraint.insert(std::make_pair(sub_query[0], sub_query[1]));  // For the constraint ("Con_name=exp")   
     }
@@ -121,14 +129,15 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     mgm->base_port = base_port;
 
     //Save the constraints ...
-
+    mgm->isMax = maxOrMin;
+    //........................
 
     //Modify response message...
 
     coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
 }
 
-void MGM_post(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
+void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
 {
     //Check if the query is empty
     if (!query) 
@@ -198,9 +207,38 @@ void MGM_post(coap_resource_t *resource, coap_session_t *session, const coap_pdu
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;
     }
+    else if (opt->second == "UPDATEG")
+    {
+        auto gainStr = query_map.find("gain");
+        
+        if (gainStr == query_map.end()) 
+        {
+            coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
+            return;
+        }
+
+        {
+            mgm->saveGainFromNeighbor(stol(gainStr->second));
+        }
+
+        coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
+        return;
+
+    }
+    else
+    {
+        coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
+        return;
+    }
+    
+    
     
     
 
+}
+MGM::MGM()
+{
+    
 }
 
 MGM::MGM(coap_context_t *server_context,CoapServer *server)
@@ -230,6 +268,7 @@ MGM::MGM(coap_context_t *server_context,CoapServer *server)
     this->indexOfVariablesHandled = {};
     this->allNeighbors = {};
     this->indexAndValues_vector = {};
+    this->gain = 0;
 }
 
 void MGM::executeAlgo()
@@ -272,16 +311,46 @@ void MGM::mgmAlgo()
             done = true;
             cv.notify_all();
         }
+
+        this->indexAndValues_vector.clear();
         
         //[gain,newValue] = BestUnilateralGain(currentContext)
         std::vector<bool> newValues = {};
-        long gain = BestUnilateralGain(valuesVariables,indexOfVariablesHandled);
+
+        newValues.reserve(indexOfVariablesHandled.size());
+        
+        long gain = BestUnilateralGain(valuesVariables,indexOfVariablesHandled, &newValues);
 
         //SendGainMessage(allNeighbors, gain)
+        status = SendGainMessage(allNeighbors,gain);
+
         //neighborsGains = ReceiveGainMessages(allNeighbors)
-        //if gain > max(neighborsGains) then
+        done = false;
+
+        while (!done)
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            cv.wait(lock,[&](){return gains_vector.size() == allNeighbors.size();});
+            
+            done = true;
+            cv.notify_all();
+        }
+        
+        if (gain > *std::max_element(gains_vector.begin(), gains_vector.end()))
+        {
+            for (auto &index : this->indexOfVariablesHandled)
+            {
+                int i = 0;
+                this->valuesVariables[index] = newValues[i];
+                i++;
+            }
+            
+
+        } 
         //  currentValue = newValue
         //end if
+        gettimeofday(&tv, &tz);
+        curr_time = tv.tv_sec + 0.000001*tv.tv_usec;
     }
         
 }
@@ -303,6 +372,49 @@ void MGM::saveSomeValuesOfVariables(std::unordered_map<std::string, std::string>
         this->indexAndValues_vector.push_back(values_map);
         cv.notify_all();
     }
+}
+
+void MGM::saveGainFromNeighbor(long gain)
+{
+    {
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock,[&](){return this->gains_vector.size()< allNeighbors.size();});
+        this->gains_vector.push_back(gain);
+        cv.notify_all();
+    }
+}
+
+bool MGM::SendGainMessage(std::vector<std::string> allNeighbors, long gain)
+{
+    //Send the new values of some variables to all the agent in allNeighbors
+    for (const auto &agent: allNeighbors) 
+    {
+        //Create the query
+        request_t request;
+        std::string q = "opt=UPDATEG&gain=" + gain;
+
+        //Create the request and receive the response
+        std::vector<std::string> ipAndPort = split(agent, ':');
+
+        request.method = POST;
+        request.path = "MGM";
+        request.query = q.c_str();
+        request.dst_host = ipAndPort[0].c_str();
+        request.dst_port = ipAndPort[1].c_str();
+
+        message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
+
+        //Handle the response
+        
+        if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }      
+    }    
 }
 
 bool MGM::SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled)
@@ -360,38 +472,64 @@ bool MGM::getValueMessages(std::vector<bool> * valuesVariables, std::vector<std:
     
 }
 
-long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled)
+long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled, std::vector<bool>* newValues)
 {
     long currentGain = gain;
 
-    for (auto &index : indexOfVariablesHandled)
-        valuesVariables[index] = false;
+    std::vector<bool> currentValues;
+    currentValues.reserve(indexOfVariablesHandled.size());
 
-    //    
+    int i = 0;
 
     for (auto &index : indexOfVariablesHandled)
     {
+        currentValues[i] = false;
+        i++;
+    }
 
-        //Handle case False
-        valuesVariables[index] = false;
-        for (auto &index1 : indexOfVariablesHandled)
+    //    
+    do
+    {
+        i=0;
+
+        for (auto &index : indexOfVariablesHandled)
         {
-            long gainTemp;
-            valuesVariables[index] = false;
-            //apply constraint and obtain gain
-            if (gainTemp)
-            {
-                /* code */
-            }
-            
-
-            valuesVariables[index] = true;
-            //apply constraint and obtain gain
+            valuesVariables[index] = currentValues[i];
+            i++;
         }
 
-        //Handle case False
+        long newGain;
+        //newGain = applyConstraint(this->constraint,valuesVariables)
 
-    }
+        if (this->isMax)
+        {
+            if (newGain > currentGain)
+            {    
+                currentGain = newGain;
+                i = 0;
+                for (auto &index : indexOfVariablesHandled)
+                {
+                    (*newValues)[i] = valuesVariables[index];
+                    i++;    
+                }
+            }
+        }
+        else
+        {
+            if (newGain < currentGain)
+            {
+                currentGain = newGain;
+                i = 0;
+                for (auto &index : indexOfVariablesHandled)
+                {
+                    (*newValues)[i] = valuesVariables[index];
+                    i++;    
+                }                
+            }    
+        }               
+
+    } while (std::next_permutation(currentValues.begin(),currentValues.end()));
+    
     
 }
 

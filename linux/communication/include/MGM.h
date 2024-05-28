@@ -32,12 +32,13 @@ private:
     long gain;
 
     //For the constraints
-
+    bool isMax;
 
     //For the values received by all the agents
     std::mutex mtx;
     std::condition_variable cv;
     std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector;
+    std::vector<long> gains_vector;
 
     //For the timer
     struct timeval tv;
@@ -67,13 +68,16 @@ private:
     //Send the current values of the variables handled to all the agents
     bool SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled);                                                            
     bool getValueMessages(std::vector<bool> * valuesVariables, std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector);
-    long BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled);
+    long BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled,std::vector<bool>* newValues);
+    bool SendGainMessage(std::vector<std::string> allNeighbors, long gain);
 public:
     MGM(coap_context_t *server_context,CoapServer *server);
+    MGM();
     ~MGM();
     void executeAlgo();
     void mgmAlgo();
     void saveSomeValuesOfVariables(std::unordered_map<std::string, std::string> values_map);
+    void saveGainFromNeighbor(long gain);
     
 };
 
