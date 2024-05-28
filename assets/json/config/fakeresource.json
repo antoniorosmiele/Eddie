@@ -1,0 +1,6 @@
+{
+    "id": "key",
+    "name": "fake_resource",
+    "rt": "eddie.r.fake",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json"
+  }
