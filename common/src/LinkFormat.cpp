@@ -227,3 +227,25 @@ std::vector<Link> parse_link_format(std::string link_format) {
 
     return links; 
 }
+
+/*template <typename KTy, typename VTy> inline
+void to_json(nlohmann::json& j, const std::map<KTy, VTy>& m)
+{
+    using std::to_string;
+    for (const auto& e : m)
+    {
+        j[to_string(e.first)] = e.second;
+    }
+}
+
+template <typename KTy, typename VTy> inline
+void from_json(const nlohmann::json& j, std::map<KTy, VTy>& m)
+{
+    for (const auto& e : j.items())
+    {
+        KeyTy k;
+        from_string(e.key(), k);
+        auto v = e.value().get<VTy>();
+        m[k] = v;
+    }
+}*/

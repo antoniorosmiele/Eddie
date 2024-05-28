@@ -22,6 +22,9 @@
 #define LOG_INFO(_str, ...) printf(_str "\n", ##__VA_ARGS__)
 #define LOG_ERR(_str, ...) printf(_str "\n", ##__VA_ARGS__)
 
+#define MGM_MAX "Max"
+#define MGM_MIN "Min"
+
 /**
  * Resolve coap_address_t from destination host and port.
  * @param host Ip or host name to be resolved

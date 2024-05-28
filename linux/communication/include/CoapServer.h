@@ -10,6 +10,7 @@
 
 #include "CoapClient.h"
 #include "ResourceDirectory.h"
+#include "MGM.h"
 
 #include <coap3/coap.h>
 #include <unordered_map>
@@ -33,6 +34,8 @@ private:
     std::string my_port;
 
     std::thread server_thread;
+
+    MGM *mgm;
 
     static ThreadSafeMap<std::string, coap_resource_t *> *resources;
 

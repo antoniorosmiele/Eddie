@@ -101,7 +101,8 @@ void CoapServer::resource_handler(coap_resource_t *resource, coap_session_t *ses
     }
 }
 
-CoapServer::CoapServer(const char *host, const char *port) {
+CoapServer::CoapServer(const char *host, const char *port) 
+{
     my_ip = host;
     my_port = port;
 
@@ -109,6 +110,7 @@ CoapServer::CoapServer(const char *host, const char *port) {
     init_server(is_ipv6() ? "::" : "0.0.0.0", port);
     this->client = new CoapClient();
     LOG_DBG("Initialized CoapServer");
+
 }
 
 CoapServer::~CoapServer() {
@@ -118,6 +120,7 @@ CoapServer::~CoapServer() {
     delete client;
     coap_free_context(this->context);
     if (g_buf != nullptr) free(g_buf);
+    delete mgm;
 }
 
 bool CoapServer::get_quit() const {
@@ -163,6 +166,9 @@ int CoapServer::init_server(const char *host, const char *port) {
     coap_join_mcast_group(this->context, COAP_IP4_MULTICAST);
     coap_join_mcast_group(this->context, COAP_IP6_MULTICAST_LOCAL_LINK);
     coap_join_mcast_group(this->context, COAP_IP6_MULTICAST_SITE_LOCAL);
+
+    //Create object MGM
+    this->mgm = new MGM(this->context,this);
 
     return EXIT_SUCCESS;
 }
