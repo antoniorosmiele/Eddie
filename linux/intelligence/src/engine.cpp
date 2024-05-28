@@ -195,6 +195,86 @@ std::string Engine::perform(const std::string &command) {
         return eddie_endpoint->get_client()->send_message_and_wait_response(request).data;
     }
 
+    if (action == "selection")
+    {
+        auto variables = root["h_constraints"];
+        auto constraints = root["o_function"];
+
+        int size = std::stoi(variables[0]["sizes"].asString());
+
+        std::unordered_map<std::string, std::vector<int>> m;
+
+        for (int i = 1; i <= size; i++)
+        {
+            std::string ip = variables[i]["dst_ip"].asString();
+            std::string port = variables[i]["dst_port"].asString();
+
+            if (m.find(ip +":"+ port) == m.end())
+            {
+                m.insert(ip +":"+ port, {std::to_string(i)});
+            }
+            else
+            {
+                (m.find(ip +":"+ port))->second.push_back(i);
+            }
+            
+
+        }
+
+        request_t request;
+        std::string q = "";
+
+        for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
+        {
+            std::vector<int> indexes = iter->second;
+
+            //Save id of the variables
+            for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); it++)//("id=allarm")
+            {
+                q+= "id=" + variables[*it]["id"].asString() + "&";
+            }
+            //Save the constraint and type of optimization
+            for (const auto &constraint:constraints)//("Con_name=exp").....(max/min=type)
+            {
+                auto c_name = constraint.getMemberNames()[0].c_str();
+                auto c_content = constraint[c_name].asString();
+
+                q += std::string(c_name) + "=" + c_content + "&";
+            }
+            //Save Ip and port of the agents
+            for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++) //(neigh=ip:port)
+            {
+                q+= "neigh=" + neigh->first + "&";
+            }
+            
+            
+
+            if(q.back() == '&') q.pop_back();
+
+            auto ipAndPort = split(iter->first,':');
+            request.method = PUT;
+            request.path = "MGM";
+            request.query = q.c_str();
+            request.dst_host = ipAndPort[0].c_str();
+            request.dst_port = ipAndPort[1].c_str();
+            
+            LOG_INFO("Send Message to: %s:%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+            //return "Breakpoint";
+            message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
+
+            if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
+            {
+                return "Error in the query: check if there are the resource and constraint in h_constraints and o_function";
+            }
+            
+        }
+        
+        
+
+
+    }
+    
+
     if (action == "get") {
         std::string q;
         auto req_resources = root["h_constraints"][3]["res"];
