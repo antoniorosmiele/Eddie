@@ -236,6 +236,17 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     
 
 }
+
+void MGM::MGM_get(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
+{
+
+}
+
+void MGM::MGM_delete(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
+{
+
+}
+
 MGM::MGM()
 {
     
@@ -354,12 +365,12 @@ void MGM::mgmAlgo()
     }
         
 }
-inline const std::string const BoolToString(bool b)
+inline const std::string  BoolToString(bool b)
 {
   return b ? "true" : "false";
 }
 
-inline const bool const StringToBool(std::string s)
+inline const bool  StringToBool(std::string s)
 {
   return (s == "true") ? true : false;
 }

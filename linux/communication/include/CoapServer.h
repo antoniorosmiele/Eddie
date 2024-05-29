@@ -23,6 +23,8 @@
 #include <map>
 
 class CoapClient;
+class MGM;
+
 
 class CoapServer {
 private:

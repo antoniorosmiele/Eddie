@@ -11,6 +11,8 @@
 
 #define SECONDS_TIMEOUT 5
 
+class CoapServer;
+
 class MGM
 {
 private:

@@ -211,7 +211,10 @@ std::string Engine::perform(const std::string &command) {
 
             if (m.find(ip +":"+ port) == m.end())
             {
-                m.insert(ip +":"+ port, {std::to_string(i)});
+                std::vector<int> val;
+                val.push_back(i);
+                std::string key = ip +":"+ port;
+                m.insert(std::make_pair(key, val));
             }
             else
             {

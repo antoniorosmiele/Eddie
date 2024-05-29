@@ -120,7 +120,7 @@ CoapServer::~CoapServer() {
     delete client;
     coap_free_context(this->context);
     if (g_buf != nullptr) free(g_buf);
-    delete mgm;
+    delete this->mgm;
 }
 
 bool CoapServer::get_quit() const {
