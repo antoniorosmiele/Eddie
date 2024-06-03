@@ -48,6 +48,8 @@ void VirtualizationReceiver::handle_method_call(GDBusConnection *connection, con
 
         g_variant_get(parameters, "(s)", &payload);
 
+        //LOG_DBG("Executed g_variant_get");
+
         auto result = engine.perform(std::string(payload));
 
         g_dbus_method_invocation_return_value(invocation, g_variant_new("(s)", result.c_str()));

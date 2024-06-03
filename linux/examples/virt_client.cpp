@@ -40,7 +40,7 @@ int main() {
     h_cs = Json::arrayValue;
     o_f = Json::arrayValue;
 
-    h_cs[0]["size"] = res_link.size();
+    h_cs[0]["size"] = std::to_string( res_link.size());
 
     int i = 1;
 
@@ -53,20 +53,23 @@ int main() {
         std::map<std::string, std::string> *attrs = &(link.attrs);
 
         for (auto &e : *attrs)
-            h_cs[i][e.first] = e.second;
-
+        {
+           h_cs[i][e.first] = e.second;
+           LOG_DBG("Resource:%s %s=%s",link.path.c_str(),e.first.c_str(),e.second.c_str());
+        }
         i++;                
     }
 
     //Constraints
 
-    o_f[0] = MGM_MAX;
+    o_f[0]["max/min"] = MGM_MAX;
+    //...........
 
     auto messageS = compose_message("selection", "", h_cs, o_f);
 
     auto answerS = send_message(messageS);
 
-    LOG_DBG("%s", answerS);
+    LOG_DBG("%s", answerS.c_str());
     
 
     disconnect(watcher_id);

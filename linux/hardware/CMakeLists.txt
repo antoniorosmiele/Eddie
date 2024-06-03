@@ -14,6 +14,7 @@ add_library(${PROJECT_NAME}
         src/hardware_utils.cpp
         src/EddieTemperature.cpp
         src/OneWireReader.cpp
-        src/EddieVirtualAlarm.cpp)
+        src/EddieVirtualAlarm.cpp
+        src/FakeResource.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} eddie-common eddie-communication PkgConfig::jsoncpp)

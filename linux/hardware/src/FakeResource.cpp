@@ -4,13 +4,19 @@
 #include "FakeResource.h"
 #include "hardware_utils.h"
 
+#include "../../virtualization/include/common.h"
+
 FakeResource::FakeResource(const std::string &path,
                                      const std::string &attributes,
                                      Json::Value root,
                                      bool on_board,int key) {
 
+    //LOG_DBG("FakeResource input: path=%s",path.c_str());
+
     this->path = new char[path.length() + 1];
     strcpy(this->path, path.c_str());
+
+    //LOG_DBG("FakeResource output: path=%s",this->path);
 
     this->attributes = new char[attributes.length() + 1];
     strcpy(this->attributes, attributes.c_str());
@@ -48,6 +54,24 @@ FakeResource::~FakeResource() {
 
 message_t FakeResource::render_get(request_t &request) 
 {
+    message_t response;
+
+    if (request.query == nullptr) {
+        response.status_code = BAD_REQUEST;
+        return response;
+    }
+
+    auto query = parse_query(request.query);
+
+    Json::Value answer;
+    if (query["rt"] == "true") answer["rt"] = "eddie.r.fake";
+    if (query["json"] == "true") answer["json"] = this->json_descriptor;
+
+    Json::StreamWriterBuilder builder;
+    builder["indentation"] = "";
+    response.data = Json::writeString(builder, answer);
+    response.status_code = CONTENT;
+    return response;    
 
 }
 

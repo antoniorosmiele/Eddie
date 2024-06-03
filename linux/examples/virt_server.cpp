@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
     VirtualizationReceiver receiver = VirtualizationReceiver(ip, std::to_string(port_number));
 
     string base_path = DESCRIPTORS_DIR;
+    LOG_DBG("base_path:%s", base_path.c_str());
     ifstream ifs_alarm(base_path + "/json/config/alarm.json");
     Json::CharReaderBuilder builder;
     Json::Value root;
@@ -56,12 +57,13 @@ int main(int argc, char *argv[]) {
     builder["indentation"] = "";
     JSONCPP_STRING errs;
     if (!Json::parseFromStream(builder, ifs_alarm, &root, &errs)) {
-        LOG_DBG("Error parsing json file: %s, %s", errs.c_str(), string(base_path + "alarm.json").c_str());
+        LOG_DBG("Error parsing json file: %s, %s", errs.c_str(), string(base_path + "/json/config/alarm.json").c_str());
         exit(-1);
     }
 
     vector<EddieResource *> resources = {};
-    if (program["--exampleres"] == true) {
+    if (program["--exampleres"] == true) 
+    {
         auto res = new EddieVirtualAlarm("alarm",
                                          "rt=eddie.r.virtual.alarm&ct=40",
                                          root,
@@ -79,12 +81,19 @@ int main(int argc, char *argv[]) {
             exit(-1);
         }        
 
-        for (size_t i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
-            resources.push_back(new FakeResource("fake" + i,"rt=eddie.r.fake",root,false,i));
+            std::string temp = "fake" + std::to_string(i);
+            resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i),root,false,i));
         }
         
+        //Check Resources added in the vector
+        for (int i = 0; i < 11; i++)
+        {
+            LOG_DBG("%d: path=%s, attr=%s",i, *(resources[i]->get_path()), *(resources[i]->get_attributes()));
+        }   
     }
+    
 
     receiver.run(resources);
 }

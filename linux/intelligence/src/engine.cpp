@@ -167,12 +167,17 @@ std::string Engine::perform(const std::string &command) {
     if (!reader->parse(command.c_str(), command.c_str() + command.length(), &root, &errors)) {
         return "ERROR WHILE PARSING COMMAND";
     }
+    LOG_DBG("Updating resource .....");
 
     update_resources(); // -> resources in the net and jsons of every resource updated
 
+    //LOG_DBG("updated resource");
+
     std::string action = root["action"].asString();
 
-    if (action == "find") {
+    if (action == "find") 
+    {
+        LOG_DBG("Handling request of finding");
         std::string q;
         auto constraints = root["h_constraints"];
 
@@ -192,15 +197,23 @@ std::string Engine::perform(const std::string &command) {
         request.dst_host = eddie_endpoint->get_resource_dir_ip().c_str();
         request.dst_port = eddie_endpoint->get_resource_dir_port().c_str();
 
+        LOG_DBG("Send Message to: %s:%s with query:%s and path:rd-lookup/res", request.dst_host, request.dst_port,q.c_str());
+
         return eddie_endpoint->get_client()->send_message_and_wait_response(request).data;
     }
 
     if (action == "selection")
     {
+        LOG_DBG("Handling request of selection");
+
         auto variables = root["h_constraints"];
         auto constraints = root["o_function"];
 
-        int size = std::stoi(variables[0]["sizes"].asString());
+        //LOG_DBG("sizes: %s", variables[0]["sizes"].asString().c_str());
+
+        int size = std::stoi(variables[0]["size"].asString());
+
+        LOG_DBG("Saved size");
 
         std::unordered_map<std::string, std::vector<int>> m;
 
@@ -261,8 +274,8 @@ std::string Engine::perform(const std::string &command) {
             request.dst_host = ipAndPort[0].c_str();
             request.dst_port = ipAndPort[1].c_str();
             
-            LOG_INFO("Send Message to: %s:%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
-            //return "Breakpoint";
+            LOG_DBG("Send Message to: %s:%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+            
             message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
 
             if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
@@ -272,7 +285,7 @@ std::string Engine::perform(const std::string &command) {
             
         }
         
-        
+        return "Breakpoint";
 
 
     }
@@ -359,7 +372,10 @@ std::string Engine::perform(const std::string &command) {
 }
 
 void Engine::update_resources() {
+
+    //LOG_DBG("Start retriving resources from rd...");
     auto discover_results = eddie_endpoint->get_resources_from_rd();
+    //LOG_DBG("Resources obtained");
 
     json_link_by_rt.clear();
     link_by_href.clear();
@@ -371,6 +387,8 @@ void Engine::update_resources() {
         request.dst_port = result.port.c_str();
         request.path = result.path.c_str();
         request.query = "json=true";
+
+        LOG_DBG("Send Message to: %s:%s with query:json=true and path:%s", result.host.c_str(), result.port.c_str(),result.path.c_str());
 
         message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
 
