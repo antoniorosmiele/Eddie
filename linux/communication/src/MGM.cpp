@@ -1,6 +1,6 @@
 #include "MGM.h"
 #include "common.h"
-
+#include <math.h>  
 #include <coap3/coap.h>
 #include <string>
 #include <vector>
@@ -11,9 +11,11 @@
 
 void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
 {
+    LOG_DBG("Handling message PUT for MGM");
     //Check if the query is empty
     if (!query) 
     {
+        LOG_ERR("Error: empty query");
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;
     }
@@ -51,12 +53,14 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     const coap_address_t* address = coap_session_get_addr_local(session);
     size_t length = coap_print_addr(address, tmp_buf, 64);
     std::string base_address = std::string(reinterpret_cast<const char *>(tmp_buf), length);
+    LOG_DBG("Obtained address local: %s",base_address.c_str());
             
     //obtain port
     uint16_t port_int = coap_address_get_port(address);
     int len = sprintf(str_buff, "%d", port_int);
 
-    std::string base_port = std::string(reinterpret_cast<const char *>(str_buff), len);    
+    std::string base_port = std::string(reinterpret_cast<const char *>(str_buff), len);
+    LOG_DBG("Obtained port: %s", base_port.c_str());    
 
     for (const auto &token: sub_queries) 
     {
@@ -66,11 +70,12 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
             ids.emplace_back(sub_query[1]); //For the id of resource ("id=allarm")
         else if (sub_query[0].compare("neigh") == 0) // For the ip and port of the agents (neigh=ip:port)
         {
-            std::vector<std::string> ipAndPort = split(token, ':');
+            std::vector<std::string> ipAndPort = split(token, '@');
 
-            if (ipAndPort[0].compare(base_address) != 0 || ipAndPort[1].compare(base_port) != 0)
+            if (ipAndPort[0].compare(base_address) != 0 && ipAndPort[1].compare(base_port) != 0)
             {
-                neighbors.emplace_back(ipAndPort[0] + ":" + ipAndPort[1]);
+                neighbors.emplace_back(ipAndPort[0] + "@" + ipAndPort[1]);
+                LOG_DBG("Saving neighbor: %s@%s",ipAndPort[0].c_str(),ipAndPort[1].c_str());
             }
             
         }
@@ -88,6 +93,7 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     //If there aren't no ids of the variables then send an error message
     if(ids.size() == 0)
     {
+        LOG_ERR("Error: there aren't no ids of the variables");
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;        
     }
@@ -107,7 +113,9 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
          std::vector<std::string>::iterator elem = std::find(ids.begin(), ids.end(), id_local);
 
         if ( elem != ids.end() )
-        {   int index = elem - ids.begin();
+        {   
+            int index = elem - ids.begin();
+            LOG_DBG("Save variables local with id:%s and index:%d",(*elem).c_str(),index);
             mgm->indexOfVariablesHandled.emplace_back(index);
             mgm->variablesHandled.emplace_back(link);
         }    
@@ -118,11 +126,13 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
 
     for (const auto &id: ids)
     {
+        LOG_DBG("Save variables with id:%s", id.c_str());
         mgm->allVariables.emplace_back(id);
         mgm->valuesVariables.emplace_back(false);
     }
 
-    copy(mgm->allNeighbors.begin(), mgm->allNeighbors.end(), back_inserter(mgm->allNeighbors));
+    LOG_DBG("Saving ip and port of neighbors....");
+    copy(neighbors.begin(), neighbors.end(), back_inserter(mgm->allNeighbors));
 
     //Save local ip and port
     mgm->base_address = base_address;
@@ -130,6 +140,7 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
 
     //Save the constraints ...
     mgm->isMax = maxOrMin;
+    LOG_DBG("Save type of optimisation: %s", maxOrMin ? "true" : "false");
     //........................
 
     //Modify response message...
@@ -139,9 +150,12 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
 
 void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
 {
+    LOG_DBG("Handling message Post for MGM");
+
     //Check if the query is empty
     if (!query) 
     {
+        LOG_ERR("Error: empty query");
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;
     }
@@ -154,6 +168,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     //possible query:
     // "opt=START"
     // "opt=UPDATE&3=true&7=false&11=true"
+    // "opt=UPDATEG&gain=60"
 
     //If there are no segments return an error message
     if (n_opts < 0) {
@@ -191,6 +206,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     //If opt is the command START then starts the execution of the MGM algorithm in this Agent
     if (opt->second == "START")
     {
+        LOG_DBG("Starting MGM...");
         mgm->executeAlgo();
 
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
@@ -199,7 +215,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     else if (opt->second == "UPDATE")//If opt is the command UPDATE then save the new values of the variables in the class MGM
     {
         query_map.erase("opt");
-
+        LOG_DBG("Saving new values of variables....");
         //Need a mutex
         {
             mgm->saveSomeValuesOfVariables(query_map);
@@ -209,6 +225,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     }
     else if (opt->second == "UPDATEG")
     {
+        LOG_DBG("Saving new Gain:");
         auto gainStr = query_map.find("gain");
         
         if (gainStr == query_map.end()) 
@@ -218,6 +235,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
         }
 
         {
+            LOG_DBG("%ld", stol(gainStr->second));
             mgm->saveGainFromNeighbor(stol(gainStr->second));
         }
 
@@ -227,6 +245,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     }
     else
     {
+        LOG_ERR("Error: opt not present or not correct");
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;
     }
@@ -294,21 +313,26 @@ void MGM::executeAlgo()
 
 void MGM::mgmAlgo()
 {
+    LOG_DBG("Initilise local variables:");
 
     for (size_t i = 0; i < this->variablesHandled.size(); i++)
     {
         int index = this->indexOfVariablesHandled[i];
         this->valuesVariables[index] = rand()%2;
+        LOG_DBG("Variables with id %s with index %d has value %s", this->allVariables[index].c_str() , index, this->valuesVariables[index] ? "true" : "false");
     }
 
     gettimeofday(&tv, &tz);
+    LOG_DBG("Starting timer......");
     start_time = tv.tv_sec + 0.000001*tv.tv_usec;
 
     long double curr_time = start_time;
 
-    while (curr_time- start_time > SECONDS_TIMEOUT)
+    while (curr_time- start_time <= SECONDS_TIMEOUT)
     {
+        LOG_DBG("New step:");
         //SendValueMessage(allNeighbors, currentValue)
+        LOG_DBG("Sending values of the local variables to the neighbors");
         bool status = SendValueMessage(allNeighbors,valuesVariables,indexOfVariablesHandled);
 
         bool done = false;
@@ -318,6 +342,7 @@ void MGM::mgmAlgo()
         {
             std::unique_lock<std::mutex> lock(mtx);
             cv.wait(lock,[&](){return indexAndValues_vector.size() == allNeighbors.size();});
+            LOG_DBG("Getting values of the local variables of the neighbors");
             getValueMessages(&valuesVariables,indexAndValues_vector);
             done = true;
             cv.notify_all();
@@ -328,11 +353,19 @@ void MGM::mgmAlgo()
         //[gain,newValue] = BestUnilateralGain(currentContext)
         std::vector<bool> newValues = {};
 
-        newValues.reserve(indexOfVariablesHandled.size());
-        
+        for (auto &index : indexOfVariablesHandled)
+        {
+            newValues.push_back(false);
+
+        }
+
+        LOG_DBG("Obtaining best unilateral Gain..");
         long gain = BestUnilateralGain(valuesVariables,indexOfVariablesHandled, &newValues);
 
+        LOG_DBG("gain=%ld",gain);
+
         //SendGainMessage(allNeighbors, gain)
+        LOG_DBG("Send best gain to neighbors...");
         status = SendGainMessage(allNeighbors,gain);
 
         //neighborsGains = ReceiveGainMessages(allNeighbors)
@@ -341,17 +374,21 @@ void MGM::mgmAlgo()
         while (!done)
         {
             std::unique_lock<std::mutex> lock(mtx);
+            LOG_DBG("Waiting new gains by neighbors");
             cv.wait(lock,[&](){return gains_vector.size() == allNeighbors.size();});
             
             done = true;
             cv.notify_all();
+            LOG_DBG("new gains by neighbors received");
         }
         
-        if (gain > *std::max_element(gains_vector.begin(), gains_vector.end()))
+        if ((gains_vector.size() != 0 && gain > *std::max_element(gains_vector.begin(), gains_vector.end())) || (gains_vector.size() == 0))
         {
+            LOG_DBG("New local gain is the max gain");
             for (auto &index : this->indexOfVariablesHandled)
             {
                 int i = 0;
+                LOG_DBG("Variables with index %d , id=%s has values %s now",index,this->allVariables[index].c_str(),newValues[i] ? "true" : "false");
                 this->valuesVariables[index] = newValues[i];
                 i++;
             }
@@ -362,6 +399,7 @@ void MGM::mgmAlgo()
         //end if
         gettimeofday(&tv, &tz);
         curr_time = tv.tv_sec + 0.000001*tv.tv_usec;
+        LOG_DBG("End step");
     }
         
 }
@@ -382,6 +420,7 @@ void MGM::saveSomeValuesOfVariables(std::unordered_map<std::string, std::string>
         cv.wait(lock,[&](){return indexAndValues_vector.size()< allNeighbors.size();});
         this->indexAndValues_vector.push_back(values_map);
         cv.notify_all();
+        LOG_DBG("Saved");
     }
 }
 
@@ -402,7 +441,7 @@ bool MGM::SendGainMessage(std::vector<std::string> allNeighbors, long gain)
     {
         //Create the query
         request_t request;
-        std::string q = "opt=UPDATEG&gain=" + gain;
+        std::string q = "opt=UPDATEG&gain=" + std::to_string(gain);
 
         //Create the request and receive the response
         std::vector<std::string> ipAndPort = split(agent, ':');
@@ -413,6 +452,7 @@ bool MGM::SendGainMessage(std::vector<std::string> allNeighbors, long gain)
         request.dst_host = ipAndPort[0].c_str();
         request.dst_port = ipAndPort[1].c_str();
 
+        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
         message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
 
         //Handle the response
@@ -425,7 +465,9 @@ bool MGM::SendGainMessage(std::vector<std::string> allNeighbors, long gain)
         {
             return true;
         }      
-    }    
+    }
+
+    return true;    
 }
 
 bool MGM::SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled)
@@ -454,6 +496,7 @@ bool MGM::SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bo
         request.dst_host = ipAndPort[0].c_str();
         request.dst_port = ipAndPort[1].c_str();
 
+        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
         message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
 
         //Handle the response
@@ -467,6 +510,8 @@ bool MGM::SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bo
             return true;
         }      
     }
+
+    return true;
 }
 
 bool MGM::getValueMessages(std::vector<bool> * valuesVariables, std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector)
@@ -475,6 +520,7 @@ bool MGM::getValueMessages(std::vector<bool> * valuesVariables, std::vector<std:
     {
         for(std::unordered_map<std::string, std::string>::iterator it = map.begin(); it != map.end(); ++it) 
         {
+            LOG_DBG("Variables with index %s , id=%s has values %s now",it->first.c_str(),this->allVariables[stoi(it->first)].c_str(),it->second.c_str());
             (*valuesVariables)[stoi(it->first)] = StringToBool(it->second);
         }
     }
@@ -483,24 +529,46 @@ bool MGM::getValueMessages(std::vector<bool> * valuesVariables, std::vector<std:
     
 }
 
+long applyConstraint(std::vector<std::string> constraint,std::vector<bool> valuesVariables)
+{
+    if (valuesVariables[2])
+    {
+        LOG_DBG("Valid");
+        return 1;
+    }
+
+    return -9999999;
+    
+}
+
 long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled, std::vector<bool>* newValues)
 {
-    long currentGain = gain;
-
     std::vector<bool> currentValues;
-    currentValues.reserve(indexOfVariablesHandled.size());
+    //currentValues.reserve(indexOfVariablesHandled.size());
 
     int i = 0;
 
     for (auto &index : indexOfVariablesHandled)
     {
-        currentValues[i] = false;
+        currentValues.push_back(false);
         i++;
     }
 
-    //    
-    do
+    long currentGain;
+    bool first = true;
+    //
+    for (int j = 0; j < pow(2,currentValues.size()); j++)
     {
+        for (int k = 0; k < currentValues.size(); k++)
+        {
+            currentValues[k] = j & (1<< k);
+        }
+        
+        printf("[");
+        for (auto var : currentValues)
+            printf("%s,", var ? "true" : "false");    
+        LOG_DBG("]");
+        
         i=0;
 
         for (auto &index : indexOfVariablesHandled)
@@ -510,12 +578,24 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
         }
 
         long newGain;
-        //newGain = applyConstraint(this->constraint,valuesVariables)
+        newGain = applyConstraint({},valuesVariables);
 
-        if (this->isMax)
+        if (first)
+        {
+            currentGain = newGain;
+            first = false;
+            i = 0;
+            for (auto &index : indexOfVariablesHandled)
+            {
+                (*newValues)[i] = valuesVariables[index];
+                i++;    
+            }           
+        }
+        else if (this->isMax)
         {
             if (newGain > currentGain)
-            {    
+            {   
+                LOG_DBG("New gain max: %ld",newGain);
                 currentGain = newGain;
                 i = 0;
                 for (auto &index : indexOfVariablesHandled)
@@ -539,8 +619,9 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
             }    
         }               
 
-    } while (std::next_permutation(currentValues.begin(),currentValues.end()));
-    
+    }
+
+    return currentGain;    
     
 }
 

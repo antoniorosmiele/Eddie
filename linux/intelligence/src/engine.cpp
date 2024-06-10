@@ -222,16 +222,16 @@ std::string Engine::perform(const std::string &command) {
             std::string ip = variables[i]["dst_ip"].asString();
             std::string port = variables[i]["dst_port"].asString();
 
-            if (m.find(ip +":"+ port) == m.end())
+            if (m.find(ip +"@"+ port) == m.end())
             {
                 std::vector<int> val;
                 val.push_back(i);
-                std::string key = ip +":"+ port;
+                std::string key = ip +"@"+ port;
                 m.insert(std::make_pair(key, val));
             }
             else
             {
-                (m.find(ip +":"+ port))->second.push_back(i);
+                (m.find(ip +"@"+ port))->second.push_back(i);
             }
             
 
@@ -267,14 +267,14 @@ std::string Engine::perform(const std::string &command) {
 
             if(q.back() == '&') q.pop_back();
 
-            auto ipAndPort = split(iter->first,':');
+            auto ipAndPort = split(iter->first,'@');
             request.method = PUT;
             request.path = "MGM";
             request.query = q.c_str();
             request.dst_host = ipAndPort[0].c_str();
             request.dst_port = ipAndPort[1].c_str();
             
-            LOG_DBG("Send Message to: %s:%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+            LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
             
             message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
 
@@ -284,6 +284,30 @@ std::string Engine::perform(const std::string &command) {
             }
             
         }
+
+        LOG_DBG("Setup completed:");
+
+        q = "opt=START";
+
+        for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
+        {
+            auto ipAndPort = split(iter->first,'@');
+            request.method = POST;
+            request.path = "MGM";
+            request.query = q.c_str();
+            request.dst_host = ipAndPort[0].c_str();
+            request.dst_port = ipAndPort[1].c_str();
+
+            LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+            
+            message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
+
+            if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
+            {
+                return "Error in the query: check if there are the resource and constraint in h_constraints and o_function";
+            }
+        }
+        
         
         return "Breakpoint";
 

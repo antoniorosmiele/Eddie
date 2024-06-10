@@ -81,14 +81,14 @@ int main(int argc, char *argv[]) {
             exit(-1);
         }        
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 4; i++)
         {
             std::string temp = "fake" + std::to_string(i);
             resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i),root,false,i));
         }
         
         //Check Resources added in the vector
-        for (int i = 0; i < 11; i++)
+        for (int i = 0; i < 5; i++)
         {
             LOG_DBG("%d: path=%s, attr=%s",i, *(resources[i]->get_path()), *(resources[i]->get_attributes()));
         }   
