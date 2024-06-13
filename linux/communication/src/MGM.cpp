@@ -385,9 +385,11 @@ void MGM::mgmAlgo()
         if ((gains_vector.size() != 0 && gain > *std::max_element(gains_vector.begin(), gains_vector.end())) || (gains_vector.size() == 0))
         {
             LOG_DBG("New local gain is the max gain");
+            
+            int i = 0;
+
             for (auto &index : this->indexOfVariablesHandled)
             {
-                int i = 0;
                 LOG_DBG("Variables with index %d , id=%s has values %s now",index,this->allVariables[index].c_str(),newValues[i] ? "true" : "false");
                 this->valuesVariables[index] = newValues[i];
                 i++;
@@ -587,7 +589,7 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
             i = 0;
             for (auto &index : indexOfVariablesHandled)
             {
-                (*newValues)[i] = valuesVariables[index];
+                newValues->operator[](i) = valuesVariables[index];
                 i++;    
             }           
         }
@@ -600,7 +602,8 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
                 i = 0;
                 for (auto &index : indexOfVariablesHandled)
                 {
-                    (*newValues)[i] = valuesVariables[index];
+                    newValues->operator[](i) = valuesVariables[index];
+                    //LOG_DBG("New values %s:%s for variable with index=: %d",newValues->operator[](i) ? "true" : "false",valuesVariables[index]? "true" : "false",index);
                     i++;    
                 }
             }
@@ -613,7 +616,7 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
                 i = 0;
                 for (auto &index : indexOfVariablesHandled)
                 {
-                    (*newValues)[i] = valuesVariables[index];
+                    newValues->operator[](i) = valuesVariables[index];
                     i++;    
                 }                
             }    
