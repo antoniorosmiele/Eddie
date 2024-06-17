@@ -81,14 +81,29 @@ int main(int argc, char *argv[]) {
             exit(-1);
         }        
 
-        for (int i = 0; i < 4; i++)
+        std::vector<std::string> acc = {"70","20","30","90","10","80","50","40","60","100","70","20","30","90","10","80","50","40","60","100"};
+        std::vector<std::string> place = {"a","b","c","d","e","f","g","h", "i", "l","a","b","c","d","e","f","g","h", "i", "l"};
+        for (int i = 0; i < 10; i++)
         {
             std::string temp = "fake" + std::to_string(i);
-            resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i),root,false,i));
+            resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i) + "&group=0&acc=" + acc[i] + "&place=" +place[i],root,false,i));
         }
+
+        for (int i = 10; i < 20; i++)
+        {
+            std::string temp = "fake" + std::to_string(i);
+            resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i) + "&group=1&acc=" + acc[i] + "&place=" +place[i],root,false,i));
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            std::string temp = "fplace" + std::to_string(i);
+            resources.push_back(new FakeResource(temp,"rt=eddie.r.fplace&id=" + std::to_string(i + 20) + "&group=0&acc=" + acc[i] + "&place=" +place[i],root,false,i));
+        }        
+
         
         //Check Resources added in the vector
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 31; i++)
         {
             LOG_DBG("%d: path=%s, attr=%s",i, *(resources[i]->get_path()), *(resources[i]->get_attributes()));
         }   
