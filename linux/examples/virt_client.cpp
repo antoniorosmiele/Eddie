@@ -13,6 +13,12 @@
 #include "eddie.h"
 #include "common.h"
 
+#define N_fake 5
+
+std::vector<Link> filterConstraint(std::vector<Link> * links);
+std::vector<std::string> createConstraint(std::vector<Link> * links);
+
+
 int main() {
     guint watcher_id = connect();
 
@@ -35,16 +41,20 @@ int main() {
         LOG_DBG("%s:%s@%s", res.host.c_str(), res.port.c_str(), res.path.c_str());
     }
 
+    //Creation constraint
+    auto res_link_filtered = filterConstraint(&res_link);
+    std::vector<std::string> constr = createConstraint(&res_link_filtered);
+
     Json::Value h_cs, o_f;
 
     h_cs = Json::arrayValue;
     o_f = Json::arrayValue;
 
-    h_cs[0]["size"] = std::to_string( res_link.size());
+    h_cs[0]["size"] = std::to_string( res_link_filtered.size());
 
     int i = 1;
 
-    for (auto &link : res_link)
+    for (auto &link : res_link_filtered)
     {
         h_cs[i]["dst_ip"] = link.host;
         h_cs[i]["dst_port"] = link.port;
@@ -63,6 +73,12 @@ int main() {
     //Constraints
 
     o_f[0]["max/min"] = MGM_MAX;
+
+    for (int i = 0; i < constr.size(); i++)
+    {
+        o_f[i+1]["constr" + std::to_string(i+1)] = constr[i];
+    }
+    
     //...........
 
     auto messageS = compose_message("selection", "", h_cs, o_f);
@@ -74,4 +90,124 @@ int main() {
 
     disconnect(watcher_id);
     main.join();
+}
+
+std::vector<Link> filterConstraint(std::vector<Link> * links)
+{
+    std::vector<Link> newLinks;
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        //apply constraint
+        if (rt == "eddie.r.fake" )
+        {   
+            if (attrs->find("group")->second == "0")
+                newLinks.push_back(link);
+        }
+        
+
+    }   
+
+    return newLinks; 
+}
+
+std::vector<std::string> createConstraint(std::vector<Link> * links)
+{
+    std::vector<std::string> constraints;
+    //Create constraints of cardinality
+
+    std::string k = "";
+
+    int i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.fake")
+        {
+            k+= "x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(k.back() == '+') k.pop_back();
+
+    k+= "= " + std::to_string(N_fake);
+
+    constraints.push_back(k);
+
+    //Create constraints of max or min
+    std::string max = "";
+
+    i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.fake")
+        {
+            max+= "x" + std::to_string(i) + "*" + attrs->find("acc")->second + " +";
+        }
+        
+        i++;
+    }
+
+    if(max.back() == '+') max.pop_back();
+
+    max.pop_back();
+
+    constraints.push_back(max);
+
+    //Create constraints of comparison
+
+    std::string cmp = "";
+
+    i= 0;
+    
+    for (auto &link1 : *links)
+    {
+        std::map<std::string, std::string> *attrs1 = &(link1.attrs);
+
+        std::string rt1 =attrs1->find("rt")->second;
+
+        if (rt1 == "eddie.r.fake")
+        {   
+            int j = 0;
+
+            for (auto &link2 : *links)
+            {
+                std::map<std::string, std::string> *attrs2 = &(link2.attrs);
+
+                std::string rt2 =attrs2->find("rt")->second;
+
+                if (rt2 == "eddie.r.fplace")
+                {
+                    cmp+= "x" + std::to_string(i) + "*x" + std::to_string(j) + "*strcmp(" + attrs1->find("place")->second  + "," + attrs2->find("place")->second + ") +";
+                }
+
+                j++;             
+            }
+        }
+
+        i++;     
+    }
+
+    if(cmp.back() == '+') cmp.pop_back();
+
+    cmp+= "= " + std::to_string(N_fake);
+
+    constraints.push_back(cmp);
+
+    return constraints;
+
 }
