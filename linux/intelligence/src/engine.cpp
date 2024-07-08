@@ -211,11 +211,13 @@ std::string Engine::perform(const std::string &command) {
 
         //LOG_DBG("sizes: %s", variables[0]["sizes"].asString().c_str());
 
+        //Saves number of the variables to select
         int size = std::stoi(variables[0]["size"].asString());
 
         LOG_DBG("Saved size");
 
         std::unordered_map<std::string, std::vector<int>> m;
+        std::unordered_map<std::string, std::vector<int>> constrsForNeighbor;
 
         for (int i = 1; i <= size; i++)
         {
@@ -228,6 +230,27 @@ std::string Engine::perform(const std::string &command) {
                 val.push_back(i);
                 std::string key = ip +"@"+ port;
                 m.insert(std::make_pair(key, val));
+
+                std::vector<int> indexsConstr;
+                //Partitioning index of constraints and agents
+                for (const auto &constraint:constraints)//("Con_name=exp").....(max/min=type)
+                {
+                    auto c_name = constraint.getMemberNames()[0].c_str();
+                    auto c_content = constraint[c_name].asString();
+
+                    if (std::string(c_name) != "max/min")
+                    {
+                        if (c_content.find("x" + std::to_string(i-1)) !=std::string::npos)
+                        {
+                            indexsConstr.push_back(i);
+                        }
+                        
+                    }
+                    
+                    //q += std::string(c_name) + "=" + c_content + "&";
+                }
+
+                constrsForNeighbor.insert(std::make_pair(key,indexsConstr));
             }
             else
             {
@@ -250,13 +273,16 @@ std::string Engine::perform(const std::string &command) {
                 q+= "id=" + variables[*it]["id"].asString() + "&";
             }
             //Save the constraint and type of optimization
-            for (const auto &constraint:constraints)//("Con_name=exp").....(max/min=type)
+            for (const auto &constraintIndex:constrsForNeighbor.find(iter->first)->second)//("Con_name=exp").....(max/min=type)
             {
-                auto c_name = constraint.getMemberNames()[0].c_str();
-                auto c_content = constraint[c_name].asString();
+                auto c_name = constraints[constraintIndex].getMemberNames()[0].c_str();
+                auto c_content = constraints[constraintIndex][c_name].asString();
 
                 q += std::string(c_name) + "=" + c_content + "&";
             }
+
+            q+= "max/min =" + constraints[0]["max/min"].asString() + "&";
+
             //Save Ip and port of the agents
             for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++) //(neigh=ip:port)
             {
