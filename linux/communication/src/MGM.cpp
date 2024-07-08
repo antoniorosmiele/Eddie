@@ -141,6 +141,14 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     //Save the constraints ...
     mgm->isMax = maxOrMin;
     LOG_DBG("Save type of optimisation: %s", maxOrMin ? "true" : "false");
+
+    mgm->query_map_constraint = query_map_constraint;
+
+    for (auto &i : mgm->query_map_constraint)
+    {
+        LOG_DBG("Saved constraint: %s = %s", i.first.c_str(), i.second.c_str());
+    }
+    
     //........................
 
     //Modify response message...
@@ -531,7 +539,185 @@ bool MGM::getValueMessages(std::vector<bool> * valuesVariables, std::vector<std:
     
 }
 
-long applyConstraint(std::vector<std::string> constraint,std::vector<bool> valuesVariables)
+bool isOperator(char c)
+{
+    // Returns true if the character is an operator
+    return c == '+' || c == '-' || c == '*' || c == '/'
+           || c == '^' || c == '=';
+}
+
+// Function to get the precedence of an operator
+int precedence(char op)
+{
+    // Returns the precedence of the operator
+    if (op == '+' || op == '-')
+        return 1;
+    if (op == '*' || op == '/')
+        return 2;
+    if (op == '^')
+        return 3;
+    return 0;
+}
+
+// Function to apply an operator to two operands
+double MGM::applyOp(double a, double b, char op)
+{
+    // Applies the operator to the operands and returns the
+    // result
+    switch (op) {
+    case '+':
+        return a + b;
+    case '-':
+        return a - b;
+    case '*':
+        return a * b;
+    case '/':
+        return a / b;
+    case '^':
+        return pow(a, b);
+    case '=':
+
+        if (!(this->isMax))
+        {
+            if (a == b)
+                return 0;
+            else
+                return 10000.0;
+        }
+        else
+        {
+            if (a == b)
+                return 10000.0;
+            else
+                return 0;
+        }
+            
+            
+    default:
+        return 0;
+    }
+}
+
+// Function to parse and evaluate a mathematical expression
+double MGM::evaluateExpression(const std::string& expression, std::vector<bool> valuesVariables)
+{
+    std::stack<char> operators; // Stack to hold operators
+    std::stack<double> operands; // Stack to hold operands
+
+    std::stringstream ss(expression); // String stream to parse
+                                 // the expression
+
+    std::string token;
+    while (getline(
+        ss, token,
+        ' ')) { // Parse the expression token by token
+
+        if (token.empty())
+            continue; // Skip empty tokens
+        if (isdigit(token[0])) { // If the token is a number
+            double num;
+            std::stringstream(token)
+                >> num; // Convert the token to a number
+            operands.push(num); // Push the number onto the
+                                // operand stack
+        }
+        else if (token[0] == 'x' && isdigit(token[1])) // If the token is a variable
+        {
+            int num;
+            
+            std::stringstream(token.substr(1))
+                >> num; // Convert the portion of the token with the index to a number
+
+            bool val = valuesVariables[num];
+
+            operands.push(val ? 1.0:0); // Push the boolean converted in double onto the
+                                        // operand stack            
+
+        }
+        else if (token.find("strcmp(") != std::string::npos)
+        {
+            //strcmp(value1,value2)
+            /* evaluate strcmp() */
+            //obtain "value1,value2"
+            token.pop_back();
+            auto  values = split(token.substr(7), ',');
+
+            if (values[0] == values[1])
+                operands.push(1.0);
+            else
+                operands.push(0);
+            
+        }
+        else if (isOperator(token[0])) { // If the token is
+                                         // an operator
+            char op = token[0];
+            // While the operator stack is not empty and the
+            // top operator has equal or higher precedence
+            while (!operators.empty()
+                   && precedence(operators.top())
+                          >= precedence(op)) {
+                // Pop two operands and one operator
+                double b = operands.top();
+                operands.pop();
+                double a = operands.top();
+                operands.pop();
+                char op = operators.top();
+                operators.pop();
+                // Apply the operator to the operands and
+                // push the result onto the operand stack
+                operands.push(applyOp(a, b, op));
+            }
+            // Push the current operator onto the operator
+            // stack
+            operators.push(op);
+        }
+        else if (token[0] == '(') { // If the token is an
+                                    // opening parenthesis
+            // Push it onto the operator stack
+            operators.push('(');
+        }
+        else if (token[0] == ')') { // If the token is a
+                                    // closing parenthesis
+            // While the operator stack is not empty and the
+            // top operator is not an opening parenthesis
+            while (!operators.empty()
+                   && operators.top() != '(') {
+                // Pop two operands and one operator
+                double b = operands.top();
+                operands.pop();
+                double a = operands.top();
+                operands.pop();
+                char op = operators.top();
+                operators.pop();
+                // Apply the operator to the operands and
+                // push the result onto the operand stack
+                operands.push(applyOp(a, b, op));
+            }
+            // Pop the opening parenthesis
+            operators.pop();
+        }
+    }
+
+    // While the operator stack is not empty
+    while (!operators.empty()) {
+        // Pop two operands and one operator
+        double b = operands.top();
+        operands.pop();
+        double a = operands.top();
+        operands.pop();
+        char op = operators.top();
+        operators.pop();
+        // Apply the operator to the operands and push the
+        // result onto the operand stack
+        operands.push(applyOp(a, b, op));
+    }
+
+    // The result is at the top of the operand stack
+    return operands.top();
+}
+
+
+long MGM::applyConstraint(std::unordered_map<std::string, std::string> constraints,std::vector<bool> valuesVariables,bool isMax)
 {
     if (valuesVariables[2])
     {
@@ -540,7 +726,15 @@ long applyConstraint(std::vector<std::string> constraint,std::vector<bool> value
     }
 
     return -9999999;
+
+    /*double cost = 0;
     
+    for (auto &i : constraints)
+    {
+        cost+=this->evaluateExpression(i.second,valuesVariables);
+    }
+
+    return cost;*/    
 }
 
 long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled, std::vector<bool>* newValues)
@@ -580,7 +774,7 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
         }
 
         long newGain;
-        newGain = applyConstraint({},valuesVariables);
+        newGain = applyConstraint(this->query_map_constraint,valuesVariables, this->isMax);
 
         if (first)
         {

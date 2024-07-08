@@ -35,6 +35,7 @@ private:
 
     //For the constraints
     bool isMax;
+    std::unordered_map<std::string, std::string> query_map_constraint;
 
     //For the values received by all the agents
     std::mutex mtx;
@@ -72,6 +73,10 @@ private:
     bool getValueMessages(std::vector<bool> * valuesVariables, std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector);
     long BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled,std::vector<bool>* newValues);
     bool SendGainMessage(std::vector<std::string> allNeighbors, long gain);
+
+    double applyOp(double a, double b, char op);
+    long applyConstraint(std::unordered_map<std::string, std::string> constraints,std::vector<bool> valuesVariables,bool isMax);
+    double evaluateExpression(const std::string& expression, std::vector<bool> valuesVariables);
 public:
     MGM(coap_context_t *server_context,CoapServer *server);
     MGM();
