@@ -64,11 +64,35 @@ std::string ResourceDirectory::add_endpoint_to_rd(const std::string &ep_d_key,
     auto res = rd_endpoints_by_ep_d->get(ep_d_key);
 
     if (res) {
-        auto uri = std::string(reinterpret_cast<const char *>(coap_resource_get_uri_path(res)->s));
+        //auto uri = std::string(reinterpret_cast<const char *>(coap_resource_get_uri_path(res)->s));
+        //free(coap_resource_get_userdata(res));
+        //coap_delete_resource(context, res);
+        //rd_endpoints_by_ep_d->erase(ep_d_key);
+        //rd_endpoints->erase(uri);
+
+        auto dataOld = std::string((char *) coap_resource_get_userdata(res));
+
+        //LOG_DBG("Old string for RD:%s", dataOld.c_str());
+
+        std::string newData = dataOld.append(data);
+
+        //LOG_DBG("New string for RD:%s", newData.c_str());
+        
+        auto userdata = malloc(newData.size());
+        
+        if (!userdata)
+        {
+            return "";
+        }
+
+        memset(userdata, 0, newData.size());
+        memcpy(userdata, newData.c_str(), newData.size());
         free(coap_resource_get_userdata(res));
-        coap_delete_resource(context, res);
-        rd_endpoints_by_ep_d->erase(ep_d_key);
-        rd_endpoints->erase(uri);
+        coap_resource_set_userdata(res,userdata);
+
+        auto ep_name = std::string(reinterpret_cast<const char *>(coap_resource_get_uri_path(res)->s));
+        //LOG_DBG("New complete string:%s",std::string((char *) coap_resource_get_userdata(res)).c_str());
+        return ep_name;
     }
 
     auto new_endpoint = create_endpoint(params, data);
@@ -311,6 +335,8 @@ ResourceDirectory::rd_resources_to_string_list_filtered(std::map<std::string, st
 
 void ResourceDirectory::hnd_post_rd(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request,
                                     const coap_string_t *query, coap_pdu_t *response) {
+    
+    //LOG_DBG("hnd_post_rd");                                    
     if (!query) {
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;
@@ -319,12 +345,16 @@ void ResourceDirectory::hnd_post_rd(coap_resource_t *resource, coap_session_t *s
     size_t data_len;
     const u_int8_t *data;
     coap_get_data(request, &data_len, &data);
+    //LOG_DBG("coap_get_data executed");
+    //LOG_DBG("Data for directory:%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str());
     if (!data) {
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;
     }
 
     std::string data_str = std::string(reinterpret_cast<const char *>(data), data_len);
+    //LOG_DBG("data publishing resource:%s",data_str.c_str());
+
     if (data_str.empty()) {
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_BAD_REQUEST);
         return;
@@ -382,6 +412,7 @@ void ResourceDirectory::hnd_post_rd(coap_resource_t *resource, coap_session_t *s
     std::string ep_sector_key = ep->second + "@" + d_name;
 
     std::string ep_name = add_endpoint_to_rd(ep_sector_key, coap_session_get_context(session), query_map, data_str);
+
     if (ep_name.empty()) {
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_INTERNAL_ERROR);
     }
