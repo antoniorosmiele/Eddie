@@ -95,18 +95,18 @@ int main(int argc, char *argv[]) {
             resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i) + "&group=1&acc=" + acc[i] + "&place=" +place[i],root,false,i));
         }
 
-        for (int i = 0; i < 10; i++)
+        /*for (int i = 0; i < 10; i++)
         {
             std::string temp = "fplace" + std::to_string(i);
             resources.push_back(new FakeResource(temp,"rt=eddie.r.fplace&id=" + std::to_string(i + 20) + "&group=0&acc=" + acc[i] + "&place=" +place[i],root,false,i));
-        }        
+        }*/        
 
         
         //Check Resources added in the vector
-        for (int i = 0; i < 31; i++)
+        for (int i = 0; i < resources.size(); i++)
         {
-            LOG_DBG("%d: path=%s, attr=%s",i, *(resources[i]->get_path()), *(resources[i]->get_attributes()));
-        }   
+            LOG_DBG("%d: path=%s, attr=%s&%s&%s&%s&%s",i, *(resources[i]->get_path()), (resources[i]->get_attributes())[0],(resources[i]->get_attributes())[1],(resources[i]->get_attributes())[2],(resources[i]->get_attributes())[3],(resources[i]->get_attributes())[4]);
+        }
     }
     
 

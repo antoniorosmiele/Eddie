@@ -29,6 +29,7 @@ int main() {
     Json::Value h_c;
     h_c = Json::arrayValue;
     h_c[0]["rt"] = "eddie.r.fake";
+    //h_c[1]["rt"] = "eddie.r.fplace";
 
     auto message = compose_message("find", "", h_c, {});
     auto answer = send_message(message);
@@ -37,13 +38,28 @@ int main() {
 
     LOG_DBG("RESOURCES FOUND WITH rt=eddie.r.virtual.alarm:");
 
+    LOG_DBG("Res:%d",res_link.size());
+
     for (const auto& res: res_link) {
         LOG_DBG("%s:%s@%s", res.host.c_str(), res.port.c_str(), res.path.c_str());
     }
-
+    return 0;
     //Creation constraint
     auto res_link_filtered = filterConstraint(&res_link);
     std::vector<std::string> constr = createConstraint(&res_link_filtered);
+
+    LOG_DBG("RESOURCES FILTERED:");
+    for (const auto& res: res_link_filtered) 
+    {
+        LOG_DBG("%s:%s@%s", res.host.c_str(), res.port.c_str(), res.path.c_str());
+    }
+    
+    LOG_DBG("CONSTRAINTS CREATED:");
+
+    for (const auto& con: constr) 
+    {
+        LOG_DBG("%s", con.c_str());
+    }
 
     Json::Value h_cs, o_f;
 
@@ -117,6 +133,7 @@ std::vector<Link> filterConstraint(std::vector<Link> * links)
 std::vector<std::string> createConstraint(std::vector<Link> * links)
 {
     std::vector<std::string> constraints;
+
     //Create constraints of cardinality
 
     std::string k = "";
@@ -131,7 +148,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
         if (rt == "eddie.r.fake")
         {
-            k+= "x" + std::to_string(i) + " +";
+            k+= " x" + std::to_string(i) + " +";
         }
         
         i++;
@@ -156,7 +173,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
         if (rt == "eddie.r.fake")
         {
-            max+= "x" + std::to_string(i) + "*" + attrs->find("acc")->second + " +";
+            max+= " x" + std::to_string(i) + " * " + attrs->find("acc")->second + " +";
         }
         
         i++;
@@ -192,7 +209,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
                 if (rt2 == "eddie.r.fplace")
                 {
-                    cmp+= "x" + std::to_string(i) + "*x" + std::to_string(j) + "*strcmp(" + attrs1->find("place")->second  + "," + attrs2->find("place")->second + ") +";
+                    cmp+= " x" + std::to_string(i) + " * x" + std::to_string(j) + " * strcmp(" + attrs1->find("place")->second  + "," + attrs2->find("place")->second + ") +";
                 }
 
                 j++;             
