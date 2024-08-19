@@ -131,13 +131,10 @@ int EddieEndpoint::publish_resources() {
         LOG_ERR("unknown resource directory address, please discover it first or initialize one");
         return -1;
     }
-    //LOG_DBG("ip:%s",resource_directory_ip.c_str());
 
     std::string base_address = ip_to_url(get_server()->get_my_ip(), get_server()->get_my_port());
 
     std::string data = CoapServer::get_resources_in_linkformat();
-
-    //LOG_DBG("data completed:%s",data.c_str());
 
     if (data.empty()) {
         LOG_DBG("[CoapServer::publish_resources]: unable to get resources in link format");
@@ -148,50 +145,26 @@ int EddieEndpoint::publish_resources() {
     if (!base_address.empty()) query +=  + "&base=" + base_address;
     query = url_encode(query);
 
-    int i = 0; //
-    bool end = false; //
+    request_t request {
+            resource_directory_ip.c_str(),
+            resource_directory_port.c_str(),
+            POST,
+            "rd",
+            query.c_str(),
+            reinterpret_cast<const uint8_t *>(data.c_str()),
+            data.length(),
+            true,
+            40
+    };
 
-    while (!end) //
-    {
-        std::string newData; //
-
-        if(i + 668 < data.length() -1) //
-            newData = data.substr(i,i+668 + 1); //
-        else    //
-            newData = data.substr(i,data.length()); //
-
-
-        request_t request {
-                resource_directory_ip.c_str(),
-                resource_directory_port.c_str(),
-                POST,
-                "rd",
-                query.c_str(),
-                reinterpret_cast<const uint8_t *>(newData.c_str()),
-                newData.length(),
-                true,
-                40
-        };
-        //LOG_DBG("i=%d e i+668=%d",i, i + 668);
-        LOG_DBG("Data for directory:%s and size: %ld", std::string(reinterpret_cast<const char *>(request.data), request.data_length).c_str(),request.data_length);
-
-        message_t response = get_client()->send_message_and_wait_response(request);
-        if (!response.location_path.empty()) {
-            this->rd_endpoint = "rd/" + response.location_path;
-        }
-        else {
-            LOG_ERR("Location path option not found in response");
-            return -1;
-        }
-
-
-        if (i + 669  >= data.length())//
-            end = true;//
-        else//
-            i+= 669;//
-            
-    }//
-    
+    message_t response = get_client()->send_message_and_wait_response(request);
+    if (!response.location_path.empty()) {
+        this->rd_endpoint = "rd/" + response.location_path;
+    }
+    else {
+        LOG_ERR("Location path option not found in response");
+        return -1;
+    }
 
     return 0;
 }
