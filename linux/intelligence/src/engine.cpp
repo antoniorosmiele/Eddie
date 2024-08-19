@@ -578,7 +578,7 @@ void Engine::update_resources() {
         request.path = result.path.c_str();
         request.query = "json=true";
 
-        LOG_DBG("Send Message to: %s:%s with query:json=true and path:%s", result.host.c_str(), result.port.c_str(),result.path.c_str());
+        //LOG_DBG("Send Message to: %s:%s with query:json=true and path:%s", result.host.c_str(), result.port.c_str(),result.path.c_str());
 
         message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
 
