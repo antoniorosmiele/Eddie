@@ -8,6 +8,7 @@
 #include <coap3/coap.h>
 #include <map>
 #include <mutex>
+#include <atomic>
 
 #define SECONDS_TIMEOUT 5
 
@@ -50,6 +51,7 @@ private:
 
     //Threads
     std::thread mgm_thread;
+    std::atomic<bool> done;
 
     bool quit = false;
 
