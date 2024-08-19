@@ -533,7 +533,7 @@ ResourceDirectory::hnd_get_lookup_res(coap_resource_t *resource, coap_session_t 
                     coap_encode_var_safe(content_type_buf, sizeof(content_type_buf),
                                          COAP_MEDIATYPE_APPLICATION_LINK_FORMAT),
                     content_type_buf);
-    coap_add_data(response, result.length(), coap_make_str_const(result.c_str())->s);
+    coap_add_data_large_response(resource,session,request,response,query,COAP_MEDIATYPE_TEXT_PLAIN, 1, 0, result.length(), coap_make_str_const(result.c_str())->s,NULL, NULL);
 }
 
 void ResourceDirectory::hnd_get_lookup_ep(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request,
@@ -629,7 +629,7 @@ void ResourceDirectory::hnd_get_lookup_ep(coap_resource_t *resource, coap_sessio
                     coap_encode_var_safe(content_type_buf, sizeof(content_type_buf),
                                          COAP_MEDIATYPE_APPLICATION_LINK_FORMAT),
                     content_type_buf);
-    coap_add_data(response, result.length(), coap_make_str_const(result.c_str())->s);
+    coap_add_data_large_response(resource,session,request,response,query,COAP_MEDIATYPE_TEXT_PLAIN, 1, 0, result.length(), coap_make_str_const(result.c_str())->s,NULL, NULL);
 }
 
 void

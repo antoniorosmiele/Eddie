@@ -80,12 +80,13 @@ coap_session_t *
 CoapClient::open_session(const char *dst_host, const char *dst_port) {
     coap_session_t *session;
     coap_address_t dst;
-
+    //Piuttosto che fare il resolve address ogni volta , si salvano i coap_address risultanti in una tabella hash
     if (resolve_address(dst_host, dst_port, &dst) < 0) {
         LOG_ERR("Unable to open connection");
         return nullptr;
     }
 
+    //LOG_DBG("Resolved addr:%s" , dst.addr.sin6);
     session = coap_new_client_session(this->context, nullptr, &dst, COAP_PROTO_UDP);
 
     if (!session) {
@@ -148,6 +149,7 @@ std::string CoapClient::send_message(request_t request) {
     // BEGIN CRITICAL CALLS TO CoAP APIs
     std::unique_lock<decltype(CoapClient::client_mutex)> lock(CoapClient::client_mutex);
 
+    //LOG_ERR("Opening session host=%s,port=%s",request.dst_host,request.dst_port);
     coap_session_t * session = open_session(request.dst_host, request.dst_port);
     if (!session) {
         LOG_ERR("Error creating remote session");
@@ -213,7 +215,7 @@ std::string CoapClient::send_message(request_t request) {
 
     // check data and data type
     if (request.data && request.data_length) {
-        coap_add_data(pdu, request.data_length, request.data);
+        coap_add_data_large_request(session,pdu, request.data_length, request.data,NULL,NULL);
     }
 
     coap_send(session, pdu);
