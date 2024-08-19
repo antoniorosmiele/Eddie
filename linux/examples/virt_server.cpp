@@ -17,6 +17,16 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    /*
+    Note sulle inizializzazioni delle risorse
+    Ogni risorsa nella stringa degli attributi deve avere l'ID!
+    Esse sono le chiavi delle risorse senza di esse la selezione non è possibile
+    La stringa degli attributi messa nel costruttore è quella che viene poi restituita sia ai
+    client che fanno la richiesta sia quando si chiama il metodo get_resources_in_linkformat() dentro
+    il framework (Esso restituisce tutte le risorse registrate in un agent in formato Link con i relativi attributi)
+    Si tenga nota che quindi in questi due casi non vengono restituiti tutti gli attributi presenti nel JSON
+    Se si vuole tutto il JSON di una risorsa bisogna richiederlo manualmente
+    */
     argparse::ArgumentParser program("eddie-virt-server");
 
     program.add_argument("--ip", "-a")
@@ -65,7 +75,7 @@ int main(int argc, char *argv[]) {
     if (program["--exampleres"] == true) 
     {
         auto res = new EddieVirtualAlarm("alarm",
-                                         "rt=eddie.r.virtual.alarm&ct=40",
+                                         "rt=eddie.r.virtual.alarm&id=100&ct=40",
                                          root,
                                          false);
         resources.push_back(res);
@@ -95,11 +105,11 @@ int main(int argc, char *argv[]) {
             resources.push_back(new FakeResource(temp,"rt=eddie.r.fake&id=" + std::to_string(i) + "&group=1&acc=" + acc[i] + "&place=" +place[i],root,false,i));
         }
 
-        /*for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             std::string temp = "fplace" + std::to_string(i);
             resources.push_back(new FakeResource(temp,"rt=eddie.r.fplace&id=" + std::to_string(i + 20) + "&group=0&acc=" + acc[i] + "&place=" +place[i],root,false,i));
-        }*/        
+        }        
 
         
         //Check Resources added in the vector

@@ -12,6 +12,7 @@
 #include "../communication/include/common.h"
 #include "eddie.h"
 #include "common.h"
+#include <bits/stdc++.h>
 
 #define N_fake 5
 
@@ -29,21 +30,31 @@ int main() {
     Json::Value h_c;
     h_c = Json::arrayValue;
     h_c[0]["rt"] = "eddie.r.fake";
-    //h_c[1]["rt"] = "eddie.r.fplace";
+    //h_c[0]["rt"] = "eddie.r.fplace";
 
     auto message = compose_message("find", "", h_c, {});
     auto answer = send_message(message);
 
     auto res_link = parse_link_format(answer);
 
-    LOG_DBG("RESOURCES FOUND WITH rt=eddie.r.virtual.alarm:");
+    h_c[0]["rt"] = "eddie.r.fplace";
+    auto message1 = compose_message("find", "", h_c, {});
+    auto answer1 = send_message(message1);
 
-    LOG_DBG("Res:%d",res_link.size());
+    auto res_link1 = parse_link_format(answer1);
+
+    for (size_t i = 0; i < res_link1.size(); i++)
+        res_link.push_back(res_link1[i]);
+    
+
+    LOG_DBG("RESOURCES FOUND:");
+
+    LOG_DBG("Res:%ld",res_link.size());
 
     for (const auto& res: res_link) {
         LOG_DBG("%s:%s@%s", res.host.c_str(), res.port.c_str(), res.path.c_str());
     }
-    return 0;
+    
     //Creation constraint
     auto res_link_filtered = filterConstraint(&res_link);
     std::vector<std::string> constr = createConstraint(&res_link_filtered);
@@ -97,11 +108,39 @@ int main() {
     
     //...........
 
-    auto messageS = compose_message("selection", "", h_cs, o_f);
+    //auto messageS = compose_message("selection", "", h_cs, o_f);
 
-    auto answerS = send_message(messageS);
+    //auto answerS = send_message(messageS);
+
+    auto answerS = selection(h_cs,o_f, res_link_filtered.size());
 
     LOG_DBG("%s", answerS.c_str());
+
+    answerS = answerS.substr(1);
+    answerS.pop_back();
+
+    std::replace( answerS.begin(), answerS.end(), ',', ' ');
+
+    LOG_DBG("%s", answerS.c_str());
+
+    std::stringstream lineStream(answerS);
+ 
+    std::vector<int> vectorValues(std::istream_iterator<int>(lineStream),{});
+    
+    i = 0;
+
+    LOG_DBG("Resource Selected:");
+
+    for (auto res : res_link_filtered)
+    {
+        LOG_DBG("%d=%d", i ,vectorValues[i]);
+        if (vectorValues[i] == 1)
+        {
+            LOG_DBG("%s:%s@%s", res.host.c_str(), res.port.c_str(), res.path.c_str());
+        }
+        
+        i++;
+    }
     
 
     disconnect(watcher_id);
@@ -123,6 +162,11 @@ std::vector<Link> filterConstraint(std::vector<Link> * links)
             if (attrs->find("group")->second == "0")
                 newLinks.push_back(link);
         }
+        else
+        {
+            newLinks.push_back(link);
+        }
+        
         
 
     }   
