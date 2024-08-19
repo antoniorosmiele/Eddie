@@ -52,4 +52,13 @@ std::string send_message(const Json::Value& message);
  */
 void run();
 
+/**
+ * Start the process of selection translating 
+ * a JSON message, with constraints and resource, 
+ * into a Virtualization Layer request
+ * and send the request to the VirtualizationReceiver using dbus
+ */
+
+std::string selection(Json::Value h_constraints,Json::Value o_functions,int size);
+
 #endif //EDDIE_VIRTUALIZATION_SENDER_H

@@ -190,3 +190,73 @@ void run() {
     global_loop = g_main_loop_new(nullptr, FALSE);
     g_main_loop_run(global_loop);
 }
+
+std::vector<std::string> split(const std::string &s, char delimiter) {
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream tokenStream(s);
+
+    while (std::getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+
+
+std::string selection(Json::Value h_constraints,Json::Value o_functions,int size)
+{
+    //Send the message to the framework to start the process of selection
+    auto messageS = compose_message("selection", "", h_constraints, o_functions);
+
+    //Returns the query with the neighbors and the Time to Wait
+    auto answerS = send_message(messageS);
+
+    if (answerS == "Error in the query: check if there are the resource and constraint in h_constraints and o_function")
+    {
+        return answerS;
+    }
+    
+
+    std::vector<std::string> neighbors = split(answerS,'&');
+
+    Json::Value h_endpoint;
+    h_endpoint = Json::arrayValue; 
+
+    int i = 1;
+    int secondsWait;
+
+    h_endpoint[0]["size"] = std::to_string(size);
+
+    for ( auto &token: neighbors) 
+    {
+        std::vector<std::string> subtoken = split(token, '=');
+
+        if (subtoken[0] == "time")
+        {
+            secondsWait = stoi(subtoken[1]);
+        }
+        else
+        {
+            h_endpoint[i]["dst_ip"] = split(subtoken[1], '@')[0];
+            h_endpoint[i]["dst_port"] = split(subtoken[1], '@')[1];
+            i++;
+        }
+    }
+
+    auto messageG = compose_message("GETselection", "", h_endpoint, {});
+
+    std::string answerG;
+
+    do
+    {
+        LOG_DBG("Wait ....");
+        sleep(secondsWait);
+        answerG = send_message(messageG);
+
+    } while (answerG == "COAP_RESPONSE_CODE_CONFLICT");
+
+
+    return answerG;    
+}
