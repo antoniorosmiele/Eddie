@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <unistd.h>
 
 Engine::Engine() {
     json_link_by_rt = std::unordered_multimap<std::string, std::pair<Json::Value, Link>>();
@@ -167,7 +168,7 @@ std::string Engine::perform(const std::string &command) {
     if (!reader->parse(command.c_str(), command.c_str() + command.length(), &root, &errors)) {
         return "ERROR WHILE PARSING COMMAND";
     }
-    LOG_DBG("Updating resource .....");
+    //LOG_DBG("Updating resource .....");
 
     update_resources(); // -> resources in the net and jsons of every resource updated
 
@@ -233,6 +234,7 @@ std::string Engine::perform(const std::string &command) {
 
                 std::vector<int> indexsConstr;
                 //Partitioning index of constraints and agents
+                int j = 0;
                 for (const auto &constraint:constraints)//("Con_name=exp").....(max/min=type)
                 {
                     auto c_name = constraint.getMemberNames()[0].c_str();
@@ -241,13 +243,12 @@ std::string Engine::perform(const std::string &command) {
                     if (std::string(c_name) != "max/min")
                     {
                         if (c_content.find("x" + std::to_string(i-1)) !=std::string::npos)
-                        {
-                            indexsConstr.push_back(i);
-                        }
+                            indexsConstr.push_back(j);
                         
                     }
                     
                     //q += std::string(c_name) + "=" + c_content + "&";
+                    j++;
                 }
 
                 constrsForNeighbor.insert(std::make_pair(key,indexsConstr));
@@ -262,6 +263,8 @@ std::string Engine::perform(const std::string &command) {
 
         request_t request;
         std::string q = "";
+        std::string dataConstr = "";
+        std::string qGet = "";
 
         for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
         {
@@ -278,20 +281,25 @@ std::string Engine::perform(const std::string &command) {
                 auto c_name = constraints[constraintIndex].getMemberNames()[0].c_str();
                 auto c_content = constraints[constraintIndex][c_name].asString();
 
-                q += std::string(c_name) + "=" + c_content + "&";
+                //LOG_DBG("name_const=%s, content=%s",c_name, c_content.c_str());
+                dataConstr += std::string(c_name) + ":" + c_content + "&";
             }
 
-            q+= "max/min =" + constraints[0]["max/min"].asString() + "&";
+            q+= "max/min=" + constraints[0]["max/min"].asString() + "&";
 
             //Save Ip and port of the agents
             for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++) //(neigh=ip:port)
             {
-                q+= "neigh=" + neigh->first + "&";
+                std::string address = neigh->first;
+                std::replace( address.begin(), address.end(), '%', '$');
+                q+= "neigh=" + address + "&";
+                qGet = "neigh=" + neigh->first + "&";
             }
             
             
 
             if(q.back() == '&') q.pop_back();
+            if(dataConstr.back() == '&') dataConstr.pop_back();
 
             auto ipAndPort = split(iter->first,'@');
             request.method = PUT;
@@ -299,6 +307,8 @@ std::string Engine::perform(const std::string &command) {
             request.query = q.c_str();
             request.dst_host = ipAndPort[0].c_str();
             request.dst_port = ipAndPort[1].c_str();
+            request.data = reinterpret_cast<const uint8_t *>(dataConstr.c_str());
+            request.data_length = dataConstr.length();
             
             LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
             
@@ -312,6 +322,8 @@ std::string Engine::perform(const std::string &command) {
         }
 
         LOG_DBG("Setup completed:");
+
+        //return "Breakpoint";
 
         q = "opt=START";
 
@@ -333,12 +345,140 @@ std::string Engine::perform(const std::string &command) {
                 return "Error in the query: check if there are the resource and constraint in h_constraints and o_function";
             }
         }
-        
-        
-        return "Breakpoint";
 
+        LOG_DBG("Algo MGM Started:");
 
+        qGet+= "time=" + std::to_string(SECONDS_TIMEOUT + 1);
+
+        return qGet;
+
+        /*LOG_DBG("Wait ....");
+        sleep(SECONDS_TIMEOUT+1);
+        LOG_DBG("Retriving values of the selection ...");
+
+        q = "";
+        std::vector<int> values;
+        values.reserve(size);
+        request_t request1;
+
+        for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
+        {
+            auto ipAndPort = split(iter->first,'@');
+            request1.method = GET;
+            request1.path = "MGM";
+            //request1.query = q.c_str();
+            request1.dst_host = ipAndPort[0].c_str();
+            request1.dst_port = ipAndPort[1].c_str();
+
+            LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+            
+            message_t response; 
+            
+            do
+            {   
+                response = eddie_endpoint->get_client()->send_message_and_wait_response(request1);
+                //sleep(10);
+            }while(response.status_code == COAP_RESPONSE_CODE_CONFLICT);
+
+            std::string local = response.data;
+
+            auto tokens = split(local,'&');
+
+            for (auto token : tokens)
+            {
+                auto indexAndValue = split(token,'=');
+                values[stoi(indexAndValue[0])] = stoi(indexAndValue[1]);
+            }
+            
+
+            if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
+            {
+                return "Error in the query: check if there are the resource and constraint in h_constraints and o_function";
+            }
+        }
+
+        std::string strRes = "[";
+        for(auto value : values)
+            strRes+= std::to_string(value) + ',';
+
+        strRes.pop_back();
+        strRes.push_back(']');
+
+        return strRes;*/
     }
+
+    if (action =="GETselection")
+    {
+        LOG_DBG("Retriving values of the selection ...");
+        auto param = root["h_constraints"];
+
+        //LOG_DBG("sizes: %s", variables[0]["sizes"].asString().c_str());
+
+        //Saves number of the variables to select
+        int size = std::stoi(param[0]["size"].asString());
+
+        std::vector<int> values;
+        values.reserve(size);
+        request_t request1;
+
+        LOG_DBG("param.size() = %d",param.size());
+
+        for (int i = 1; i <= param.size() -1; i++)
+        {
+            request1.method = GET;
+            request1.path = "MGM";
+            //request1.query = q.c_str();
+            std::string ip = param[i]["dst_ip"].asString();
+            std::string port = param[i]["dst_port"].asString();
+            request1.dst_host = ip.c_str();
+            request1.dst_port = port.c_str();
+
+            LOG_DBG("Send Message to: %s@%s for Get selection", ip.c_str(), port.c_str());
+            
+            message_t response; 
+            
+
+            response = eddie_endpoint->get_client()->send_message_and_wait_response(request1);
+
+            if(response.status_code == COAP_RESPONSE_CODE_CONFLICT)
+                return "COAP_RESPONSE_CODE_CONFLICT";
+
+            if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
+                return "[]"; 
+
+            std::string local = response.data;
+
+            //LOG_DBG("data=%s",local.c_str());
+
+            auto tokens = split(local,'&');
+
+            for (auto token : tokens)
+            {
+                auto indexAndValue = split(token,'=');
+                values[stoi(indexAndValue[0])] = stoi(indexAndValue[1]);
+                //LOG_DBG("%d=%d",stoi(indexAndValue[0]),values[stoi(indexAndValue[0])]);
+
+            }
+            
+
+        }
+
+        std::string strRes = "[";
+        
+        //LOG_DBG("values.size()=%ld",values.size());
+
+        for(int k = 0; k < size;k++)
+            strRes+= std::to_string(values[k]) + ",";
+
+        //LOG_DBG("strRes=%s",strRes.c_str());
+        strRes.pop_back();
+        //LOG_DBG("strRes=%s",strRes.c_str());
+        strRes+= ']';
+        //LOG_DBG("strRes=%s",strRes.c_str());
+
+        return strRes;
+    }
+    
     
 
     if (action == "get") {
