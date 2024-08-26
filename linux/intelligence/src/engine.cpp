@@ -169,10 +169,11 @@ std::string Engine::perform(const std::string &command) {
         return "ERROR WHILE PARSING COMMAND";
     }
     //LOG_DBG("Updating resource .....");
-
+    //LOG_DBG("ip_Dir before update = %s", eddie_endpoint->get_resource_dir_ip().c_str());
     update_resources(); // -> resources in the net and jsons of every resource updated
 
     //LOG_DBG("updated resource");
+    //LOG_DBG("ip_Dir after update = %s", eddie_endpoint->get_resource_dir_ip().c_str());
 
     std::string action = root["action"].asString();
 
@@ -195,9 +196,14 @@ std::string Engine::perform(const std::string &command) {
         request.method = GET;
         request.path = "rd-lookup/res";
         request.query = q.c_str();
-        request.dst_host = eddie_endpoint->get_resource_dir_ip().c_str();
+        //LOG_DBG("ip_Dir before assign = %s", eddie_endpoint->get_resource_dir_ip().c_str());
+        std::string  ip = eddie_endpoint->get_resource_dir_ip();
+        //LOG_DBG("ip_Dir after assign = %s", ip.c_str());
+        request.dst_host = ip.c_str();
         request.dst_port = eddie_endpoint->get_resource_dir_port().c_str();
 
+        //LOG_DBG("ip_Dir after assign in request = %s", eddie_endpoint->get_resource_dir_ip().c_str());
+        //LOG_DBG("ip_Dir in request = %s", request.dst_host);
         LOG_DBG("Send Message to: %s:%s with query:%s and path:rd-lookup/res", request.dst_host, request.dst_port,q.c_str());
 
         return eddie_endpoint->get_client()->send_message_and_wait_response(request).data;
