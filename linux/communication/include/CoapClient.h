@@ -25,6 +25,7 @@ class CoapClient {
 private:
     bool quit = false;
     coap_context_t *context = nullptr;
+    std::string my_interface;
 
     coap_session_t *open_session(const char *dst_host, const char *dst_port);
 
@@ -83,6 +84,8 @@ public:
      * will contain a GATEWAY_TIMEOUT status code.
      */
     message_t send_message_and_wait_response(request_t request, int timeout=5);
+
+    void set_interface(std::string interface);
 };
 
 #endif //EDDIE_COAPCLIENT_H

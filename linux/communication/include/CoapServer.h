@@ -34,6 +34,7 @@ private:
     CoapClient *client;
     std::string my_ip;
     std::string my_port;
+    std::string my_interface;
 
     std::thread server_thread;
 
@@ -116,6 +117,12 @@ public:
      * @return Port number of the server as a string
      */
     [[nodiscard]] const std::string &get_my_port() const;
+
+    /**
+     * Get name of network interface assigned to the server
+     * @return Network interface of the server as a string
+     */
+    [[nodiscard]] const std::string &get_my_interface() const;
 
     /**
      * Get server context

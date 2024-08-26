@@ -150,7 +150,19 @@ std::string CoapClient::send_message(request_t request) {
     std::unique_lock<decltype(CoapClient::client_mutex)> lock(CoapClient::client_mutex);
 
     //LOG_ERR("Opening session host=%s,port=%s",request.dst_host,request.dst_port);
-    coap_session_t * session = open_session(request.dst_host, request.dst_port);
+    
+    //Check if the name of the interface is correct
+
+    std::vector<std::string> ipAndInterface = split(request.dst_host,'%');
+
+    if (ipAndInterface[1] != my_interface)
+    {
+        ipAndInterface[1] = my_interface;
+    }
+    
+    std::string dst_host = ipAndInterface[0] + "%" + ipAndInterface[1];
+
+    coap_session_t * session = open_session(dst_host.c_str(), request.dst_port);
     if (!session) {
         LOG_ERR("Error creating remote session");
         coap_session_release(session);
@@ -256,4 +268,9 @@ message_t CoapClient::receive_message(std::string token, int timeout) {
 message_t CoapClient::send_message_and_wait_response(request_t request, int timeout) {
     std::string token = this->send_message(request);
     return this->receive_message(token, timeout);
+}
+
+void CoapClient::set_interface(std::string interface)
+{
+    my_interface = interface;
 }

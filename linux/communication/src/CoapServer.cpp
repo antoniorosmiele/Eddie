@@ -109,6 +109,10 @@ CoapServer::CoapServer(const char *host, const char *port)
     LOG_DBG("Initializing CoapServer ip=%s port=%s", my_ip.c_str(), my_port.c_str());
     init_server(is_ipv6() ? "::" : "0.0.0.0", port);
     this->client = new CoapClient();
+    std::vector<std::string> ipAndInterface = split(my_ip,'%');
+    my_interface = ipAndInterface[1];
+    this->client->set_interface(my_interface);
+    LOG_DBG("Saved interface: %s",my_interface.c_str());
     LOG_DBG("Initialized CoapServer");
 
 }
@@ -240,6 +244,10 @@ const std::string &CoapServer::get_my_ip() const {
 
 const std::string &CoapServer::get_my_port() const {
     return my_port;
+}
+
+const std::string &CoapServer::get_my_interface() const {
+    return my_interface;
 }
 
 std::string CoapServer::get_resources_in_linkformat() {
