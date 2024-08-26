@@ -60,7 +60,7 @@ typedef enum {
 } response_code_t;
 
 typedef struct {
-    char const * dst_host;
+    const char * dst_host;
     const char * dst_port;
     method_t method = GET;
     const char * path = nullptr;
