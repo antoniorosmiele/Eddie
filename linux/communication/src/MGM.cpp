@@ -91,6 +91,8 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
             std::replace( token.begin(), token.end(), '$', '%');
             std::vector<std::string> ipAndPort = split(token, '@');
 
+            LOG_DBG("Comparing neighbor: %s@%s",ipAndPort[0].c_str(),ipAndPort[1].c_str());
+            
             if (split(ipAndPort[0],'%')[0].compare(onlyAddress) != 0 && ipAndPort[1].compare(base_port) != 0)
             {
                 neighbors.emplace_back(ipAndPort[0] + "@" + ipAndPort[1]);
@@ -445,7 +447,7 @@ void MGM::mgmAlgo()
             cv.notify_all();
             LOG_DBG("new gains by neighbors received");
         }
-        
+        //Controllare i Gain per vedere se arrivano tutti
         if ((gains_vector.size() != 0 && gain > *std::max_element(gains_vector.begin(), gains_vector.end())) || (gains_vector.size() == 0))
         {
             LOG_DBG("New local gain is the max gain");
