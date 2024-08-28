@@ -278,7 +278,6 @@ std::string Engine::perform(const std::string &command) {
 
             q = "";
             dataConstr = "";
-            qGet = "";
 
             //Save id of the variables
             for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); it++)//("id=allarm")
