@@ -280,9 +280,10 @@ std::string Engine::perform(const std::string &command) {
             dataConstr = "";
 
             //Save id of the variables
-            for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); it++)//("id=allarm")
+            for (int v = 1; v <= size; v++)//("id=allarm")
+            //for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); it++)//("id=allarm")
             {
-                q+= "id=" + variables[*it]["id"].asString() + "&";
+                q+= "id=" + variables[v]["id"].asString() + "&";
             }
             //Save the constraint and type of optimization
             for (const auto &constraintIndex:constrsForNeighbor.find(iter->first)->second)//("Con_name=exp").....(max/min=type)
