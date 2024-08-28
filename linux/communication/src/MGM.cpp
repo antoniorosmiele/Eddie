@@ -91,16 +91,16 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
             std::replace( token.begin(), token.end(), '$', '%');
             std::vector<std::string> ipAndPort = split(token, '@');
 
-            LOG_DBG("Comparing neighbor: %s@%s",split(ipAndPort[0],'%')[0].c_str(),ipAndPort[1].c_str());
+            //LOG_DBG("Comparing neighbor: %s@%s",split(ipAndPort[0],'%')[0].c_str(),ipAndPort[1].c_str());
 
             //if(split(ipAndPort[0],'%')[0] != onlyAddress && ipAndPort[1] != base_port)
 
             std::string neigh = split(ipAndPort[0],'%')[0] + "@" + ipAndPort[1];
             std::string ipCurr = onlyAddress + "@" +base_port;
 
-            LOG_DBG("Comparing neighbor: %s with %s",neigh.c_str(),ipCurr.c_str());
+            LOG_DBG("Comparing neighbor: %s with %s compare = %d",neigh.c_str(),ipCurr.c_str(),neigh.compare(ipCurr) == 0);
 
-            if(neigh != ipCurr)
+            if(!(neigh.compare(ipCurr) == 0))
             {
                 neighbors.emplace_back(ipAndPort[0] + "@" + ipAndPort[1]);
                 LOG_DBG("Saving neighbor: %s@%s",ipAndPort[0].c_str(),ipAndPort[1].c_str());
