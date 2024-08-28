@@ -98,7 +98,7 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
             std::string neigh = split(ipAndPort[0],'%')[0] + "@" + ipAndPort[1];
             std::string ipCurr = onlyAddress + "@" +base_port;
 
-            LOG_DBG("Comparing neighbor: %s with %s compare = %d",neigh.c_str(),ipCurr.c_str(),neigh.compare(ipCurr) == 0);
+            LOG_DBG("Comparing neighbor: %s with %s compare = %d",neigh.c_str(),ipCurr.c_str(),neigh.compare(ipCurr));
 
             if(!(neigh.compare(ipCurr) == 0))
             {
