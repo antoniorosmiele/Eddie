@@ -302,7 +302,7 @@ std::string Engine::perform(const std::string &command) {
                 std::string address = neigh->first;
                 std::replace( address.begin(), address.end(), '%', '$');
                 q+= "neigh=" + address + "&";
-                qGet = "neigh=" + neigh->first + "&";
+                //qGet += "neigh=" + neigh->first + "&";
             }
             
             
@@ -356,6 +356,9 @@ std::string Engine::perform(const std::string &command) {
         }
 
         LOG_DBG("Algo MGM Started:");
+
+        for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++)
+            qGet += "neigh=" + neigh->first + "&";
 
         qGet+= "time=" + std::to_string(SECONDS_TIMEOUT + 1);
 
