@@ -153,15 +153,31 @@ std::string CoapClient::send_message(request_t request) {
     
     //Check if the name of the interface is correct
 
-    std::vector<std::string> ipAndInterface = split(request.dst_host,'%');
 
-    if (ipAndInterface[1] != my_interface)
+    std::vector<std::string> ipAndInterface = split(std::string(request.dst_host),'%');
+
+    //LOG_DBG("ipAndInterface[0] = %s , ipAndInterface[1] = %s, my_interface = %s",ipAndInterface[0].c_str(),ipAndInterface[1].c_str(),my_interface.c_str());
+    //LOG_DBG("ipAndInterface[1].size() = %d",ipAndInterface[1].size());
+
+    if (std::string(request.dst_host).find('%') != std::string::npos && ipAndInterface[1] != my_interface)
     {
         ipAndInterface[1] = my_interface;
     }
     
-    std::string dst_host = ipAndInterface[0] + "%" + ipAndInterface[1];
+    std::string dst_host;
 
+    if (std::string(request.dst_host).find('%') == std::string::npos)
+    {
+        dst_host = ipAndInterface[0];
+    }
+    else
+    {
+        dst_host = ipAndInterface[0] + "%" + ipAndInterface[1];
+    }
+
+    //LOG_DBG("dst_host = %s , ipAndInterface[1].size() = %d, my_interface = %s",dst_host.c_str(),ipAndInterface[1].size(),my_interface.c_str());
+
+    //Open session comunication
     coap_session_t * session = open_session(dst_host.c_str(), request.dst_port);
     if (!session) {
         LOG_ERR("Error creating remote session");
