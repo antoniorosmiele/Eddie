@@ -88,8 +88,8 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
             ids.emplace_back(sub_query[1]); //For the id of resource ("id=allarm")
         else if (sub_query[0].compare("neigh") == 0) // For the ip and port of the agents (neigh=ip:port)
         {
-            std::replace( token.begin(), token.end(), '$', '%');
-            std::vector<std::string> ipAndPort = split(token, '@');
+            std::replace( sub_query[1].begin(), sub_query[1].end(), '$', '%');
+            std::vector<std::string> ipAndPort = split(sub_query[1], '@');
 
             //LOG_DBG("Comparing neighbor: %s@%s",split(ipAndPort[0],'%')[0].c_str(),ipAndPort[1].c_str());
 
