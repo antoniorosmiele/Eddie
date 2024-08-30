@@ -522,7 +522,7 @@ bool MGM::SendGainMessage(std::vector<std::string> allNeighbors, long gain)
         std::string q = "opt=UPDATEG&gain=" + std::to_string(gain);
 
         //Create the request and receive the response
-        std::vector<std::string> ipAndPort = split(agent, ':');
+        std::vector<std::string> ipAndPort = split(agent, '@');
 
         request.method = POST;
         request.path = "MGM";
@@ -539,10 +539,6 @@ bool MGM::SendGainMessage(std::vector<std::string> allNeighbors, long gain)
         {
             return false;
         }
-        else
-        {
-            return true;
-        }      
     }
 
     return true;    
@@ -559,14 +555,14 @@ bool MGM::SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bo
 
         for (std::vector<int>::iterator iter = indexOfVariablesHandled.begin(); iter != indexOfVariablesHandled.end(); iter++)
         {
-            q+= *iter + "=" + BoolToString(valuesVariables[*iter]) + "&"; // "opt=UPDATE&3=true&7=false&11=true"
+            q+= std::to_string(*iter) + "=" + BoolToString(valuesVariables[*iter]) + "&"; // "opt=UPDATE&3=true&7=false&11=true"
         }
         
         if(q.back() == '&')
                q.pop_back();
 
         //Create the request and receive the response
-        std::vector<std::string> ipAndPort = split(agent, ':');
+        std::vector<std::string> ipAndPort = split(agent, '@');
 
         request.method = POST;
         request.path = "MGM";
@@ -582,11 +578,7 @@ bool MGM::SendValueMessage(std::vector<std::string> allNeighbors, std::vector<bo
         if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
         {
             return false;
-        }
-        else
-        {
-            return true;
-        }      
+        }    
     }
 
     return true;
