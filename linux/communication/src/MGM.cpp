@@ -471,6 +471,7 @@ void MGM::mgmAlgo()
             
 
         } 
+        gains_vector.clear();
         //  currentValue = newValue
         //end if
         gettimeofday(&tv, &tz);
