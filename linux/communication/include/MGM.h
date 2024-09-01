@@ -10,7 +10,7 @@
 #include <mutex>
 #include <atomic>
 
-#define SECONDS_TIMEOUT 5
+#define SECONDS_TIMEOUT 10
 
 class CoapServer;
 
