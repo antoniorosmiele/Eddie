@@ -391,7 +391,8 @@ void MGM::mgmAlgo()
     for (size_t i = 0; i < this->variablesHandled.size(); i++)
     {
         int index = this->indexOfVariablesHandled[i];
-        this->valuesVariables[index] = rand()%2;
+        //this->valuesVariables[index] = rand()%2;
+        this->valuesVariables[index] = false;
         LOG_DBG("Variables with id %s with index %d has value %s", this->allVariables[index].c_str() , index, this->valuesVariables[index] ? "true" : "false");
     }
 
