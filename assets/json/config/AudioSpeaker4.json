@@ -1,0 +1,8 @@
+{
+    "id": "153",
+    "name": "Audio_Speaker4",
+    "rt": "eddie.r.audio",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "connectedTo": "143",
+    "place": "SR"
+  }

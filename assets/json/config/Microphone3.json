@@ -1,0 +1,8 @@
+{
+    "id": "132",
+    "name": "Microphone3",
+    "rt": "eddie.r.microphone",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "accuracy": "60",
+    "place": "CR"
+  }

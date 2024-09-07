@@ -1,0 +1,8 @@
+{
+    "id": "141",
+    "name": "Monitor_Video2",
+    "rt": "eddie.r.video",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "audioConnected": "151",
+    "place": "kitchen"
+  }

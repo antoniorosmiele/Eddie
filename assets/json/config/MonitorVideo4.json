@@ -1,0 +1,8 @@
+{
+    "id": "143",
+    "name": "Monitor_Video4",
+    "rt": "eddie.r.video",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "audioConnected": "153",
+    "place": "SR"
+  }
