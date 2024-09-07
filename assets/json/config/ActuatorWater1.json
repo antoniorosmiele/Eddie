@@ -1,0 +1,7 @@
+{
+    "id": "80",
+    "name": "ActuatorsWater1",
+    "rt": "eddie.r.actuator.water",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "place": "bed"
+  }

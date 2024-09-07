@@ -1,0 +1,7 @@
+{
+    "id": "70",
+    "name": "AllarmSilent1",
+    "rt": "eddie.r.allarm.silent",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "owner": "Adam"
+  }

@@ -1,0 +1,7 @@
+{
+    "id": "61",
+    "name": "AllarmNoisy2",
+    "rt": "eddie.r.allarm.noisy",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "place": "bed"
+  }

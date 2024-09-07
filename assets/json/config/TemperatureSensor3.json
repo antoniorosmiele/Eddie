@@ -1,0 +1,8 @@
+{
+    "id": "52",
+    "name": "TemperatureSensor3",
+    "rt": "eddie.r.temperature",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "accuracy": "60",
+    "place": "kitchen"
+  }
