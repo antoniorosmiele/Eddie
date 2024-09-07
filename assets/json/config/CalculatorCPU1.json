@@ -1,0 +1,8 @@
+{
+    "id": "100",
+    "name": "Calculator_CPU1",
+    "rt": "eddie.r.cpu",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "deviceID": "1",
+    "nCore": "4"
+  }

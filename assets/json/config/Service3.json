@@ -1,0 +1,8 @@
+{
+    "id": "112",
+    "name": "Service3",
+    "rt": "eddie.r.service",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "deviceID": "3",
+    "typeService": "TransFile"
+  }

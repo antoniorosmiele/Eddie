@@ -1,0 +1,8 @@
+{
+    "id": "113",
+    "name": "Service4",
+    "rt": "eddie.r.service",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "deviceID": "4",
+    "typeService": "SoSCloud"
+  }
