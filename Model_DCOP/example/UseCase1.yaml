@@ -1,0 +1,47 @@
+name: Use Case 1
+objective: max
+
+domains:
+  Temperature_Sensors:
+    values: ["1_20_kitchen", "2_40_kitchen", "3_60_kitchen", "4_30_bed"]
+  Allarm_Noisy:
+    values: ["1_kitchen", "2_bed", "3_exit"]
+  Allarm_Silent:
+    values: ["1_Adam", "2_Steve", "3_Security"]
+  Actuators_Water:
+    values: ["1_bed","2_kitchen","3_exit"]    
+
+variables:
+  x1:
+    domain: Temperature_Sensors
+  xN1:
+    domain: Allarm_Noisy
+  xN2:
+    domain: Allarm_Noisy
+  xN3:
+    domain: Allarm_Noisy        
+  xS:
+    domain: Allarm_Silent
+  xA1:
+    domain: Actuators_Water  
+
+constraints:
+
+    owner:
+      type: intention
+      function: 1 if xS.split('_')[1] == "Security" else 0
+
+    accuracy:
+      type: intention
+      function: int(x1.split('_')[1])
+
+    position:
+      type: intention
+      function: 1 if xA1.split('_')[1] == x1.split('_')[2] else 0 
+    
+    allarmNnotEqual:
+      type: intention
+      function: -1000 if xN1 == xN2 or xN2 == xN3 or xN1 == xN3 else 1   
+
+
+agents: [a1, a2, a3, a4, a5, a6]

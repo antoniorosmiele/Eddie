@@ -1,0 +1,206 @@
+pydcop --timeout 1 solve --algo dsa UseCase1.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.1925310052052781,
+      "count_ext_msg": {
+        "_discovery_a1": 5,
+        "x1": 1067
+      },
+      "cycles": {
+        "x1": 1066
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "x1": 1067
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.17038945229140293,
+      "count_ext_msg": {
+        "_discovery_a2": 6,
+        "xN1": 2132
+      },
+      "cycles": {
+        "xN1": 1065
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "xN1": 2132
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.16539005906825646,
+      "count_ext_msg": {
+        "_discovery_a3": 6,
+        "xN2": 2134
+      },
+      "cycles": {
+        "xN2": 1066
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "xN2": 2134
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.16967533056587802,
+      "count_ext_msg": {
+        "_discovery_a4": 6,
+        "xN3": 2132
+      },
+      "cycles": {
+        "xN3": 1065
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xN3": 2132
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.0002845355628964718,
+      "count_ext_msg": {
+        "_discovery_a5": 4
+      },
+      "cycles": {
+        "xS": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0
+      }
+    },
+    "a6": {
+      "activity_ratio": 0.1416053874895722,
+      "count_ext_msg": {
+        "_discovery_a6": 5,
+        "xA1": 1068
+      },
+      "cycles": {
+        "xA1": 1067
+      },
+      "size_ext_msg": {
+        "_discovery_a6": 0,
+        "xA1": 1068
+      }
+    }
+  },
+  "assignment": {
+    "x1": "3_60_kitchen",
+    "xA1": "2_kitchen",
+    "xN1": "3_exit",
+    "xN2": "2_bed",
+    "xN3": "1_kitchen",
+    "xS": "3_Security"
+  },
+  "cost": 63,
+  "cycle": 1067,
+  "msg_count": 8565,
+  "msg_size": 8533,
+  "status": "TIMEOUT",
+  "time": 1.00361219000024,
+  "violation": 0
+}
+
+
+
+Soluzione mgm{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.08083499328845918,
+      "count_ext_msg": {
+        "_discovery_a1": 6,
+        "xN3": 1
+      },
+      "cycles": {
+        "xN3": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "xN3": 2
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.19180086463380708,
+      "count_ext_msg": {
+        "_discovery_a2": 6,
+        "xN1": 2
+      },
+      "cycles": {
+        "xN1": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "xN1": 7
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.6435662803656915,
+      "count_ext_msg": {
+        "_discovery_a3": 6,
+        "xN2": 1
+      },
+      "cycles": {
+        "xN2": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "xN2": 9
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.11581208943359846,
+      "count_ext_msg": {
+        "_discovery_a4": 5,
+        "xA1": 1
+      },
+      "cycles": {
+        "xA1": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xA1": 2
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.5088960151700991,
+      "count_ext_msg": {
+        "_discovery_a5": 5,
+        "x1": 1
+      },
+      "cycles": {
+        "x1": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "x1": 3
+      }
+    },
+    "a6": {
+      "activity_ratio": 0.11057249054809602,
+      "count_ext_msg": {
+        "_discovery_a6": 4
+      },
+      "cycles": {
+        "xS": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a6": 0
+      }
+    }
+  },
+  "assignment": {
+    "x1": "3_60_kitchen",
+    "xA1": "2_kitchen",
+    "xN1": "2_bed",
+    "xN2": "3_exit",
+    "xN3": "1_kitchen",
+    "xS": "3_Security"
+  },
+  "cost": 63,
+  "cycle": 0,
+  "msg_count": 38,
+  "msg_size": 23,
+  "status": "FINISHED",
+  "time": 0.013138518001142074,
+  "violation": 0
+}

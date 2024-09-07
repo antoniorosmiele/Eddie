@@ -1,0 +1,97 @@
+pydcop --timeout 1 solve --algo dsa UseCase5.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.22019380024253873,
+      "count_ext_msg": {
+        "_discovery_a1": 7,
+        "x1": 2352
+      },
+      "cycles": {
+        "x1": 783
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "x1": 2352
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.242428341277302,
+      "count_ext_msg": {
+        "_discovery_a2": 7,
+        "x2": 2352
+      },
+      "cycles": {
+        "x2": 783
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "x2": 2352
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.20705567432152508,
+      "count_ext_msg": {
+        "_discovery_a3": 7,
+        "x3": 2352
+      },
+      "cycles": {
+        "x3": 783
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "x3": 2352
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.0002684996524360004,
+      "count_ext_msg": {
+        "_discovery_a4": 4
+      },
+      "cycles": {
+        "xF": 0
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.2087331869176253,
+      "count_ext_msg": {
+        "_discovery_a5": 7,
+        "xT": 2355
+      },
+      "cycles": {
+        "xT": 784
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "xT": 2355
+      }
+    },
+    "a6": {
+      "activity_ratio": 2.059660851359711e-05,
+      "count_ext_msg": {
+        "_discovery_a6": 3
+      },
+      "cycles": {},
+      "size_ext_msg": {
+        "_discovery_a6": 0
+      }
+    }
+  },
+  "assignment": {
+    "x1": "3_plane3",
+    "x2": "7_plane3",
+    "x3": "5_plane3",
+    "xF": "4_90",
+    "xT": "4_plane3_1080"
+  },
+  "cost": 1172,
+  "cycle": 784,
+  "msg_count": 9446,
+  "msg_size": 9411,
+  "status": "TIMEOUT",
+  "time": 1.0057967659995484,
+  "violation": 0
+}

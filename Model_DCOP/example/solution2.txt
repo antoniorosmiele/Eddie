@@ -1,0 +1,134 @@
+ pydcop --timeout 1 solve --algo dsa UseCase2.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.12156842902568793,
+      "count_ext_msg": {
+        "_discovery_a1": 11,
+        "x1": 1554
+      },
+      "cycles": {
+        "x1": 221
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "x1": 1554
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.10733518476504258,
+      "count_ext_msg": {
+        "_discovery_a2": 11,
+        "x2": 1561
+      },
+      "cycles": {
+        "x2": 222
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "x2": 1561
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.11820269922865011,
+      "count_ext_msg": {
+        "_discovery_a3": 11,
+        "x3": 1561
+      },
+      "cycles": {
+        "x3": 222
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "x3": 1561
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.08058309225212501,
+      "count_ext_msg": {
+        "_discovery_a4": 11,
+        "xC": 1554
+      },
+      "cycles": {
+        "xC": 221
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xC": 1554
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.09326187012749752,
+      "count_ext_msg": {
+        "_discovery_a5": 11,
+        "xS1": 1561
+      },
+      "cycles": {
+        "xS1": 222
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "xS1": 1561
+      }
+    },
+    "a6": {
+      "activity_ratio": 0.10583084428249494,
+      "count_ext_msg": {
+        "_discovery_a6": 11,
+        "xS2": 1561
+      },
+      "cycles": {
+        "xS2": 222
+      },
+      "size_ext_msg": {
+        "_discovery_a6": 0,
+        "xS2": 1561
+      }
+    },
+    "a7": {
+      "activity_ratio": 0.10692278604539802,
+      "count_ext_msg": {
+        "_discovery_a7": 11,
+        "xS3": 1561
+      },
+      "cycles": {
+        "xS3": 222
+      },
+      "size_ext_msg": {
+        "_discovery_a7": 0,
+        "xS3": 1561
+      }
+    },
+    "a8": {
+      "activity_ratio": 0.10579352634431988,
+      "count_ext_msg": {
+        "_discovery_a8": 11,
+        "xS4": 1554
+      },
+      "cycles": {
+        "xS4": 221
+      },
+      "size_ext_msg": {
+        "_discovery_a8": 0,
+        "xS4": 1554
+      }
+    }
+  },
+  "assignment": {
+    "x1": "1_kmeans_1",
+    "x2": "5_kmeans_3",
+    "x3": "3_kmeans_3",
+    "xC": "3_8_3",
+    "xS1": "1_TransFile_1",
+    "xS2": "3_TransFile_3",
+    "xS3": "3_TransFile_3",
+    "xS4": "3_TransFile_3"
+  },
+  "cost": 5,
+  "cycle": 222,
+  "msg_count": 12555,
+  "msg_size": 12467,
+  "status": "TIMEOUT",
+  "time": 1.0110905720002847,
+  "violation": 0
+}

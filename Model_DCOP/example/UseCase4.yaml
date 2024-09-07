@@ -1,0 +1,52 @@
+name: Use Case 1
+objective: max
+
+domains:
+  Sensor_Bracelet:
+    values: ["1_David_1", "2_Alex_2", "3_Luca_3", "4_Joseph_4"]
+  Mattress_Cover:
+    values: ["1_Alex_AlexBeedroom", "2_Joseph_JosephBeedroom", "3_David_DavidBeedroom"]
+  Tent:
+    values: ["1_JosephBeedroom", "2_DavidBeedroom", "3_AlexBeedroom"]
+  Bulb:
+    values: ["1_DavidBeedroom","2_AlexBeedroom","3_JosephBeedroom", "4_Kitchen", "5_Exit"]    
+  Vibration_Allarm:
+    values: ["1_1","2_2","3_3","4_4"]
+
+variables:
+  xB:
+    domain: Sensor_Bracelet
+  xM:
+    domain: Mattress_Cover
+  xT:
+    domain: Tent
+  xL:
+    domain: Bulb        
+  xV:
+    domain: Vibration_Allarm
+
+
+constraints:
+
+    ownerBracelet:
+      type: intention
+      function: 1 if xB.split('_')[1] == "David" else -999999
+
+    ownerMattress:
+      type: intention
+      function: 1 if xM.split('_')[1] == "David" else -999999
+
+    positionTentMattress:
+      type: intention
+      function: 1 if xT.split('_')[1] == xM.split('_')[2] else -999999 
+
+    positionBulbMattress:
+      type: intention
+      function: 1 if xL.split('_')[1] == xM.split('_')[2] else -999999
+
+    connectBraceletAllarm:
+      type: intention
+      function: 1 if xB.split('_')[2] == xV.split('_')[1] else -999999
+
+
+agents: [a1, a2, a3, a4, a5]

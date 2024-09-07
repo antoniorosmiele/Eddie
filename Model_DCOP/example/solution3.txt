@@ -1,0 +1,389 @@
+pydcop --timeout 2 solve --algo dsa UseCase3.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.08861501815485079,
+      "count_ext_msg": {
+        "_discovery_a1": 6,
+        "x1": 832
+      },
+      "cycles": {
+        "x1": 415
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "x1": 832
+      }
+    },
+    "a10": {
+      "activity_ratio": 0.05760311319720455,
+      "count_ext_msg": {
+        "_discovery_a10": 9,
+        "xA1": 1290
+      },
+      "cycles": {
+        "xA1": 257
+      },
+      "size_ext_msg": {
+        "_discovery_a10": 0,
+        "xA1": 1290
+      }
+    },
+    "a11": {
+      "activity_ratio": 0.05768942666568084,
+      "count_ext_msg": {
+        "_discovery_a11": 9,
+        "xA2": 1290
+      },
+      "cycles": {
+        "xA2": 257
+      },
+      "size_ext_msg": {
+        "_discovery_a11": 0,
+        "xA2": 1290
+      }
+    },
+    "a12": {
+      "activity_ratio": 0.05816718424196219,
+      "count_ext_msg": {
+        "_discovery_a12": 9,
+        "xA3": 1290
+      },
+      "cycles": {
+        "xA3": 257
+      },
+      "size_ext_msg": {
+        "_discovery_a12": 0,
+        "xA3": 1290
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.08681627196342916,
+      "count_ext_msg": {
+        "_discovery_a2": 6,
+        "x2": 830
+      },
+      "cycles": {
+        "x2": 414
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "x2": 830
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.08965646855514088,
+      "count_ext_msg": {
+        "_discovery_a3": 6,
+        "x3": 830
+      },
+      "cycles": {
+        "x3": 414
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "x3": 830
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.08333760852345869,
+      "count_ext_msg": {
+        "_discovery_a4": 6,
+        "xM1": 802
+      },
+      "cycles": {
+        "xM1": 400
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xM1": 802
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.08106875379475534,
+      "count_ext_msg": {
+        "_discovery_a5": 6,
+        "xM2": 802
+      },
+      "cycles": {
+        "xM2": 400
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "xM2": 802
+      }
+    },
+    "a6": {
+      "activity_ratio": 0.08327648755823777,
+      "count_ext_msg": {
+        "_discovery_a6": 6,
+        "xM3": 804
+      },
+      "cycles": {
+        "xM3": 401
+      },
+      "size_ext_msg": {
+        "_discovery_a6": 0,
+        "xM3": 804
+      }
+    },
+    "a7": {
+      "activity_ratio": 0.06966095603138507,
+      "count_ext_msg": {
+        "_discovery_a7": 9,
+        "xS1": 1290
+      },
+      "cycles": {
+        "xS1": 257
+      },
+      "size_ext_msg": {
+        "_discovery_a7": 0,
+        "xS1": 1290
+      }
+    },
+    "a8": {
+      "activity_ratio": 0.07044364321425486,
+      "count_ext_msg": {
+        "_discovery_a8": 9,
+        "xS2": 1285
+      },
+      "cycles": {
+        "xS2": 256
+      },
+      "size_ext_msg": {
+        "_discovery_a8": 0,
+        "xS2": 1285
+      }
+    },
+    "a9": {
+      "activity_ratio": 0.07279795798543255,
+      "count_ext_msg": {
+        "_discovery_a9": 9,
+        "xS3": 1290
+      },
+      "cycles": {
+        "xS3": 257
+      },
+      "size_ext_msg": {
+        "_discovery_a9": 0,
+        "xS3": 1290
+      }
+    }
+  },
+  "assignment": {
+    "x1": "5_2160_CR",
+    "x2": "3_1080_CR",
+    "x3": "6_4320_CR",
+    "xA1": "6_6_SR",
+    "xA2": "1_1_SR",
+    "xA3": "3_3_SR",
+    "xM1": "3_60_CR",
+    "xM2": "5_80_CR",
+    "xM3": "6_90_CR",
+    "xS1": "6_6_SR",
+    "xS2": "1_1_SR",
+    "xS3": "3_3_SR"
+  },
+  "cost": 7798,
+  "cycle": 415,
+  "msg_count": 12725,
+  "msg_size": 12635,
+  "status": "TIMEOUT",
+  "time": 2.0118512509998254,
+  "violation": 0
+}
+
+pydcop --timeout 1 solve --algo dsa UseCase3.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.09272021000429773,
+      "count_ext_msg": {
+        "_discovery_a1": 6,
+        "x1": 428
+      },
+      "cycles": {
+        "x1": 213
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "x1": 428
+      }
+    },
+    "a10": {
+      "activity_ratio": 0.05644642304490203,
+      "count_ext_msg": {
+        "_discovery_a10": 9,
+        "xA1": 580
+      },
+      "cycles": {
+        "xA1": 115
+      },
+      "size_ext_msg": {
+        "_discovery_a10": 0,
+        "xA1": 580
+      }
+    },
+    "a11": {
+      "activity_ratio": 0.05270248920629342,
+      "count_ext_msg": {
+        "_discovery_a11": 9,
+        "xA2": 580
+      },
+      "cycles": {
+        "xA2": 115
+      },
+      "size_ext_msg": {
+        "_discovery_a11": 0,
+        "xA2": 580
+      }
+    },
+    "a12": {
+      "activity_ratio": 0.05183406863641449,
+      "count_ext_msg": {
+        "_discovery_a12": 9,
+        "xA3": 585
+      },
+      "cycles": {
+        "xA3": 116
+      },
+      "size_ext_msg": {
+        "_discovery_a12": 0,
+        "xA3": 585
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.09241315202970501,
+      "count_ext_msg": {
+        "_discovery_a2": 6,
+        "x2": 430
+      },
+      "cycles": {
+        "x2": 214
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "x2": 430
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.08942831191974024,
+      "count_ext_msg": {
+        "_discovery_a3": 6,
+        "x3": 428
+      },
+      "cycles": {
+        "x3": 213
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "x3": 428
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.08944363688286029,
+      "count_ext_msg": {
+        "_discovery_a4": 6,
+        "xM1": 424
+      },
+      "cycles": {
+        "xM1": 211
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xM1": 424
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.0880969870568173,
+      "count_ext_msg": {
+        "_discovery_a5": 6,
+        "xM2": 422
+      },
+      "cycles": {
+        "xM2": 210
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "xM2": 422
+      }
+    },
+    "a6": {
+      "activity_ratio": 0.08720158919923549,
+      "count_ext_msg": {
+        "_discovery_a6": 6,
+        "xM3": 422
+      },
+      "cycles": {
+        "xM3": 210
+      },
+      "size_ext_msg": {
+        "_discovery_a6": 0,
+        "xM3": 422
+      }
+    },
+    "a7": {
+      "activity_ratio": 0.06338775976438252,
+      "count_ext_msg": {
+        "_discovery_a7": 9,
+        "xS1": 580
+      },
+      "cycles": {
+        "xS1": 115
+      },
+      "size_ext_msg": {
+        "_discovery_a7": 0,
+        "xS1": 580
+      }
+    },
+    "a8": {
+      "activity_ratio": 0.06198522223047972,
+      "count_ext_msg": {
+        "_discovery_a8": 9,
+        "xS2": 580
+      },
+      "cycles": {
+        "xS2": 115
+      },
+      "size_ext_msg": {
+        "_discovery_a8": 0,
+        "xS2": 580
+      }
+    },
+    "a9": {
+      "activity_ratio": 0.061028061039770466,
+      "count_ext_msg": {
+        "_discovery_a9": 9,
+        "xS3": 585
+      },
+      "cycles": {
+        "xS3": 116
+      },
+      "size_ext_msg": {
+        "_discovery_a9": 0,
+        "xS3": 585
+      }
+    }
+  },
+  "assignment": {
+    "x1": "6_4320_CR",
+    "x2": "3_1080_CR",
+    "x3": "5_2160_CR",
+    "xA1": "1_1_SR",
+    "xA2": "4_4_SR",
+    "xA3": "6_6_SR",
+    "xM1": "5_80_CR",
+    "xM2": "6_90_CR",
+    "xM3": "3_60_CR",
+    "xS1": "1_1_SR",
+    "xS2": "4_4_SR",
+    "xS3": "6_6_SR"
+  },
+  "cost": 7798,
+  "cycle": 214,
+  "msg_count": 6134,
+  "msg_size": 6044,
+  "status": "TIMEOUT",
+  "time": 1.0123306370005594,
+  "violation": 0
+}

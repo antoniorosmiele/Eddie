@@ -1,0 +1,54 @@
+name: Use Case 2
+objective: max
+
+domains:
+  Dataset:
+    values: ["1_kmeans_1", "2_stereo_1", "3_kmeans_3", "4_body_3", "5_kmeans_3"]
+  Calculator_CPU:
+    values: ["1_4_1", "2_6_2", "3_8_3"]
+  Service:
+    values: ["1_TransFile_1", "2_TransFile_2", "3_TransFile_3", "4_SoSCloud_4"]
+
+variables:
+  x1:
+    domain: Dataset
+  x2:
+    domain: Dataset
+  x3:
+    domain: Dataset
+  xC:
+    domain: Calculator_CPU            
+  xS1:
+    domain: Service
+  xS2:
+    domain: Service
+  xS3:
+    domain: Service        
+  xS4:
+    domain: Service
+
+constraints:
+    DatasetNotEqual:
+      type: intention
+      function: -1000 if x1 == x2 or x2 == x3 or x1 == x3 else 1
+
+    typeData:
+      type: intention
+      function: 1 if x1.split('_')[1] == "kmeans" and x2.split('_')[1] == "kmeans" and x3.split('_')[1] == "kmeans" else -1000
+
+    nCore:
+      type: intention
+      function: 1 if xC.split('_')[1] >= "6" else -1000
+
+    typeService:
+      type: intention
+      function: 1 if xS1.split('_')[1] == "TransFile" and xS2.split('_')[1] == "TransFile" and xS3.split('_')[1] == "TransFile" and xS4.split('_')[1] == "TransFile" else -1000
+
+    deviceEqualServiceDatasetCalculator:
+      type: intention
+      function: 1 if x1.split('_')[2] == xS1.split('_')[2] and x2.split('_')[2] == xS2.split('_')[2] and x3.split('_')[2] == xS3.split('_')[2] and xC.split('_')[2] == xS4.split('_')[2] else -1000 
+
+
+
+
+agents: [a1, a2, a3, a4, a5, a6,a7,a8]

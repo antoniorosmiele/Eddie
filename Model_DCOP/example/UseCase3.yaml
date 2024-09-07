@@ -1,0 +1,84 @@
+name: Use Case 3
+objective: max
+
+domains:
+  Camera:
+    values: ["1_240_CR", "2_720_kitchen", "3_1080_CR", "4_480_CR", "5_2160_CR", "6_4320_CR", "7_2160_SR"]
+  Microphone:
+    values: ["1_20_CR", "2_40_kitchen", "3_60_CR", "4_30_CR", "5_80_CR", "6_90_CR", "7_80_SR"]
+  Monitor_Video:
+    values: ["1_1_SR", "2_2_kitchen", "3_3_SR", "4_4_SR", "5_5_SR", "6_6_SR", "7_7_CR"]
+  Audio_Speaker:
+    values: ["1_1_SR", "2_2_kitchen", "3_3_SR", "4_4_SR", "5_5_SR", "6_6_SR", "7_7_CR"]    
+
+variables:
+  x1:
+    domain: Camera
+  x2:
+    domain: Camera
+  x3:
+    domain: Camera
+  xM1:
+    domain: Microphone
+  xM2:
+    domain: Microphone
+  xM3:
+    domain: Microphone
+  xS1:
+    domain: Monitor_Video
+  xS2:
+    domain: Monitor_Video
+  xS3:
+    domain: Monitor_Video
+  xA1:
+    domain: Audio_Speaker
+  xA2:
+    domain: Audio_Speaker
+  xA3:
+    domain: Audio_Speaker                                    
+
+constraints:
+    
+    cameraNotEqual:
+      type: intention
+      function: -999999 if x1 == x2 or x2 == x3 or x1 == x3 else 1
+
+    microphoneNotEqual:
+      type: intention
+      function: -999999 if xM1 == xM2 or xM2 == xM3 or xM1 == xM3 else 1
+
+    monitorNotEqual:
+      type: intention
+      function: -999999 if xS1 == xS2 or xS2 == xS3 or xS1 == xS3 else 1
+    
+    audioNotEqual:
+      type: intention
+      function: -999999 if xA1 == xA2 or xA2 == xA3 or xA1 == xA3 else 1
+
+    cameraLocation:
+      type: intention
+      function: 1 if x1.split('_')[2] == "CR" and x2.split('_')[2] == "CR" and x3.split('_')[2] == "CR" else -999999
+    
+    microphoneLocation:
+      type: intention
+      function: 1 if xM1.split('_')[2] == "CR" and xM2.split('_')[2] == "CR" and xM3.split('_')[2] == "CR" else -999999
+
+    monitorLocation:
+      type: intention
+      function: 1 if xS1.split('_')[2] == "SR" and xS2.split('_')[2] == "SR" and xS3.split('_')[2] == "SR" else -999999
+
+    audioConnected:
+      type: intention
+      function: 1 if xS1.split('_')[0] == xA1.split('_')[1] and xS2.split('_')[0] == xA2.split('_')[1] and xS3.split('_')[0] == xA3.split('_')[1] else -999999
+
+    maxResolution:
+      type: intention
+      function: int(x1.split('_')[1]) + int(x2.split('_')[1]) + int(x3.split('_')[1])
+
+    maxAccuracy:
+      type: intention
+      function: int(xM1.split('_')[1]) + int(xM2.split('_')[1]) + int(xM3.split('_')[1])
+
+
+
+agents: [a1, a2, a3, a4, a5, a6,a7,a8,a9,a10,a11,a12]

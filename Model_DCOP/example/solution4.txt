@@ -1,0 +1,181 @@
+pydcop --timeout 1 solve --algo dsa UseCase4.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.16675440515392026,
+      "count_ext_msg": {
+        "_discovery_a1": 5,
+        "xB": 1201
+      },
+      "cycles": {
+        "xB": 1200
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "xB": 1201
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.268152110519782,
+      "count_ext_msg": {
+        "_discovery_a2": 6,
+        "xM": 2402
+      },
+      "cycles": {
+        "xM": 1200
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "xM": 2402
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.14392444574640245,
+      "count_ext_msg": {
+        "_discovery_a3": 5,
+        "xT": 1200
+      },
+      "cycles": {
+        "xT": 1199
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "xT": 1200
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.14733960701057108,
+      "count_ext_msg": {
+        "_discovery_a4": 5,
+        "xL": 1200
+      },
+      "cycles": {
+        "xL": 1199
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xL": 1200
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.14446604489265194,
+      "count_ext_msg": {
+        "_discovery_a5": 5,
+        "xV": 1200
+      },
+      "cycles": {
+        "xV": 1199
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "xV": 1200
+      }
+    }
+  },
+  "assignment": {
+    "xB": "1_David_1",
+    "xL": "1_DavidBeedroom",
+    "xM": "3_David_DavidBeedroom",
+    "xT": "2_DavidBeedroom",
+    "xV": "1_1"
+  },
+  "cost": 5,
+  "cycle": 1200,
+  "msg_count": 7229,
+  "msg_size": 7203,
+  "status": "TIMEOUT",
+  "time": 1.003638055999545,
+  "violation": 0
+}
+
+Avvolte non converge e non arriva alla soluzione ottima
+
+pydcop --timeout 1 solve --algo dsa UseCase4.yaml 
+{
+  "agt_metrics": {
+    "a1": {
+      "activity_ratio": 0.18720023278163844,
+      "count_ext_msg": {
+        "_discovery_a1": 5,
+        "xB": 1335
+      },
+      "cycles": {
+        "xB": 1334
+      },
+      "size_ext_msg": {
+        "_discovery_a1": 0,
+        "xB": 1335
+      }
+    },
+    "a2": {
+      "activity_ratio": 0.23534198037552365,
+      "count_ext_msg": {
+        "_discovery_a2": 6,
+        "xM": 2674
+      },
+      "cycles": {
+        "xM": 1336
+      },
+      "size_ext_msg": {
+        "_discovery_a2": 0,
+        "xM": 2674
+      }
+    },
+    "a3": {
+      "activity_ratio": 0.15214982696946333,
+      "count_ext_msg": {
+        "_discovery_a3": 5,
+        "xT": 1336
+      },
+      "cycles": {
+        "xT": 1335
+      },
+      "size_ext_msg": {
+        "_discovery_a3": 0,
+        "xT": 1336
+      }
+    },
+    "a4": {
+      "activity_ratio": 0.15798386929310082,
+      "count_ext_msg": {
+        "_discovery_a4": 5,
+        "xL": 1336
+      },
+      "cycles": {
+        "xL": 1335
+      },
+      "size_ext_msg": {
+        "_discovery_a4": 0,
+        "xL": 1336
+      }
+    },
+    "a5": {
+      "activity_ratio": 0.14454157007865828,
+      "count_ext_msg": {
+        "_discovery_a5": 5,
+        "xV": 1336
+      },
+      "cycles": {
+        "xV": 1335
+      },
+      "size_ext_msg": {
+        "_discovery_a5": 0,
+        "xV": 1336
+      }
+    }
+  },
+  "assignment": {
+    "xB": "1_David_1",
+    "xL": "3_JosephBeedroom",
+    "xM": "2_Joseph_JosephBeedroom",
+    "xT": "1_JosephBeedroom",
+    "xV": "1_1"
+  },
+  "cost": -999995,
+  "cycle": 1336,
+  "msg_count": 8043,
+  "msg_size": 8017,
+  "status": "TIMEOUT",
+  "time": 1.0031916930001898,
+  "violation": 0
+}
