@@ -1,0 +1,7 @@
+{
+    "id": "201",
+    "name": "Bulb2",
+    "rt": "eddie.r.bulb",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "place": "AlexBeedroom"
+  }

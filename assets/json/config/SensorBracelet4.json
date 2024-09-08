@@ -1,0 +1,8 @@
+{
+    "id": "163",
+    "name": "Sensor_Bracelet4",
+    "rt": "eddie.r.bracelet",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "ConnectedTo": "173",
+    "owner": "Joseph"
+  }

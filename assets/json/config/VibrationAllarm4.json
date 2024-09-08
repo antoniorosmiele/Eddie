@@ -1,0 +1,7 @@
+{
+    "id": "173",
+    "name": "Vibration_Allarm4",
+    "rt": "eddie.r.vibration",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "ConnectedTo": "163"
+  }
