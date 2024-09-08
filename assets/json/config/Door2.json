@@ -1,0 +1,7 @@
+{
+    "id": "211",
+    "name": "Door2",
+    "rt": "eddie.r.door",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "place": "plane2"
+  }

@@ -1,0 +1,8 @@
+{
+    "id": "300",
+    "name": "Camera11",
+    "rt": "eddie.r.camera",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "resolution": "1080",
+    "place": "plane3"
+  }

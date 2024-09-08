@@ -1,0 +1,7 @@
+{
+    "id": "221",
+    "name": "Facial_Recognizer2",
+    "rt": "eddie.r.frecognizer",
+    "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
+    "accuracy": "30"
+  }
