@@ -90,19 +90,20 @@ int main(int argc, char *argv[]) {
     if (ip == "auto") ip = "";
 
     VirtualizationReceiver receiver = VirtualizationReceiver(ip, std::to_string(port_number));
+    LOG_DBG("Receiver creation complete");
 
-    std::vector<std::string> allName1 = {"ActuatorsWater1","AllarmNoisy2","AllarmSilent1","AudioSpeaker1","AudioSpeaker3","AudioSpeaker4",
+    std::vector<std::string> allName1 = {"ActuatorWater1","AllarmNoisy2","AllarmSilent1","AudioSpeaker1","AudioSpeaker3","AudioSpeaker4",
                                         "AudioSpeaker5","AudioSpeaker6","Bulb1","CalculatorCPU1","Camera7","Camera8","Camera9","dataset1","dataset2",
                                         "Door2","Door4","Door6","FacialRecognizer1","FacialRecognizer3","MattressCover3","Microphone7","MonitorVideo1"
-                                        ,"MonitorVideo3","MonitorVideo4","MonitorVideo5","MonitorVideo5","MonitorVideo6","SensorBracelet1",
+                                        ,"MonitorVideo3","MonitorVideo4","MonitorVideo5","MonitorVideo6","SensorBracelet1",
                                         "Service1","TemperatureSensor4","Tent2","VibrationAllarm1"};
 
-    std::vector<std::string> allName2 = {"ActuatorsWater2","AllarmNoisy1","AllarmSilent2","AudioSpeaker2","Bulb2","CalculatorCPU2",
+    std::vector<std::string> allName2 = {"ActuatorWater2","AllarmNoisy1","AllarmSilent2","AudioSpeaker2","Bulb2","CalculatorCPU2",
                                         "Camera2","Camera10","Camera11","Door3","Door5","Door7","FacialRecognizer2","FacialRecognizer4","MattressCover1",
                                         "Microphone2","MonitorVideo2","SensorBracelet2","Service2","TemperatureSensor1","TemperatureSensor2","TemperatureSensor3","Tent3"
                                         ,"VibrationAllarm2"};
     
-    std::vector<std::string> allName3 = {"ActuatorsWater3","AllarmNoisy3","AllarmSilent3","AudioSpeaker7","Bulb3","Bulb4",
+    std::vector<std::string> allName3 = {"ActuatorWater3","AllarmNoisy3","AllarmSilent3","AudioSpeaker7","Bulb3","Bulb4",
                                         "CalculatorCPU3","Camera1","Camera3","Camera4","Camera5","Camera6","Camera12","Camera13","dataset3",
                                         "dataset4","dataset5","Door1","Door8","MattressCover2","Microphone1","Microphone3","Microphone4"
                                         ,"Microphone5","Microphone6","MonitorVideo7","SensorBracelet3","SensorBracelet4","Service3",
@@ -222,7 +223,7 @@ int main(int argc, char *argv[]) {
     //Check Resources added in the vector
     for (int i = 0; i < resources.size(); i++)
     {
-        LOG_DBG("%d: path=%s, attr=%s&%s&%s&%s&%s",i, *(resources[i]->get_path()), (resources[i]->get_attributes())[0],(resources[i]->get_attributes())[1],(resources[i]->get_attributes())[2],(resources[i]->get_attributes())[3],(resources[i]->get_attributes())[4]);
+        LOG_DBG("%d: path=%s, Some attr=%s&%s&%s",i, *(resources[i]->get_path()), (resources[i]->get_attributes())[0],(resources[i]->get_attributes())[1],(resources[i]->get_attributes())[2]);
     }    
 
     receiver.run(resources);

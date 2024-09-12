@@ -216,7 +216,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     k = "";
 
-    int i = 0;
+    i = 0;
 
     for (auto &link : *links)
     {
@@ -240,7 +240,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     k = "";
 
-    int i = 0;
+    i = 0;
 
     for (auto &link : *links)
     {

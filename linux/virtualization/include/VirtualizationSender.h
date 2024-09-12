@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <json/json.h>
+#include <sstream>
 
 /**
  * Create a connection over dbus with the VirtualizationReceiver component.
