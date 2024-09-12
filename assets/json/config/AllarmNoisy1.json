@@ -3,5 +3,5 @@
     "name": "AllarmNoisy1",
     "rt": "eddie.r.allarm.noisy",
     "descriptor": "/json/ontology/eddie-r-virtual-alarm.json",
-    "place": "bed"
+    "place": "kitchen"
   }
