@@ -16,8 +16,8 @@
 
 #define N_Allarm_Noisy 3
 #define N_Temperature_Sensors 1
-#define Allarm_Silent 1
-#define Actuators_Water 1
+#define N_Allarm_Silent 1
+#define N_Actuators_Water 1
 
 std::vector<Link> filterConstraint(std::vector<Link> * links);
 std::vector<std::string> createConstraint(std::vector<Link> * links);
@@ -32,7 +32,7 @@ int main() {
 
     Json::Value h_c;
     h_c = Json::arrayValue;
-    h_c[0]["rt"] = "eddie.r.fake";
+    h_c[0]["rt"] = "eddie.r.allarm.noisy";
     //h_c[0]["rt"] = "eddie.r.fplace";
 
     auto message = compose_message("find", "", h_c, {});
@@ -40,11 +40,29 @@ int main() {
 
     auto res_link = parse_link_format(answer);
 
-    h_c[0]["rt"] = "eddie.r.fplace";
+    h_c[0]["rt"] = "eddie.r.temperature";
     auto message1 = compose_message("find", "", h_c, {});
     auto answer1 = send_message(message1);
 
     auto res_link1 = parse_link_format(answer1);
+
+    for (size_t i = 0; i < res_link1.size(); i++)
+        res_link.push_back(res_link1[i]);
+
+    h_c[0]["rt"] = "eddie.r.allarm.silent";
+    message1 = compose_message("find", "", h_c, {});
+    answer1 = send_message(message1);
+
+    res_link1 = parse_link_format(answer1);
+
+    for (size_t i = 0; i < res_link1.size(); i++)
+        res_link.push_back(res_link1[i]);
+
+    h_c[0]["rt"] = "eddie.r.actuator.water";
+    message1 = compose_message("find", "", h_c, {});
+    answer1 = send_message(message1);
+
+    res_link1 = parse_link_format(answer1);
 
     for (size_t i = 0; i < res_link1.size(); i++)
         res_link.push_back(res_link1[i]);
@@ -165,6 +183,10 @@ std::vector<Link> filterConstraint(std::vector<Link> * links)
             if (attrs->find("owner")->second == "Security")
                 newLinks.push_back(link);
         }
+        else
+        {
+            newLinks.push_back(link);
+        }
         
         
 
@@ -189,7 +211,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
         std::string rt =attrs->find("rt")->second;
 
-        if (rt == "eddie.r.fake")
+        if (rt == "eddie.r.allarm.noisy")
         {
             k+= " x" + std::to_string(i) + " +";
         }
@@ -199,7 +221,79 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     if(k.back() == '+') k.pop_back();
 
-    k+= "= " + std::to_string(N_fake);
+    k+= "= " + std::to_string(N_Allarm_Noisy);
+
+    constraints.push_back(k);
+
+    k = "";
+
+    int i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.temperature")
+        {
+            k+= " x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(k.back() == '+') k.pop_back();
+
+    k+= "= " + std::to_string(N_Temperature_Sensors);
+
+    constraints.push_back(k);    
+
+    k = "";
+
+    int i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.allarm.silent")
+        {
+            k+= " x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(k.back() == '+') k.pop_back();
+
+    k+= "= " + std::to_string(N_Allarm_Silent);
+
+    constraints.push_back(k);
+
+    k = "";
+
+    int i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.actuator.water")
+        {
+            k+= " x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(k.back() == '+') k.pop_back();
+
+    k+= "= " + std::to_string(N_Actuators_Water);
 
     constraints.push_back(k);
 
@@ -214,9 +308,9 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
         std::string rt =attrs->find("rt")->second;
 
-        if (rt == "eddie.r.fake")
+        if (rt == "eddie.r.temperature")
         {
-            max+= " x" + std::to_string(i) + " * " + attrs->find("acc")->second + " +";
+            max+= " x" + std::to_string(i) + " * " + attrs->find("accuracy")->second + " +";
         }
         
         i++;
@@ -240,7 +334,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
         std::string rt1 =attrs1->find("rt")->second;
 
-        if (rt1 == "eddie.r.fake")
+        if (rt1 == "eddie.r.actuator.water")
         {   
             int j = 0;
 
@@ -250,7 +344,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
                 std::string rt2 =attrs2->find("rt")->second;
 
-                if (rt2 == "eddie.r.fplace")
+                if (rt2 == "eddie.r.temperature")
                 {
                     cmp+= " x" + std::to_string(i) + " * x" + std::to_string(j) + " * strcmp(" + attrs1->find("place")->second  + "," + attrs2->find("place")->second + ") +";
                 }
@@ -264,7 +358,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     if(cmp.back() == '+') cmp.pop_back();
 
-    cmp+= "= " + std::to_string(N_fake);
+    cmp+= "= " + std::to_string(N_Actuators_Water);
 
     constraints.push_back(cmp);
 
