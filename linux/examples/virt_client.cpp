@@ -204,6 +204,30 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     constraints.push_back(k);
 
+    k = "";
+
+    i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.fplace")
+        {
+            k+= " x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(k.back() == '+') k.pop_back();
+
+    k+= "= " + std::to_string(N_fake);
+
+    constraints.push_back(k);
+
     //Create constraints of max or min
     std::string max = "";
 
