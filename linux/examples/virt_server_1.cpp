@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
     LOG_DBG("base_path:%s", base_path.c_str());
     if (program["--exampleres"] == true) 
     {
-        for (auto name : allName)
+        for (std::string name : allName)
         {      
             ifstream ifs_alarm(base_path + "/json/config/" + name + ".json");
             Json::CharReaderBuilder builder;
@@ -141,8 +141,8 @@ int main(int argc, char *argv[]) {
             }
 
 
-            if(name.find("ActuatorsWater") != std::string::npos)
-            {
+            if(name.find("ActuatorWater") != std::string::npos)
+            {   
                 resources.push_back(new EddieActuatorsWater(name,"",root,false));
             }     
 
