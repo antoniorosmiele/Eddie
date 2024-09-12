@@ -65,3 +65,36 @@ target_link_libraries(app ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
 target_include_directories(app PUBLIC ${PROJECT_SOURCE_DIR}/include)
 set_property(TARGET app PROPERTY C_STANDARD 11)
 install(TARGETS app RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# virtualization server and client for the Use cases 1,2,3,4,5
+
+add_executable(eddie-virt-client-1 examples/virt_client_1.cpp ${SOURCES})
+target_link_libraries(eddie-virt-client-1 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
+set_property(TARGET eddie-virt-client-1 PROPERTY C_STANDARD 11)
+install(TARGETS eddie-virt-client-1 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(eddie-virt-client-2 examples/virt_client_2.cpp ${SOURCES})
+target_link_libraries(eddie-virt-client-2 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
+set_property(TARGET eddie-virt-client-2 PROPERTY C_STANDARD 11)
+install(TARGETS eddie-virt-client-2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(eddie-virt-client-3 examples/virt_client_3.cpp ${SOURCES})
+target_link_libraries(eddie-virt-client-3 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
+set_property(TARGET eddie-virt-client-3 PROPERTY C_STANDARD 11)
+install(TARGETS eddie-virt-client-3 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(eddie-virt-client-4 examples/virt_client_4.cpp ${SOURCES})
+target_link_libraries(eddie-virt-client-4 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
+set_property(TARGET eddie-virt-client-4 PROPERTY C_STANDARD 11)
+install(TARGETS eddie-virt-client-4 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(eddie-virt-client-5 examples/virt_client_5.cpp ${SOURCES})
+target_link_libraries(eddie-virt-client-5 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
+set_property(TARGET eddie-virt-client-5 PROPERTY C_STANDARD 11)
+install(TARGETS eddie-virt-client-5 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(eddie-virt-server-1 examples/virt_server_1.cpp ${SOURCES})
+target_link_libraries(eddie-virt-server-1 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-communication eddie-virtualization eddie-hardware)
+target_include_directories(eddie-virt-server-1 PUBLIC ${PROJECT_SOURCE_DIR}/include)
+set_property(TARGET eddie-virt-server-1 PROPERTY C_STANDARD 11)
+install(TARGETS eddie-virt-server-1 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
