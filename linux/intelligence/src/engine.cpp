@@ -261,6 +261,23 @@ std::string Engine::perform(const std::string &command) {
             }
             else
             {
+                int j = 0;
+                for (const auto &constraint:constraints)//("Con_name=exp").....(max/min=type)
+                {
+                    auto c_name = constraint.getMemberNames()[0].c_str();
+                    auto c_content = constraint[c_name].asString();
+
+                    if (std::string(c_name) != "max/min")
+                    {
+                        if (c_content.find("x" + std::to_string(i-1)) != std::string::npos && std::find(constrsForNeighbor.find(ip +"@"+ port)->second.begin(), constrsForNeighbor.find(ip +"@"+ port)->second.end(), j) == constrsForNeighbor.find(ip +"@"+ port)->second.end() )
+                            constrsForNeighbor.find(ip +"@"+ port)->second.push_back(j);
+                        
+                    }
+                    
+                    //q += std::string(c_name) + "=" + c_content + "&";
+                    j++;
+                }
+
                 (m.find(ip +"@"+ port))->second.push_back(i);
             }
             
@@ -320,7 +337,7 @@ std::string Engine::perform(const std::string &command) {
             request.data = reinterpret_cast<const uint8_t *>(dataConstr.c_str());
             request.data_length = dataConstr.length();
             
-            LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+            LOG_DBG("Send Message to: %s@%s with query: %s and constrs: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str(),dataConstr.c_str());
             
             message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
 
