@@ -275,6 +275,56 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
     //Create constraints of max or min
     std::string max = "";
 
+    //Create constraints of gain cardinality (Only for cardinality > 1)
+
+    std::string gc = "";
+
+    i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.dataset")
+        {
+            gc+= " x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(gc.back() == '+') gc.pop_back();
+
+    gc.pop_back();
+
+    constraints.push_back(gc);
+
+    gc = "";
+
+    i = 0;
+
+    for (auto &link : *links)
+    {
+        std::map<std::string, std::string> *attrs = &(link.attrs);
+
+        std::string rt =attrs->find("rt")->second;
+
+        if (rt == "eddie.r.service")
+        {
+            gc+= " x" + std::to_string(i) + " +";
+        }
+        
+        i++;
+    }
+
+    if(gc.back() == '+') gc.pop_back();
+
+    gc.pop_back();
+
+    constraints.push_back(gc);    
+
     //Create constraints of comparison
 
     std::string cmp = "";
