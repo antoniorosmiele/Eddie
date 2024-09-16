@@ -401,6 +401,7 @@ void MGM::mgmAlgo()
     start_time = tv.tv_sec + 0.000001*tv.tv_usec;
 
     long double curr_time = start_time;
+    long count_iteration = 0;
 
     while (curr_time- start_time <= SECONDS_TIMEOUT)
     {
@@ -434,13 +435,13 @@ void MGM::mgmAlgo()
         }
 
         LOG_DBG("Obtaining best unilateral Gain..");
-        long gain = BestUnilateralGain(valuesVariables,indexOfVariablesHandled, &newValues);
+        long gainDelta = BestUnilateralGain(valuesVariables,indexOfVariablesHandled, &newValues) - this->gain;
 
-        LOG_DBG("gain=%ld",gain);
+        LOG_DBG("gain=%ld",gainDelta);
 
         //SendGainMessage(allNeighbors, gain)
         LOG_DBG("Send best gain to neighbors...");
-        status = SendGainMessage(allNeighbors,gain);
+        status = SendGainMessage(allNeighbors,gainDelta);
 
         //neighborsGains = ReceiveGainMessages(allNeighbors)
         done = false;
@@ -456,10 +457,10 @@ void MGM::mgmAlgo()
             LOG_DBG("new gains by neighbors received");
         }
         //Controllare i Gain per vedere se arrivano tutti
-        if ((gains_vector.size() != 0 && gain > *std::max_element(gains_vector.begin(), gains_vector.end())) || (gains_vector.size() == 0))
+        if ((gains_vector.size() != 0 && gainDelta > *std::max_element(gains_vector.begin(), gains_vector.end())) || (gains_vector.size() == 0))
         {
             LOG_DBG("New local gain is the max gain");
-            this->gain = gain;
+            this->gain+=gainDelta;
             
             int i = 0;
 
@@ -477,6 +478,7 @@ void MGM::mgmAlgo()
         //end if
         gettimeofday(&tv, &tz);
         curr_time = tv.tv_sec + 0.000001*tv.tv_usec;
+        count_iteration++;
         LOG_DBG("End step");
     }
 
