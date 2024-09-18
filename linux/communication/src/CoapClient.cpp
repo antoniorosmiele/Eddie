@@ -168,7 +168,7 @@ std::string CoapClient::send_message(request_t request) {
 
     if (std::string(request.dst_host).find('%') == std::string::npos)
     {
-        dst_host = ipAndInterface[0];
+        dst_host = request.dst_host;
     }
     else
     {

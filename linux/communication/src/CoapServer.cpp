@@ -109,8 +109,19 @@ CoapServer::CoapServer(const char *host, const char *port)
     LOG_DBG("Initializing CoapServer ip=%s port=%s", my_ip.c_str(), my_port.c_str());
     init_server(is_ipv6() ? "::" : "0.0.0.0", port);
     this->client = new CoapClient();
-    std::vector<std::string> ipAndInterface = split(my_ip,'%');
-    my_interface = ipAndInterface[1];
+
+    std::vector<std::string> ipAndInterface;
+
+    if (my_ip.find('%') !=  std::string::npos)
+    {
+        ipAndInterface = split(my_ip,'%');
+        my_interface = ipAndInterface[1];
+    }
+    else
+    {
+        my_interface = "";
+    }
+    
     this->client->set_interface(my_interface);
     LOG_DBG("Saved interface: %s",my_interface.c_str());
     LOG_DBG("Initialized CoapServer");
