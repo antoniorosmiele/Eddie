@@ -65,7 +65,7 @@ int EddieEndpoint::discover_rd() {
             40
     };
 
-    message_t response = get_client()->send_message_and_wait_response(request);
+    message_t response = get_client()->send_message_and_wait_response(request,10);
 
     std::vector<Link> parsed = parse_link_format(response.data);
 
