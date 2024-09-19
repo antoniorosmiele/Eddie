@@ -193,6 +193,11 @@ std::vector<Link> filterConstraint(std::vector<Link> * links)
             if (attrs->find("place")->second == "SR")
                 newLinks.push_back(link);
         }
+        else if (rt == "eddie.r.audio")
+        {   
+            if (attrs->find("place")->second == "SR")
+                newLinks.push_back(link);
+        }
         else
         {
             newLinks.push_back(link);
@@ -477,7 +482,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
                 if (rt2 == "eddie.r.audio")
                 {
-                    cmp+= " x" + std::to_string(i) + " * x" + std::to_string(j) + " * strcmp(" + attrs1->find("audioConnected")->second  + "," + attrs2->find("connectedTo")->second + ") +";
+                    cmp+= " x" + std::to_string(i) + " * x" + std::to_string(j) + " * strcmp(" + attrs1->find("audioConnected")->second  + "," + attrs2->find("id")->second + ") +";
                 }
 
                 j++;             

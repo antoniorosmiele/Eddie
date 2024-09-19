@@ -270,7 +270,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     k+= "= " + std::to_string(N_Service);
 
-    constraints.push_back(k);
+    //constraints.push_back(k);
 
     //Create constraints of max or min
     std::string max = "";
@@ -323,7 +323,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
     gc.pop_back();
 
-    constraints.push_back(gc);    
+    //constraints.push_back(gc);    
 
     //Create constraints of comparison
 

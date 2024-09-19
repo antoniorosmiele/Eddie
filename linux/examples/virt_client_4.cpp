@@ -438,7 +438,7 @@ std::vector<std::string> createConstraint(std::vector<Link> * links)
 
                 if (rt2 == "eddie.r.vibration")
                 {
-                    cmp+= " x" + std::to_string(i) + " * x" + std::to_string(j) + " * strcmp(" + attrs1->find("ConnectedTo")->second  + "," + attrs2->find("ConnectedTo")->second + ") +";
+                    cmp+= " x" + std::to_string(i) + " * x" + std::to_string(j) + " * strcmp(" + attrs1->find("ConnectedTo")->second  + "," + attrs2->find("id")->second + ") +";
                 }
 
                 j++;             
