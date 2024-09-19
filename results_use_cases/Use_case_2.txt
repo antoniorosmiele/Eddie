@@ -1,0 +1,189 @@
+RESOURCES FOUND:
+Res:12
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset5
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@CalculatorCPU3
+fe80::1658:6190:59b2:2585%wlan0:5683@CalculatorCPU2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@CalculatorCPU1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service3
+fe80::1658:6190:59b2:2585%wlan0:5683@Service2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Service1
+RESOURCES FILTERED:
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset5
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@CalculatorCPU3
+fe80::1658:6190:59b2:2585%wlan0:5683@CalculatorCPU2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service3
+fe80::1658:6190:59b2:2585%wlan0:5683@Service2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Service1
+
+CONSTRAINTS CREATED:
+ x0 + x1 + x2 = 3
+ x3 + x4 = 1
+ x5 + x6 + x7 = 4
+ x0 + x1 + x2
+ x5 + x6 + x7
+ x0 * x5 * strcmp(3,3) + x0 * x6 * strcmp(3,2) + x0 * x7 * strcmp(3,1) + x1 * x5 * strcmp(3,3) + x1 * x6 * strcmp(3,2) + x1 * x7 * strcmp(3,1) + x2 * x5 * strcmp(1,3) + x2 * x6 * strcmp(1,2) + x2 * x7 * strcmp(1,1) = 3
+ x3 * x5 * strcmp(3,3) + x3 * x6 * strcmp(3,2) + x3 * x7 * strcmp(3,1) + x4 * x5 * strcmp(2,3) + x4 * x6 * strcmp(2,2) + x4 * x7 * strcmp(2,1) = 1
+
+Attributes of the resources:
+Resource:dataset3 deviceID=3
+Resource:dataset3 id=92
+Resource:dataset3 lt=90000
+Resource:dataset3 rt=eddie.r.dataset
+Resource:dataset3 typeData=kmeans
+Resource:dataset5 deviceID=3
+Resource:dataset5 id=94
+Resource:dataset5 lt=90000
+Resource:dataset5 rt=eddie.r.dataset
+Resource:dataset5 typeData=kmeans
+Resource:dataset1 deviceID=1
+Resource:dataset1 id=90
+Resource:dataset1 lt=90000
+Resource:dataset1 rt=eddie.r.dataset
+Resource:dataset1 typeData=kmeans
+Resource:CalculatorCPU3 deviceID=3
+Resource:CalculatorCPU3 id=102
+Resource:CalculatorCPU3 lt=90000
+Resource:CalculatorCPU3 nCore=8
+Resource:CalculatorCPU3 rt=eddie.r.cpu
+Resource:CalculatorCPU2 deviceID=2
+Resource:CalculatorCPU2 id=101
+Resource:CalculatorCPU2 lt=90000
+Resource:CalculatorCPU2 nCore=6
+Resource:CalculatorCPU2 rt=eddie.r.cpu
+Resource:Service3 deviceID=3
+Resource:Service3 id=112
+Resource:Service3 lt=90000
+Resource:Service3 rt=eddie.r.service
+Resource:Service3 typeService=TransFile
+Resource:Service2 deviceID=2
+Resource:Service2 id=111
+Resource:Service2 lt=90000
+Resource:Service2 rt=eddie.r.service
+Resource:Service2 typeService=TransFile
+Resource:Service1 deviceID=1
+Resource:Service1 id=110
+Resource:Service1 lt=90000
+Resource:Service1 rt=eddie.r.service
+Resource:Service1 typeService=TransFile
+
+
+Resource Selected:
+
+Vector results: [1,1,1,1,0,1,1,1]
+
+0=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset3
+1=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset5
+2=1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset1
+3=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@CalculatorCPU3
+4=0
+5=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service3
+6=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Service2
+7=1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Service1
+
+Erasing the constraints on service:
+
+RESOURCES FOUND:
+Res:12
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset5
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@CalculatorCPU3
+fe80::1658:6190:59b2:2585%wlan0:5683@CalculatorCPU2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@CalculatorCPU1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service3
+fe80::1658:6190:59b2:2585%wlan0:5683@Service2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Service1
+RESOURCES FILTERED:
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset5
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@CalculatorCPU3
+fe80::1658:6190:59b2:2585%wlan0:5683@CalculatorCPU2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service3
+fe80::1658:6190:59b2:2585%wlan0:5683@Service2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Service1
+
+CONSTRAINTS CREATED:
+ x0 + x1 + x2 = 3
+ x3 + x4 = 1
+ x0 + x1 + x2
+ x0 * x5 * strcmp(3,3) + x0 * x6 * strcmp(3,2) + x0 * x7 * strcmp(3,1) + x1 * x5 * strcmp(3,3) + x1 * x6 * strcmp(3,2) + x1 * x7 * strcmp(3,1) + x2 * x5 * strcmp(1,3) + x2 * x6 * strcmp(1,2) + x2 * x7 * strcmp(1,1) = 3
+ x3 * x5 * strcmp(3,3) + x3 * x6 * strcmp(3,2) + x3 * x7 * strcmp(3,1) + x4 * x5 * strcmp(2,3) + x4 * x6 * strcmp(2,2) + x4 * x7 * strcmp(2,1) = 1
+
+Attributes of the resources:
+Resource:dataset3 deviceID=3
+Resource:dataset3 id=92
+Resource:dataset3 lt=90000
+Resource:dataset3 rt=eddie.r.dataset
+Resource:dataset3 typeData=kmeans
+Resource:dataset5 deviceID=3
+Resource:dataset5 id=94
+Resource:dataset5 lt=90000
+Resource:dataset5 rt=eddie.r.dataset
+Resource:dataset5 typeData=kmeans
+Resource:dataset1 deviceID=1
+Resource:dataset1 id=90
+Resource:dataset1 lt=90000
+Resource:dataset1 rt=eddie.r.dataset
+Resource:dataset1 typeData=kmeans
+Resource:CalculatorCPU3 deviceID=3
+Resource:CalculatorCPU3 id=102
+Resource:CalculatorCPU3 lt=90000
+Resource:CalculatorCPU3 nCore=8
+Resource:CalculatorCPU3 rt=eddie.r.cpu
+Resource:CalculatorCPU2 deviceID=2
+Resource:CalculatorCPU2 id=101
+Resource:CalculatorCPU2 lt=90000
+Resource:CalculatorCPU2 nCore=6
+Resource:CalculatorCPU2 rt=eddie.r.cpu
+Resource:Service3 deviceID=3
+Resource:Service3 id=112
+Resource:Service3 lt=90000
+Resource:Service3 rt=eddie.r.service
+Resource:Service3 typeService=TransFile
+Resource:Service2 deviceID=2
+Resource:Service2 id=111
+Resource:Service2 lt=90000
+Resource:Service2 rt=eddie.r.service
+Resource:Service2 typeService=TransFile
+Resource:Service1 deviceID=1
+Resource:Service1 id=110
+Resource:Service1 lt=90000
+Resource:Service1 rt=eddie.r.service
+Resource:Service1 typeService=TransFile
+
+Resource Selected:
+
+[1,1,1,1,0,1,0,1]
+
+0=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset3
+1=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@dataset5
+2=1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@dataset1
+3=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@CalculatorCPU3
+4=0
+5=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Service3
+6=0
+7=1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Service1

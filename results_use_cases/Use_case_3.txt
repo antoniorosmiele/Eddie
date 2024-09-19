@@ -1,0 +1,210 @@
+RESOURCES FOUND:
+Res:34
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera6
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera1
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera13
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera3
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera4
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera5
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera12
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Camera2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Camera10
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Camera11
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Camera9
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Camera8
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Camera7
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone1
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone5
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone3
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone4
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone6
+fe80::c9a2:eecd:df93:3479%wlan0:5683@Microphone2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@Microphone7
+fe80::1658:6190:59b2:2585%wlan0:5683@MonitorVideo7
+fe80::c9a2:eecd:df93:3479%wlan0:5683@MonitorVideo2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo5
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo6
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo4
+fe80::1658:6190:59b2:2585%wlan0:5683@AudioSpeaker7
+fe80::c9a2:eecd:df93:3479%wlan0:5683@AudioSpeaker2
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker5
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker6
+
+RESOURCES FILTERED:
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera6
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera1
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera3
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera4
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera5
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone1
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone5
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone3
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone4
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone6
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo5
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo6
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker5
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker6
+
+CONSTRAINTS CREATED:
+ x0 + x1 + x2 + x3 + x4 = 3
+ x5 + x6 + x7 + x8 + x9 = 3
+ x10 + x11 + x12 + x13 + x14 = 3
+ x15 + x16 + x17 + x18 + x19 = 3
+ x0 * 4320 + x1 * 240 + x2 * 1080 + x3 * 480 + x4 * 2160
+ x5 * 20 + x6 * 80 + x7 * 60 + x8 * 30 + x9 * 90
+ x0 + x1 + x2 + x3 + x4
+ x5 + x6 + x7 + x8 + x9
+ x10 + x11 + x12 + x13 + x14
+ x15 + x16 + x17 + x18 + x19
+ x10 * x15 * strcmp(150,150) + x10 * x16 * strcmp(150,153) + x10 * x17 * strcmp(150,154) + x10 * x18 * strcmp(150,152) + x10 * x19 * strcmp(150,155) + x11 * x15 * strcmp(154,150) + x11 * x16 * strcmp(154,153) + x11 * x17 * strcmp(154,154) + x11 * x18 * strcmp(154,152) + x11 * x19 * strcmp(154,155) + x12 * x15 * strcmp(155,150) + x12 * x16 * strcmp(155,153) + x12 * x17 * strcmp(155,154) + x12 * x18 * strcmp(155,152) + x12 * x19 * strcmp(155,155) + x13 * x15 * strcmp(152,150) + x13 * x16 * strcmp(152,153) + x13 * x17 * strcmp(152,154) + x13 * x18 * strcmp(152,152) + x13 * x19 * strcmp(152,155) + x14 * x15 * strcmp(153,150) + x14 * x16 * strcmp(153,153) + x14 * x17 * strcmp(153,154) + x14 * x18 * strcmp(153,152) + x14 * x19 * strcmp(153,155) = 3
+
+Attributes of the resources:
+Resource:Camera6 id=125
+Resource:Camera6 lt=90000
+Resource:Camera6 place=CR
+Resource:Camera6 resolution=4320
+Resource:Camera6 rt=eddie.r.camera
+Resource:Camera1 id=120
+Resource:Camera1 lt=90000
+Resource:Camera1 place=CR
+Resource:Camera1 resolution=240
+Resource:Camera1 rt=eddie.r.camera
+Resource:Camera3 id=122
+Resource:Camera3 lt=90000
+Resource:Camera3 place=CR
+Resource:Camera3 resolution=1080
+Resource:Camera3 rt=eddie.r.camera
+Resource:Camera4 id=123
+Resource:Camera4 lt=90000
+Resource:Camera4 place=CR
+Resource:Camera4 resolution=480
+Resource:Camera4 rt=eddie.r.camera
+Resource:Camera5 id=124
+Resource:Camera5 lt=90000
+Resource:Camera5 place=CR
+Resource:Camera5 resolution=2160
+Resource:Camera5 rt=eddie.r.camera
+Resource:Microphone1 accuracy=20
+Resource:Microphone1 id=130
+Resource:Microphone1 lt=90000
+Resource:Microphone1 place=CR
+Resource:Microphone1 rt=eddie.r.microphone
+Resource:Microphone5 accuracy=80
+Resource:Microphone5 id=134
+Resource:Microphone5 lt=90000
+Resource:Microphone5 place=CR
+Resource:Microphone5 rt=eddie.r.microphone
+Resource:Microphone3 accuracy=60
+Resource:Microphone3 id=132
+Resource:Microphone3 lt=90000
+Resource:Microphone3 place=CR
+Resource:Microphone3 rt=eddie.r.microphone
+Resource:Microphone4 accuracy=30
+Resource:Microphone4 id=133
+Resource:Microphone4 lt=90000
+Resource:Microphone4 place=CR
+Resource:Microphone4 rt=eddie.r.microphone
+Resource:Microphone6 accuracy=90
+Resource:Microphone6 id=135
+Resource:Microphone6 lt=90000
+Resource:Microphone6 place=CR
+Resource:Microphone6 rt=eddie.r.microphone
+Resource:MonitorVideo1 audioConnected=150
+Resource:MonitorVideo1 id=140
+Resource:MonitorVideo1 lt=90000
+Resource:MonitorVideo1 place=SR
+Resource:MonitorVideo1 rt=eddie.r.video
+Resource:MonitorVideo5 audioConnected=154
+Resource:MonitorVideo5 id=144
+Resource:MonitorVideo5 lt=90000
+Resource:MonitorVideo5 place=SR
+Resource:MonitorVideo5 rt=eddie.r.video
+Resource:MonitorVideo6 audioConnected=155
+Resource:MonitorVideo6 id=145
+Resource:MonitorVideo6 lt=90000
+Resource:MonitorVideo6 place=SR
+Resource:MonitorVideo6 rt=eddie.r.video
+Resource:MonitorVideo3 audioConnected=152
+Resource:MonitorVideo3 id=142
+Resource:MonitorVideo3 lt=90000
+Resource:MonitorVideo3 place=SR
+Resource:MonitorVideo3 rt=eddie.r.video
+Resource:MonitorVideo4 audioConnected=153
+Resource:MonitorVideo4 id=143
+Resource:MonitorVideo4 lt=90000
+Resource:MonitorVideo4 place=SR
+Resource:MonitorVideo4 rt=eddie.r.video
+Resource:AudioSpeaker1 connectedTo=140
+Resource:AudioSpeaker1 id=150
+Resource:AudioSpeaker1 lt=90000
+Resource:AudioSpeaker1 place=SR
+Resource:AudioSpeaker1 rt=eddie.r.audio
+Resource:AudioSpeaker4 connectedTo=143
+Resource:AudioSpeaker4 id=153
+Resource:AudioSpeaker4 lt=90000
+Resource:AudioSpeaker4 place=SR
+Resource:AudioSpeaker4 rt=eddie.r.audio
+Resource:AudioSpeaker5 connectedTo=144
+Resource:AudioSpeaker5 id=154
+Resource:AudioSpeaker5 lt=90000
+Resource:AudioSpeaker5 place=SR
+Resource:AudioSpeaker5 rt=eddie.r.audio
+Resource:AudioSpeaker3 connectedTo=142
+Resource:AudioSpeaker3 id=152
+Resource:AudioSpeaker3 lt=90000
+Resource:AudioSpeaker3 place=SR
+Resource:AudioSpeaker3 rt=eddie.r.audio
+Resource:AudioSpeaker6 connectedTo=145
+Resource:AudioSpeaker6 id=155
+Resource:AudioSpeaker6 lt=90000
+Resource:AudioSpeaker6 place=SR
+Resource:AudioSpeaker6 rt=eddie.r.audio
+
+Resource Selected:
+
+Vector results: [1,0,1,0,1,0,1,1,0,1,1,1,0,1,0,1,0,1,1,0]
+
+0=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera6
+1=0
+2=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera3
+3=0
+4=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Camera5
+5=0
+6=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone5
+7=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone3
+8=0
+9=1
+fe80::1658:6190:59b2:2585%wlan0:5683@Microphone6
+10=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo1
+11=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo5
+12=0
+13=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@MonitorVideo3
+14=0
+15=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker1
+16=0
+17=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker5
+18=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AudioSpeaker3
+19=0

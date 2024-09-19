@@ -1,0 +1,137 @@
+RESOURCES FOUND:
+Res:25
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Door8
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Door1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door3
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door7
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door5
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Door4
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Door2
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Door6
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera6
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera1
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera13
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera3
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera4
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera5
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Camera12
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Camera2
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Camera10
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Camera11
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Camera9
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Camera8
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Camera7
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@FacialRecognizer4
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@FacialRecognizer2
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@FacialRecognizer1
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@FacialRecognizer3
+
+RESOURCES FILTERED:
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Door8
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Door1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door3
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door7
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door5
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Door4
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Door2
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@Door6
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Camera10
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Camera11
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@FacialRecognizer4
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@FacialRecognizer2
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@FacialRecognizer1
+2001:b07:6473:7afc:41ba:23c5:ed23:5fd5:5683@FacialRecognizer3
+
+CONSTRAINTS CREATED:
+ x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7 = 3
+ x8 + x9 = 1
+ x10 + x11 + x12 + x13 = 1
+ x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7
+ x10 * 90 + x11 * 30 + x12 * 60 + x13 * 50
+ x8 * 480 + x9 * 1080
+ x0 * x8 * strcmp(plane7,plane3) + x0 * x9 * strcmp(plane7,plane3) + x1 * x8 * strcmp(plane4,plane3) + x1 * x9 * strcmp(plane4,plane3) + x2 * x8 * strcmp(plane3,plane3) + x2 * x9 * strcmp(plane3,plane3) + x3 * x8 * strcmp(plane3,plane3) + x3 * x9 * strcmp(plane3,plane3) + x4 * x8 * strcmp(plane3,plane3) + x4 * x9 * strcmp(plane3,plane3) + x5 * x8 * strcmp(plane2,plane3) + x5 * x9 * strcmp(plane2,plane3) + x6 * x8 * strcmp(plane2,plane3) + x6 * x9 * strcmp(plane2,plane3) + x7 * x8 * strcmp(plane2,plane3) + x7 * x9 * strcmp(plane2,plane3) = 1
+
+
+Attributes of the resources:
+Resource:Door8 id=217
+Resource:Door8 lt=90000
+Resource:Door8 place=plane7
+Resource:Door8 rt=eddie.r.door
+Resource:Door1 id=210
+Resource:Door1 lt=90000
+Resource:Door1 place=plane4
+Resource:Door1 rt=eddie.r.door
+Resource:Door3 id=212
+Resource:Door3 lt=90000
+Resource:Door3 place=plane3
+Resource:Door3 rt=eddie.r.door
+Resource:Door7 id=216
+Resource:Door7 lt=90000
+Resource:Door7 place=plane3
+Resource:Door7 rt=eddie.r.door
+Resource:Door5 id=214
+Resource:Door5 lt=90000
+Resource:Door5 place=plane3
+Resource:Door5 rt=eddie.r.door
+Resource:Door4 id=213
+Resource:Door4 lt=90000
+Resource:Door4 place=plane2
+Resource:Door4 rt=eddie.r.door
+Resource:Door2 id=211
+Resource:Door2 lt=90000
+Resource:Door2 place=plane2
+Resource:Door2 rt=eddie.r.door
+Resource:Door6 id=215
+Resource:Door6 lt=90000
+Resource:Door6 place=plane2
+Resource:Door6 rt=eddie.r.door
+Resource:Camera10 id=129
+Resource:Camera10 lt=90000
+Resource:Camera10 place=plane3
+Resource:Camera10 resolution=480
+Resource:Camera10 rt=eddie.r.camera
+Resource:Camera11 id=300
+Resource:Camera11 lt=90000
+Resource:Camera11 place=plane3
+Resource:Camera11 resolution=1080
+Resource:Camera11 rt=eddie.r.camera
+Resource:FacialRecognizer4 accuracy=90
+Resource:FacialRecognizer4 id=223
+Resource:FacialRecognizer4 lt=90000
+Resource:FacialRecognizer4 rt=eddie.r.frecognizer
+Resource:FacialRecognizer2 accuracy=30
+Resource:FacialRecognizer2 id=221
+Resource:FacialRecognizer2 lt=90000
+Resource:FacialRecognizer2 rt=eddie.r.frecognizer
+Resource:FacialRecognizer1 accuracy=60
+Resource:FacialRecognizer1 id=220
+Resource:FacialRecognizer1 lt=90000
+Resource:FacialRecognizer1 rt=eddie.r.frecognizer
+Resource:FacialRecognizer3 accuracy=50
+Resource:FacialRecognizer3 id=222
+Resource:FacialRecognizer3 lt=90000
+Resource:FacialRecognizer3 rt=eddie.r.frecognizer
+
+Resource Selected:
+
+Vector results: [0,0,1,1,1,0,0,0,0,1,1,0,0,0]
+
+0=0
+1=0
+2=1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door3
+3=1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door7
+4=1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Door5
+5=0
+6=0
+7=0
+8=0
+9=1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@Camera11
+10=1
+2001:b07:6473:7afc:7d64:a4b7:59e7:94a3:5683@FacialRecognizer4
+11=0
+12=0
+13=0

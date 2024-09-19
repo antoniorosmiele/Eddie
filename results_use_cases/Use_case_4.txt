@@ -1,0 +1,125 @@
+RESOURCES FOUND:
+Res:18
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@SensorBracelet3
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@SensorBracelet4
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@SensorBracelet2
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@SensorBracelet1
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@MattressCover2
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@MattressCover1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@MattressCover3
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Tent1
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@Tent3
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@Tent2
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Bulb4
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Bulb3
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@Bulb2
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@Bulb1
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@VibrationAllarm4
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@VibrationAllarm3
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@VibrationAllarm2
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@VibrationAllarm1
+
+RESOURCES FILTERED:
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@SensorBracelet1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@MattressCover3
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Tent1
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@Tent3
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@Tent2
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Bulb4
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@Bulb3
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@Bulb2
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@Bulb1
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@VibrationAllarm4
+2001:b07:6473:7afc:eeea:c4a3:b797:3b62:5683@VibrationAllarm3
+2001:b07:6473:7afc:f8b6:5b5c:bf62:deca:5683@VibrationAllarm2
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@VibrationAllarm1
+
+CONSTRAINTS CREATED:
+ x0 = 1
+ x1 = 1
+ x2 + x3 + x4 = 1
+ x5 + x6 + x7 + x8 = 1
+ x9 + x10 + x11 + x12 = 1
+ x2 * x1 * strcmp(JosephBeedroom,DavidBeedroom) + x3 * x1 * strcmp(AlexBeedroom,DavidBeedroom) + x4 * x1 * strcmp(DavidBeedroom,DavidBeedroom) = 1
+ x5 * x1 * strcmp(Exit,DavidBeedroom) + x6 * x1 * strcmp(JosephBeedroom,DavidBeedroom) + x7 * x1 * strcmp(AlexBeedroom,DavidBeedroom) + x8 * x1 * strcmp(DavidBeedroom,DavidBeedroom) = 1
+ x0 * x9 * strcmp(170,173) + x0 * x10 * strcmp(170,172) + x0 * x11 * strcmp(170,171) + x0 * x12 * strcmp(170,170) = 1
+
+Attributes of the resources:
+Resource:SensorBracelet1 ConnectedTo=170
+Resource:SensorBracelet1 id=160
+Resource:SensorBracelet1 lt=90000
+Resource:SensorBracelet1 owner=David
+Resource:SensorBracelet1 rt=eddie.r.bracelet
+Resource:MattressCover3 id=182
+Resource:MattressCover3 lt=90000
+Resource:MattressCover3 owner=David
+Resource:MattressCover3 place=DavidBeedroom
+Resource:MattressCover3 rt=eddie.r.mattress
+Resource:Tent1 id=190
+Resource:Tent1 lt=90000
+Resource:Tent1 place=JosephBeedroom
+Resource:Tent1 rt=eddie.r.tent
+Resource:Tent3 id=192
+Resource:Tent3 lt=90000
+Resource:Tent3 place=AlexBeedroom
+Resource:Tent3 rt=eddie.r.tent
+Resource:Tent2 id=191
+Resource:Tent2 lt=90000
+Resource:Tent2 place=DavidBeedroom
+Resource:Tent2 rt=eddie.r.tent
+Resource:Bulb4 id=204
+Resource:Bulb4 lt=90000
+Resource:Bulb4 place=Exit
+Resource:Bulb4 rt=eddie.r.bulb
+Resource:Bulb3 id=202
+Resource:Bulb3 lt=90000
+Resource:Bulb3 place=JosephBeedroom
+Resource:Bulb3 rt=eddie.r.bulb
+Resource:Bulb2 id=201
+Resource:Bulb2 lt=90000
+Resource:Bulb2 place=AlexBeedroom
+Resource:Bulb2 rt=eddie.r.bulb
+Resource:Bulb1 id=200
+Resource:Bulb1 lt=90000
+Resource:Bulb1 place=DavidBeedroom
+Resource:Bulb1 rt=eddie.r.bulb
+Resource:VibrationAllarm4 ConnectedTo=163
+Resource:VibrationAllarm4 id=173
+Resource:VibrationAllarm4 lt=90000
+Resource:VibrationAllarm4 rt=eddie.r.vibration
+Resource:VibrationAllarm3 ConnectedTo=162
+Resource:VibrationAllarm3 id=172
+Resource:VibrationAllarm3 lt=90000
+Resource:VibrationAllarm3 rt=eddie.r.vibration
+Resource:VibrationAllarm2 ConnectedTo=161
+Resource:VibrationAllarm2 id=171
+Resource:VibrationAllarm2 lt=90000
+Resource:VibrationAllarm2 rt=eddie.r.vibration
+Resource:VibrationAllarm1 ConnectedTo=160
+Resource:VibrationAllarm1 id=170
+Resource:VibrationAllarm1 lt=90000
+Resource:VibrationAllarm1 rt=eddie.r.vibration
+
+
+Resource Selected:
+
+Vector results: [1,1,0,0,1,0,0,0,1,0,0,0,1]
+
+0=1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@SensorBracelet1
+1=1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@MattressCover3
+2=0
+3=0
+4=1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@Tent2
+5=0
+6=0
+7=0
+8=1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@Bulb1
+9=0
+10=0
+11=0
+12=1
+2001:b07:6473:7afc:66cc:9d4f:19f0:96e0:5683@VibrationAllarm1

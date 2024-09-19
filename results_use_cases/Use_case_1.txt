@@ -1,0 +1,110 @@
+RESOURCES FOUND:
+Res:13
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AllarmNoisy3
+fe80::1658:6190:59b2:2585%wlan0:5683@AllarmNoisy1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@AllarmNoisy2
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor1
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor3
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@TemperatureSensor4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AllarmSilent3
+fe80::1658:6190:59b2:2585%wlan0:5683@AllarmSilent2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@AllarmSilent1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@ActuatorWater3
+fe80::1658:6190:59b2:2585%wlan0:5683@ActuatorWater2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@ActuatorWater1
+RESOURCES FILTERED:
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AllarmNoisy3
+fe80::1658:6190:59b2:2585%wlan0:5683@AllarmNoisy1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@AllarmNoisy2
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor1
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor3
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@TemperatureSensor4
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AllarmSilent3
+fe80::2a44:defe:922c:9ba1%wlan0:5683@ActuatorWater3
+fe80::1658:6190:59b2:2585%wlan0:5683@ActuatorWater2
+fe80::c9a2:eecd:df93:3479%wlan0:5683@ActuatorWater1
+
+CONSTRAINTS CREATED:
+ x0 + x1 + x2 = 3
+ x3 + x4 + x5 + x6 = 1
+ x7 = 1
+ x8 + x9 + x10 = 1
+ x3 * 20 + x4 * 60 + x5 * 40 + x6 * 30
+ x0 + x1 + x2
+ x8 * x3 * strcmp(exit,kitchen) + x8 * x4 * strcmp(exit,kitchen) + x8 * x5 * strcmp(exit,kitchen) + x8 * x6 * strcmp(exit,bed) + x9 * x3 * strcmp(kitchen,kitchen) + x9 * x4 * strcmp(kitchen,kitchen) + x9 * x5 * strcmp(kitchen,kitchen) + x9 * x6 * strcmp(kitchen,bed) + x10 * x3 * strcmp(bed,kitchen) + x10 * x4 * strcmp(bed,kitchen) + x10 * x5 * strcmp(bed,kitchen) + x10 * x6 * strcmp(bed,bed) = 1
+
+Attributes of the resources
+Resource:AllarmNoisy3 id=62
+Resource:AllarmNoisy3 lt=90000
+Resource:AllarmNoisy3 place=exit
+Resource:AllarmNoisy3 rt=eddie.r.allarm.noisy
+Resource:AllarmNoisy1 id=60
+Resource:AllarmNoisy1 lt=90000
+Resource:AllarmNoisy1 place=kitchen
+Resource:AllarmNoisy1 rt=eddie.r.allarm.noisy
+Resource:AllarmNoisy2 id=61
+Resource:AllarmNoisy2 lt=90000
+Resource:AllarmNoisy2 place=bed
+Resource:AllarmNoisy2 rt=eddie.r.allarm.noisy
+Resource:TemperatureSensor1 accuracy=20
+Resource:TemperatureSensor1 id=50
+Resource:TemperatureSensor1 lt=90000
+Resource:TemperatureSensor1 place=kitchen
+Resource:TemperatureSensor1 rt=eddie.r.temperature
+Resource:TemperatureSensor3 accuracy=60
+Resource:TemperatureSensor3 id=52
+Resource:TemperatureSensor3 lt=90000
+Resource:TemperatureSensor3 place=kitchen
+Resource:TemperatureSensor3 rt=eddie.r.temperature
+Resource:TemperatureSensor2 accuracy=40
+Resource:TemperatureSensor2 id=51
+Resource:TemperatureSensor2 lt=90000
+Resource:TemperatureSensor2 place=kitchen
+Resource:TemperatureSensor2 rt=eddie.r.temperature
+Resource:TemperatureSensor4 accuracy=30
+Resource:TemperatureSensor4 id=53
+Resource:TemperatureSensor4 lt=90000
+Resource:TemperatureSensor4 place=bed
+Resource:TemperatureSensor4 rt=eddie.r.temperature
+Resource:AllarmSilent3 id=72
+Resource:AllarmSilent3 lt=90000
+Resource:AllarmSilent3 owner=Security
+Resource:AllarmSilent3 rt=eddie.r.allarm.silent
+Resource:ActuatorWater3 id=82
+Resource:ActuatorWater3 lt=90000
+Resource:ActuatorWater3 place=exit
+Resource:ActuatorWater3 rt=eddie.r.actuator.water
+Resource:ActuatorWater2 id=81
+Resource:ActuatorWater2 lt=90000
+Resource:ActuatorWater2 place=kitchen
+Resource:ActuatorWater2 rt=eddie.r.actuator.water
+Resource:ActuatorWater1 id=80
+Resource:ActuatorWater1 lt=90000
+Resource:ActuatorWater1 place=bed
+Resource:ActuatorWater1 rt=eddie.r.actuator.water
+
+
+
+Resource Selected:
+
+Vector results: [1,1,1,0,1,0,0,1,0,1,0]
+
+0=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AllarmNoisy3
+1=1
+fe80::1658:6190:59b2:2585%wlan0:5683@AllarmNoisy1
+2=1
+fe80::c9a2:eecd:df93:3479%wlan0:5683@AllarmNoisy2
+3=0
+4=1
+fe80::1658:6190:59b2:2585%wlan0:5683@TemperatureSensor3
+5=0
+6=0
+7=1
+fe80::2a44:defe:922c:9ba1%wlan0:5683@AllarmSilent3
+8=0
+9=1
+fe80::1658:6190:59b2:2585%wlan0:5683@ActuatorWater2
+10=0
