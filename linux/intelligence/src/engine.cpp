@@ -588,6 +588,31 @@ std::string Engine::perform(const std::string &command) {
         return Json::writeString(builder, answer);
     }
 
+    if (action == "actuateS") 
+    {
+        auto action_description = root["action_description"].asString();
+        std::string q = dictionary[action_description]["query"].asCString();
+
+        /*auto req_resources = root["h_constraints"][3]["query"];
+        for (const auto &req_resource: req_resources) 
+        {
+            auto c_name = constraint.getMemberNames()[0].c_str();
+            auto c_content = constraint[c_name].asString();
+
+            q += std::string(c_name) + "=" + c_content + "&";
+        }
+        if (q.back() == '&') q.pop_back();*/
+
+        request_t request;
+        request.method = method_from_string(dictionary[action_description]["method"].asString());
+        request.path = root["h_constraints"][2]["dst_res"].asCString();
+        request.query = q.c_str();
+        request.dst_host = root["h_constraints"][0]["dst_ip"].asCString();
+        request.dst_port = root["h_constraints"][1]["dst_port"].asCString();
+
+        return eddie_endpoint->get_client()->send_message_and_wait_response(request).data;        
+    }
+
     return "{}";
 }
 
