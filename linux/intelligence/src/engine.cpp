@@ -609,7 +609,7 @@ std::string Engine::perform(const std::string &command) {
         request.query = q.c_str();
         request.dst_host = root["h_constraints"][0]["dst_ip"].asCString();
         request.dst_port = root["h_constraints"][1]["dst_port"].asCString();
-
+        LOG_DBG("Send Message to: %s@%s with query: %s",request.dst_host , request.dst_port, q.c_str());
         return eddie_endpoint->get_client()->send_message_and_wait_response(request).data;        
     }
 

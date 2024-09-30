@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <cstring>
 #include <cstdio>
+#include <iostream>
 
 #include "GPIOWriter.h"
 
@@ -85,6 +86,7 @@ GPIOWriter::GPIOWriter(int pin, bool on_board) {
 void GPIOWriter::write(int value) const {
     if (on_board) {
         LinuxGPIO gpio(pin);
+        std::cout << "Set pin:" << pin << " to value:" << value << "\n";
         gpio.SetDirection(true);
         gpio.SetValue(value);
     }
