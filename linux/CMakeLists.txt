@@ -68,6 +68,11 @@ install(TARGETS app RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # virtualization server and client for the Use cases 1,2,3,4,5
 
+add_executable(appLed examples/appLed.cpp ${SOURCES})
+target_link_libraries(appLed PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
+set_property(TARGET appLed PROPERTY C_STANDARD 11)
+install(TARGETS appLed RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 add_executable(eddie-virt-client-1 examples/virt_client_1.cpp ${SOURCES})
 target_link_libraries(eddie-virt-client-1 PkgConfig::GLIB ${CMAKE_THREAD_LIBS_INIT} eddie-virtualization)
 set_property(TARGET eddie-virt-client-1 PROPERTY C_STANDARD 11)
