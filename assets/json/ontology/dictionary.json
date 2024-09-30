@@ -9,6 +9,15 @@
     "query": "status=false&blinking=false",
     "cardinality": -1
   },
+
+  "on_led": {
+    "method": "POST",
+    "query": "status=true&blinking=false"
+  },
+  "off_led": {
+    "method": "POST",
+    "query": "status=false&blinking=false"
+  },
   "eddie.r.alarm": {
     "filter": "rt",
     "value": ["eddie.r.virtual.alarm", "eddie.r.blinking.lamp"]
