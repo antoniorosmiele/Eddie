@@ -31,6 +31,7 @@
 #include "EddieTent.h"
 #include "EddieVibrationAllarm.h"
 #include "EddieAllarmNoisy.h"
+#include "EddieBlinkingLamp.h"
 
 using namespace std;
 
@@ -96,7 +97,7 @@ int main(int argc, char *argv[]) {
                                         "AudioSpeaker5","AudioSpeaker6","Bulb1","CalculatorCPU1","Camera7","Camera8","Camera9","dataset1","dataset2",
                                         "Door2","Door4","Door6","FacialRecognizer1","FacialRecognizer3","MattressCover3","Microphone7","MonitorVideo1"
                                         ,"MonitorVideo3","MonitorVideo4","MonitorVideo5","MonitorVideo6","SensorBracelet1",
-                                        "Service1","TemperatureSensor4","Tent2","VibrationAllarm1"};
+                                        "Service1","TemperatureSensor4","Tent2","VibrationAllarm1","led_remote"};
 
     std::vector<std::string> allName2 = {"ActuatorWater2","AllarmNoisy1","AllarmSilent2","AudioSpeaker2","Bulb2","CalculatorCPU2",
                                         "Camera2","Camera10","Camera11","Door3","Door5","Door7","FacialRecognizer2","FacialRecognizer4","MattressCover1",
@@ -213,6 +214,10 @@ int main(int argc, char *argv[]) {
             if(name.find("VibrationAllarm") != std::string::npos)
             {
                 resources.push_back(new EddieVibrationAllarm(name,"",root,false));
+            }
+            if(name.find("led_remote") != std::string::npos)
+            {
+                resources.push_back(new EddieBlinkingLamp("lamp_r","rt=eddie.r.blinking.lamp&ct=40",root,true));
             }     
 
 
