@@ -1,0 +1,80 @@
+name: Use Case 1
+objective: max
+
+domains:
+  Bool:
+    values: [0,1]
+  #Resources:  
+  Temperature_Sensors: # (id_accuracy_place)
+    values: ["1_20_kitchen", "2_40_kitchen", "3_60_kitchen", "4_30_bed"]
+  Allarm_Noisy: # (id_place)
+    values: ["1_kitchen", "2_bed", "3_exit"]
+  Allarm_Silent: # (id_owner)
+    values: ["1_Adam", "2_Steve", "3_Security"]
+  Actuators_Water: # (id_place)
+    values: ["1_bed","2_kitchen","3_exit"]    
+
+variables:
+  x1:
+    domain: Bool
+  x2:
+    domain: Bool
+  x3:
+    domain: Bool              
+  x4:
+    domain: Bool
+  x5:
+    domain: Bool
+  x6:
+    domain: Bool
+  x7:
+    domain: Bool
+  x8:
+    domain: Bool
+  x9:
+    domain: Bool
+  x10:
+    domain: Bool
+  x11:
+    domain: Bool
+  x12:
+    domain: Bool
+  x13:
+    domain: Bool
+
+
+constraints:
+    nTemperature_Sensors:
+      type: intention
+      function: 10000 if x1 + x2 + x3 + x4 == 1 else 0
+
+    nAllarm_Noisy:
+      type: intention
+      function: 10000 if x5+x6+x7 == 3 else 0
+
+    nAllarm_Silent:
+      type: intention
+      function: 10000 if x8+x9+x10 == 1 else 0
+
+    nActuators_Water:
+      type: intention
+      function: 10000 if x11+x12+x13 == 1 else 0
+
+    maxAccuracyTemperature_Sensors:
+      type: intention
+      function:  x1 * 20 + x2 * 40 + x3 * 60 + x4 * 30
+
+    incrementalAllarm_Noisy:
+      type: intention
+      function: x5 + x6 + x7 
+
+    position: #Location of the Actuators_Water and Temperature_Sensors must be equal
+      type: intention
+      function: 10000 if  x11 * x1 * (1 if "bed" == "kitchen" else 0) + x11 * x2 * (1 if "bed" == "kitchen" else 0) + x11 * x3 * (1 if "bed" == "kitchen" else 0) + x11 * x4 * (1 if "bed" == "bed" else 0) + x12 * x1 * (1 if "kitchen" == "kitchen" else 0) + x12 * x2 * (1 if "kitchen" == "kitchen" else 0) + x12 * x3 * (1 if "kitchen" == "kitchen" else 0) + x12 * x4 * (1 if "kitchen" == "bed" else 0) + x13 * x1 * (1 if "exit" == "kitchen" else 0) + x13 * x2 * (1 if "exit" == "kitchen" else 0) + x13 * x3 * (1 if "exit" == "kitchen" else 0) + x13 * x4 * (1 if "exit" == "bed" else 0) == 1 else 0 
+
+    owner: #Owner of the Allarm_Silent must be Security
+      type: intention
+      function: 10000 if x9 == 0 and x8 == 0 else 0   
+
+
+agents: [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13]
