@@ -52,11 +52,17 @@ protected:
 
 public:
     explicit LinuxGPIOExporter(int number) : m_Number(number) {
-        LinuxFile("/sys/class/gpio/export", O_WRONLY).Write(number);
+        //LinuxFile("/sys/class/gpio/export", O_WRONLY).Write(number);
+        std::string com = std::string("echo ") + std::to_string(number) + std::string(" > /sys/class/gpio/export");
+
+        system(com.c_str());
     }
 
     ~LinuxGPIOExporter() {
-        LinuxFile("/sys/class/gpio/unexport", O_WRONLY).Write(m_Number);
+        //LinuxFile("/sys/class/gpio/unexport", O_WRONLY).Write(m_Number);
+        std::string com = std::string("echo ") + std::to_string(m_Number) + std::string(" > /sys/class/gpio/unexport");
+
+        system(com.c_str());        
     }
 };
 
