@@ -24,6 +24,12 @@ std::vector<std::string> createConstraint(std::vector<Link> * links);
 
 
 int main() {
+
+    struct timeval tv;
+    struct timezone tz;
+    long double start_time;
+    long double stop_time;
+
     guint watcher_id = connect();
 
     std::thread main([]() {
@@ -77,8 +83,18 @@ int main() {
     }
     
     //Creation constraint
+    gettimeofday(&tv, &tz);
+
+    start_time = tv.tv_usec * 0.001;
+
     auto res_link_filtered = filterConstraint(&res_link);
     std::vector<std::string> constr = createConstraint(&res_link_filtered);
+
+    gettimeofday(&tv, &tz);
+
+    stop_time = tv.tv_usec * 0.001;
+
+    LOG_DBG("time constraints: %ld", stop_time-start_time);
 
     LOG_DBG("RESOURCES FILTERED:");
     for (const auto& res: res_link_filtered) 
@@ -132,8 +148,17 @@ int main() {
     //auto messageS = compose_message("selection", "", h_cs, o_f);
 
     //auto answerS = send_message(messageS);
+    gettimeofday(&tv, &tz);
+
+    start_time = tv.tv_usec * 0.001;
 
     auto answerS = selection(h_cs,o_f, res_link_filtered.size());
+
+    gettimeofday(&tv, &tz);
+
+    stop_time = tv.tv_usec * 0.001;
+
+    LOG_DBG("time selection: %ld", stop_time-start_time);
 
     LOG_DBG("%s", answerS.c_str());
 
