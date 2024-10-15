@@ -11,6 +11,7 @@
 #include <atomic>
 
 #define SECONDS_TIMEOUT 5
+#define MAX_ITERATIONS 114
 
 class CoapServer;
 

@@ -403,7 +403,7 @@ void MGM::mgmAlgo()
     long double curr_time = start_time;
     long count_iteration = 0;
 
-    while (curr_time- start_time <= SECONDS_TIMEOUT)
+    while (count_iteration <= MAX_ITERATIONS)
     {
         LOG_DBG("New step:");
         //SendValueMessage(allNeighbors, currentValue)
