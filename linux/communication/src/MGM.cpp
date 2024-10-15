@@ -482,6 +482,8 @@ void MGM::mgmAlgo()
         LOG_DBG("End step");
     }
 
+    LOG_DBG("count_iteration: %ld",count_iteration);
+
     this->done = true;
         
 }
