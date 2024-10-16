@@ -96,7 +96,7 @@ constraints:
 
     ownerBracelet: # must be David
       type: intention
-      function: 10000 x2 == 0 and x3 == 0 and x4 == 0 else 0
+      function: 10000 if x2 == 0 and x3 == 0 and x4 == 0 else 0
 
     ownerMattress: #must be David
       type: intention
