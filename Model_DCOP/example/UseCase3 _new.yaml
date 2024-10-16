@@ -1,0 +1,130 @@
+name: Use Case 3
+objective: max
+
+domains:
+  Camera:
+    values: ["1_240_CR", "2_720_kitchen", "3_1080_CR", "4_480_CR", "5_2160_CR", "6_4320_CR", "7_2160_SR"]
+  Microphone:
+    values: ["1_20_CR", "2_40_kitchen", "3_60_CR", "4_30_CR", "5_80_CR", "6_90_CR", "7_80_SR"]
+  Monitor_Video:
+    values: ["1_1_SR", "2_2_kitchen", "3_3_SR", "4_4_SR", "5_5_SR", "6_6_SR", "7_7_CR"]
+  Audio_Speaker:
+    values: ["1_1_SR", "2_2_kitchen", "3_3_SR", "4_4_SR", "5_5_SR", "6_6_SR", "7_7_CR"]    
+
+variables:
+  x1:
+    domain: Bool
+  x2:
+    domain: Bool
+  x3:
+    domain: Bool              
+  x4:
+    domain: Bool
+  x5:
+    domain: Bool
+  x6:
+    domain: Bool
+  x7:
+    domain: Bool
+
+  x8:
+    domain: Bool
+  x9:
+    domain: Bool
+  x10:
+    domain: Bool
+  x11:
+    domain: Bool
+  x12:
+    domain: Bool
+  x13:
+    domain: Bool
+  x14:
+    domain: Bool
+
+  x15:
+    domain: Bool
+  x16:
+    domain: Bool              
+  x17:
+    domain: Bool
+  x18:
+    domain: Bool
+  x19:
+    domain: Bool
+  x20:
+    domain: Bool
+  x21:
+    domain: Bool
+
+  x22:
+    domain: Bool
+  x23:
+    domain: Bool
+  x24:
+    domain: Bool
+  x25:
+    domain: Bool
+  x26:
+    domain: Bool                                      
+  x27:
+    domain: Bool
+  x28:
+    domain: Bool 
+constraints:
+
+    nCamera:
+      type: intention
+      function: 10000 if x1 + x2 + x3 + x4 + x5 +x6 +x7 == 3 else 0
+
+    nMicrophone:
+      type: intention
+      function: 10000 if x8 + x9 + x10 + x11 + x12 +x13 +x14 == 3 else 0
+
+    nMonitor_Video:
+      type: intention
+      function: 10000 if x15 + x16 + x17 + x18 + x19 +x20 + x21 == 3 else 0
+
+    nAudio_Speaker:
+      type: intention
+      function: 10000 if x22 + x23 + x24 + x25 + x26 + x27 + x28 == 3 else 0
+
+    incrementalCamera:
+      type: intention
+      function: x1 + x2 + x3 + x4 + x5 +x6 +x7 
+
+    incrementalMicrophone:
+      type: intention
+      function: x8 + x9 + x10 + x11 + x12 +x13 +x14 
+
+    incrementalMonitor_Video:
+      type: intention
+      function: x15 + x16 + x17 + x18 + x19 +x20 + x21 
+
+    incrementalAudio_Speaker:
+      type: intention
+      function: x22 + x23 + x24 + x25 + x26 +x27 + x28 
+
+    maxResolutionCamera:
+      type: intention
+      function:  x1 * 240 + x2 * 720 + x3 * 1080 + x4 * 480 + x5*2160 + x6*4320 + x7*2160
+
+    maxAccuracyMicrophone:
+      type: intention
+      function:  x8 * 20 + x9 * 40 + x10 * 60 + x11 * 30 + x12 * 80 + x13 * 90 + x14 * 80
+
+    audioConnected: #speaker and monitor must be connected
+      type: intention
+      function: x15 * x22 + x16*x23 + x17*x24 + x18*x25 + x19*x26 + x20*x27 + x21*x28 == 3
+
+    cameraAndMicLocation: #must be CR
+      type: intention
+      function: 10000 if x2 == 0 and x7 == 0 and x9 == 0 and x14 == 0 else 0  
+
+    monitorLocation: #must be SR
+      type: intention
+      function: 10000 if x16 == 0 and x21 == 0 else 0  
+
+
+
+agents: [a1, a2, a3, a4, a5, a6,a7,a8,a9,a10,a11,a12,a13, a14, a15, a16, a17, a18,a19,a20,a21,a22,a23,a24,a25,a26,a27,a28]

@@ -1,0 +1,85 @@
+name: Use Case 2
+objective: max
+
+domains:
+  Bool:
+    values: [0,1]
+  #Resources:  
+  Dataset:
+    values: ["1_kmeans_1", "2_stereo_1", "3_kmeans_3", "4_body_3", "5_kmeans_3"]
+  Calculator_CPU:
+    values: ["1_4_1", "2_6_2", "3_8_3"]
+  Service:
+    values: ["1_TransFile_1", "2_TransFile_2", "3_TransFile_3", "4_SoSCloud_4"]
+
+variables:
+  x1:
+    domain: Bool
+  x2:
+    domain: Bool
+  x3:
+    domain: Bool              
+  x4:
+    domain: Bool
+  x5:
+    domain: Bool
+  x6:
+    domain: Bool
+  x7:
+    domain: Bool
+  x8:
+    domain: Bool
+  x9:
+    domain: Bool
+  x10:
+    domain: Bool
+  x11:
+    domain: Bool
+  x12:
+    domain: Bool
+
+constraints:
+    nDataset:
+      type: intention
+      function: 10000 if x1 + x2 + x3 + x4 + x5 == 3 else 0
+
+    nCalculator_CPU:
+      type: intention
+      function: 10000 if x6 + x7 + x8 == 1 else 0  
+
+    nService:
+      type: intention
+      function: 10000 if x9 + x10 + x11 + x12 == 4 else 0          
+    
+    incrementalDataset:
+      type: intention
+      function: x1 + x2 + x3 + x4 + x5 
+
+    incrementalService:
+      type: intention
+      function: x9 + x10 + x11 + x12
+
+    positionDS: #Location of the Dataset and Service must be equal
+      type: intention
+      function: 10000 if  x0*x8 + x2*x8 + x3*x11 + x4*x11 + x5*x11 == 3 else 0
+
+    positionCS: #Location of the Calculator_CPU and Service must be equal
+      type: intention
+      function: 10000 if  x6*x9 + x7*x10 + x8*x11 == 1 else 0
+
+    typeData: #must be kmeans
+      type: intention
+      function: 10000 if x2 == 0 and x4 == 0 else 0 
+
+    nCore: # >= 6
+      type: intention
+      function: 10000 if x6 == 0 else 0 
+
+    typeService: #must be transfile
+      type: intention
+      function: 10000 if x12 == 0 else 0     
+
+
+
+
+agents: [a1, a2, a3, a4, a5, a6,a7,a8, a9, a10, a11, a12]
