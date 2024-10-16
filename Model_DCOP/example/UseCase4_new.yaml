@@ -1,0 +1,106 @@
+name: Use Case 1
+objective: max
+
+domains:
+  Bool:
+    values: [0,1]
+  Sensor_Bracelet:
+    values: ["1_David_1", "2_Alex_2", "3_Luca_3", "4_Joseph_4"]
+  Mattress_Cover:
+    values: ["1_Alex_AlexBeedroom", "2_Joseph_JosephBeedroom", "3_David_DavidBeedroom"]
+  Tent:
+    values: ["1_JosephBeedroom", "2_DavidBeedroom", "3_AlexBeedroom"]
+  Bulb:
+    values: ["1_DavidBeedroom","2_AlexBeedroom","3_JosephBeedroom", "4_Kitchen", "5_Exit"]    
+  Vibration_Allarm:
+    values: ["1_1","2_2","3_3","4_4"]
+
+variables:
+  x1:
+    domain: Bool
+  x2:
+    domain: Bool
+  x3:
+    domain: Bool              
+  x4:
+    domain: Bool
+
+  x5:
+    domain: Bool
+  x6:
+    domain: Bool
+  x7:
+    domain: Bool
+
+  x8:
+    domain: Bool
+  x9:
+    domain: Bool
+  x10:
+    domain: Bool
+
+  x11:
+    domain: Bool
+  x12:
+    domain: Bool
+  x13:
+    domain: Bool
+  x14:
+    domain: Bool
+  x15:
+    domain: Bool
+
+  x16:
+    domain: Bool
+  x17:
+    domain: Bool
+  x18:
+    domain: Bool
+  x19:
+    domain: Bool
+
+
+constraints:
+
+    nSensor_Bracelet:
+      type: intention
+      function: 10000 if x1 + x2 + x3 + x4 == 1 else 0
+
+    nMattress_Cover:
+      type: intention
+      function: 10000 if x5 + x6 + x7 == 1 else 0
+    
+    nTent:
+      type: intention
+      function: 10000 if x8 + x9 + x10 == 1 else 0      
+
+    nBulb:
+      type: intention
+      function: 10000 if x11 + x12 + x13 + x14 + x15 == 1 else 0
+
+    nVibration_Allarm:
+      type: intention
+      function: 10000 if x16 + x17 + x18 + x19 == 1 else 0
+
+    positionTentMattress:
+      type: intention
+      function: 10000 if x5*x10 + x6*x8 + x7*x9 == 1 else 0 
+
+    positionBulbMattress:
+      type: intention
+      function: 10000 if x5*x12 + x6*x13 + x7*x11 == 1 else 0 
+
+    connectBraceletAllarm: #allarm must be connected to a bracelet
+      type: intention
+      function: 10000 if x1*x16 + x2*x17 + x3*x18 + x4*x19 == 1 else 0
+
+    ownerBracelet: # must be David
+      type: intention
+      function: 10000 x2 == 0 and x3 == 0 and x4 == 0 else 0
+
+    ownerMattress: #must be David
+      type: intention
+      function: 10000 if x5 == 0 and x6 == 0 else 0
+
+
+agents: [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10,a11, a12, a13, a14, a15,a16,a17,a18,a19]

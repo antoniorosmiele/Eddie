@@ -1,0 +1,89 @@
+name: Use Case 1
+objective: max
+
+domains:
+  Bool:
+    values: [0,1]
+  Door:
+    values: ["1_plane4", "2_plane2", "3_plane3", "4_plane2", "5_plane3", "6_plane2", "7_plane3","8_plane7"]
+  Facial_Recognizer:
+    values: ["1_60", "2_30", "3_50","4_90"]
+  Camera:
+    values: ["1_plane2_1080", "2_plane2_480", "3_plane3_480","4_plane3_1080", "5_plane7_2160","6_plane4_4320"]
+
+variables:
+  x1:
+    domain: Bool
+  x2:
+    domain: Bool
+  x3:
+    domain: Bool              
+  x4:
+    domain: Bool
+  x5:
+    domain: Bool
+  x6:
+    domain: Bool
+  x7:
+    domain: Bool
+  x8:
+    domain: Bool
+
+  x9:
+    domain: Bool
+  x10:
+    domain: Bool
+  x11:
+    domain: Bool
+  x12:
+    domain: Bool
+
+  x13:
+    domain: Bool 
+  x14:
+    domain: Bool
+  x15:
+    domain: Bool
+  x16:
+    domain: Bool
+  x17:
+    domain: Bool
+  x18:
+    domain: Bool     
+
+constraints:
+
+    nDoor:
+      type: intention
+      function: 10000 if x1 + x2 + x3 + x4 + x5 +x6 +x7 +x8 == 3 else 0
+
+    nFacial_Recognizer:
+      type: intention
+      function: 10000 if x9 + x10 + x11 + x12 == 1 else 0
+
+    nCamera:
+      type: intention
+      function: 10000 if x13 + x14 + x15 + x16 + x17 + x18  == 1 else 0
+
+    incrementalDoor:
+      type: intention
+      function: x1 + x2 + x3 + x4 + x5 +x6 +x7 +x8
+
+    accuracyMax:
+      type: intention
+      function: x9*60 + x10*30 + x11*50 + x12*90
+
+    resolutionMax:
+      type: intention
+      function: x13*1080 + x14*480 + x15*480 + x16*1080 + x17*2160 + x18*4320 
+
+    positionCamera: #camera must be in plane3
+      type: intention
+      function: 10000 if x13 == 0 and x14 == 0 and x17 == 0 and x18 == 0 else 0
+
+    positionCameraDoor: #The camera must be in the same plane of the doors
+      type: intention
+      function: 10000 if x1*x18 + x2*x13 + x2*x14 + x3*x15 + x3*x16 + x4*x13 + x4*x14 + x5*x15 + x5*x16 +x6*x14 + x6*x13 +x7*x15 + x7*x16 +x8*x17 == 1 else 0  
+
+
+agents: [a1, a2, a3, a4, a5, a6,a7, a8, a9, a10, a11, a12,a13, a14, a15, a16, a17, a18]

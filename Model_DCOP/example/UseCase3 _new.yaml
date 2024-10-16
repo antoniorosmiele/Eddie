@@ -2,6 +2,8 @@ name: Use Case 3
 objective: max
 
 domains:
+  Bool:
+    values: [0,1]
   Camera:
     values: ["1_240_CR", "2_720_kitchen", "3_1080_CR", "4_480_CR", "5_2160_CR", "6_4320_CR", "7_2160_SR"]
   Microphone:
