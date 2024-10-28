@@ -46,6 +46,11 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     std::vector<std::string> ids;
     std::vector<std::string> neighbors;
     bool maxOrMin;
+    //datas for the DPOP algo
+    std::string parent;
+    std::vector<std::string> pseudoParents;
+    std::vector<std::string> pseudoChildrens;
+    std::vector<std::string> childrens;
 
     unsigned char tmp_buf[64];
     char str_buff[20];
@@ -113,7 +118,31 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
                 maxOrMin =true;
             else
                 maxOrMin = false;
-        }   
+        }
+        else if (sub_query[0].compare("parent") == 0)
+        {
+            std::replace( sub_query[1].begin(), sub_query[1].end(), '$', '%');
+            parent = sub_query[1];
+        }
+        else if (sub_query[0].compare("children") == 0)
+        {
+            std::replace( sub_query[1].begin(), sub_query[1].end(), '$', '%');
+            childrens.emplace_back(sub_query[1]);
+        }
+        else if (sub_query[0].compare("pseudoChildren") == 0)
+        {
+            std::replace( sub_query[1].begin(), sub_query[1].end(), '$', '%');
+            pseudoChildrens.emplace_back(sub_query[1]);
+        }
+        else if (sub_query[0].compare("pseudoParent") == 0)
+        {
+            std::replace( sub_query[1].begin(), sub_query[1].end(), '$', '%');
+            pseudoParents.emplace_back(sub_query[1]);            
+        }
+        
+        
+        
+           
     }
 
     //If there aren't no ids of the variables then send an error message
@@ -178,6 +207,12 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
         LOG_DBG("Saved constraint: %s = %s", i.first.c_str(), i.second.c_str());
     }
     
+    //Save the parameters for DPOP algo in mgm
+    mgm->parent = parent;
+    mgm->pseudoParents = pseudoParents;
+    mgm->pseudoChildrens = pseudoChildrens;
+    mgm->childrens = childrens;
+
     //........................
 
     //Modify response message...
@@ -887,6 +922,145 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
 
     return currentGain;    
     
+}
+
+void MGM::getUtilMsgToParent()
+{
+    std::vector<bool> valuesVariables = this->valuesVariables;
+    std::vector<bool> currentValues;
+    std::vector<bool> parentValues;
+
+    //Results for each cycle
+    std::vector<bool> bestCurrentValues;
+    std::vector<bool> bestParentValues;
+
+    int i = 0;
+
+    for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+    {
+        parentValues.push_back(false);
+        i++;
+    }
+
+    int i = 0;
+    for (auto &index : indexOfVariablesHandled)
+    {
+        currentValues.push_back(false);
+        i++;
+    }
+
+    long currentGain;
+    bool first = true; 
+
+    //for loop to handle the values of the 
+    for (int j = 0; j < pow(2,parentValues.size()); j++)
+    {
+        for (int k = 0; k < parentValues.size(); k++)
+        {
+            parentValues[k] = j & (1<< k);
+        }
+
+        i=0;
+
+        for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+        {
+            valuesVariables[index] = parentValues[i];
+            i++;
+        }
+
+        for (int z = 0; z < pow(2,currentValues.size()); z++)
+        {
+            for (int n = 0; n < currentValues.size(); n++)
+            {
+                currentValues[n] = z & (1<< n);
+            }
+
+            i=0;
+
+            for (auto &index : indexOfVariablesHandled)
+            {
+                valuesVariables[index] = currentValues[i];
+                i++;
+            }
+
+
+            long newGain;
+            newGain = applyConstraint(this->query_map_constraint,valuesVariables, this->isMax);
+            
+            if (first)
+            {
+                currentGain = newGain;
+                first = false;
+
+                i=0;
+                for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+                {
+                    bestParentValues.push_back(parentValues[i]);
+                    i++;
+                }
+
+                i=0;
+                for (auto &index : indexOfVariablesHandled)
+                {
+                    bestCurrentValues.push_back(currentValues[i]);
+                    i++;
+                }
+                
+                        
+            }
+            else if (this->isMax)
+            {
+                if (newGain > currentGain)
+                {   
+                    LOG_DBG("New gain max: %ld",newGain);
+                    currentGain = newGain;
+
+                    i=0;
+                    for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+                    {
+                        bestParentValues[i] = parentValues[i];
+                        i++;
+                    }
+
+                    i=0;
+                    for (auto &index : indexOfVariablesHandled)
+                    {
+                        bestCurrentValues[i] = currentValues[i];
+                        i++;
+                    }
+                }
+            }
+            else
+            {
+                if (newGain < currentGain)
+                {
+                    LOG_DBG("New gain min: %ld",newGain);
+                    currentGain = newGain;
+
+                    i=0;
+                    for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+                    {
+                        bestParentValues[i] = parentValues[i];
+                        i++;
+                    }
+
+                    i=0;
+                    for (auto &index : indexOfVariablesHandled)
+                    {
+                        bestCurrentValues[i] = currentValues[i];
+                        i++;
+                    }                                    
+                }    
+            }                           
+                        
+        }
+
+        // crea una riga della matrice dove ci sono i valori delle variabili dei padri e il miglior valore
+        std::string 
+
+
+
+    }
 }
 
 MGM::~MGM()

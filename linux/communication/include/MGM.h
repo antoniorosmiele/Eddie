@@ -34,6 +34,15 @@ private:
     std::vector<std::string> allNeighbors;
 
     long gain;
+    // For DPOP
+    std::string parent;
+    std::vector<std::string> pseudoParents;
+    std::vector<std::string> pseudoChildrens;
+    std::vector<std::string> childrens;
+    // Vector of all the util messages (example: {[1=true,2=false]:50, .....})
+    std::vector<std::unordered_map<std::string, double>> allUtilMsgFromChildAndPseudoChild;
+
+    std::vector<int> indexOfVariablesHandledByParentsAndPseudoParents;
 
     //For the constraints
     bool isMax;
@@ -76,6 +85,9 @@ private:
     bool getValueMessages(std::vector<bool> * valuesVariables, std::vector<std::unordered_map<std::string, std::string>> indexAndValues_vector);
     long BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int> indexOfVariablesHandled,std::vector<bool>* newValues);
     bool SendGainMessage(std::vector<std::string> allNeighbors, long gain);
+    
+    //For DPOP
+    void getUtilMsgToParent();
 
     double applyOp(double a, double b, char op);
     long applyConstraint(std::unordered_map<std::string, std::string> constraints,std::vector<bool> valuesVariables,bool isMax);
