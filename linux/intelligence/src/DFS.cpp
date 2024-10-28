@@ -136,7 +136,7 @@ std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::
                 if (std::find(currentN->pseudoChildrens.begin(), currentN->pseudoChildrens.end(), i->nameNode) != currentN->pseudoChildrens.end())
                 {
                     currentN->pseudoChildrens.push_back(i->nameNode);
-                    // i->pseudoParent.push_back(currentN->nameNode)
+                    i->pseudoParents.push_back(currentN->nameNode);
                 }     
             }
 

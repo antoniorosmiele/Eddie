@@ -18,6 +18,7 @@ typedef struct
     std::string parent;
     std::vector<std::string> childrens;
     std::vector<std::string> pseudoChildrens;
+    std::vector<std::string> pseudoParents;
     bool visited;
 } NodeDFS;
 
@@ -25,5 +26,7 @@ typedef struct
 std::unordered_map<std::string, std::vector<std::string>> obtainConstraintGraph(Json::Value constraints,std::unordered_map<std::string, std::vector<int>> nodeAndConstraints);
 
 std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::string>> constraintGraph);
+
+NodeDFS* obtainNodeFromName(std::vector<NodeDFS> nodes,std::string name);
 
 #endif //EDDIE_ENGINE_H
