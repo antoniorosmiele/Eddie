@@ -284,6 +284,12 @@ std::string Engine::perform(const std::string &command) {
 
         }
 
+        //Creation of the constraints graph and DFS tree for DPOP
+        std::unordered_map<std::string, std::vector<std::string>> constrGraph = obtainConstraintGraph(constraints,constrsForNeighbor);
+
+        std::vector<NodeDFS> dfs = obtainDFS(constrGraph);
+
+        //Send requests to configure each agents
         request_t request;
         std::string q = "";
         std::string dataConstr = "";
@@ -314,7 +320,7 @@ std::string Engine::perform(const std::string &command) {
 
             q+= "max/min=" + constraints[0]["max/min"].asString() + "&";
 
-            //Save Ip and port of the agents
+            //Save Ip and port of the agents for MGM
             for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++) //(neigh=ip:port)
             {
                 std::string address = neigh->first;
@@ -322,8 +328,49 @@ std::string Engine::perform(const std::string &command) {
                 q+= "neigh=" + address + "&";
                 //qGet += "neigh=" + neigh->first + "&";
             }
+
+            /*Save Ip and port of the parent, pseudo-children, children and pseudo-parent of the agent iter
+            for DPOP
+            */
+
+            NodeDFS* node = obtainNodeFromName(dfs,iter->first);
+
+            std::string address = node->parent;
+            std::replace( address.begin(), address.end(), '%', '$');
+            q+= "parent=" + address + "&";
+
+            //q+= "childrens=[";
+            for (auto i : node->childrens)
+            {
+                address = i;
+                std::replace( address.begin(), address.end(), '%', '$');
+                q+= "children=" + address + "&";
+            }
+
+            //if(q.back() == ',') q.pop_back();
+            //q+= "]&";
             
-            
+            //q+= "pseudoChildrens=[";
+            for (auto i : node->pseudoChildrens)
+            {
+                address = i;
+                std::replace( address.begin(), address.end(), '%', '$');
+                q+= "pseudoChildren=" + address + "&";
+            }
+
+            //if(q.back() == ',') q.pop_back();
+            //q+= "]&";
+
+            //q+= "pseudoParents=[";
+            for (auto i : node->pseudoParents)
+            {
+                address = i;
+                std::replace( address.begin(), address.end(), '%', '$');
+                q+= "pseudoParent=" + address + "&";
+            }
+
+            //if(q.back() == ',') q.pop_back();
+            //q+= "]&";            
 
             if(q.back() == '&') q.pop_back();
             if(dataConstr.back() == '&') dataConstr.pop_back();

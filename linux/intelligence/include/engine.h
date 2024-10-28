@@ -13,6 +13,7 @@
 #include <json/json.h>
 #include "eddie.h"
 #include "EddieEndpoint.h"
+#include "DFS.h"
 
 class Engine {
 private:
