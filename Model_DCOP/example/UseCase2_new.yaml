@@ -61,7 +61,7 @@ constraints:
 
     positionDS: #Location of the Dataset and Service must be equal
       type: intention
-      function: 10000 if  x0*x8 + x2*x8 + x3*x11 + x4*x11 + x5*x11 == 3 else 0
+      function: 10000 if  x1*x8 + x2*x8 + x3*x11 + x4*x11 + x5*x11 == 3 else 0
 
     positionCS: #Location of the Calculator_CPU and Service must be equal
       type: intention
@@ -77,7 +77,7 @@ constraints:
 
     typeService: #must be transfile
       type: intention
-      function: 10000 if x12 == 0 else 0     
+      function: 100000 if x12 == 0 else 0     
 
 
 

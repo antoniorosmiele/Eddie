@@ -25,7 +25,7 @@ constraints:
 
     position:
       type: intention
-      function: 1 if xT.split('_')[1] == "plane3" else -999999
+      function: 100000 if xT.split('_')[1] == "plane3" else -999999
 
     accuracy:
       type: intention
@@ -35,7 +35,7 @@ constraints:
       type: intention
       function: int(xT.split('_')[2])
 
-    position:
+    positionCD:
       type: intention
       function: 1 if x1.split('_')[1] == xT.split('_')[1] and x2.split('_')[1] == xT.split('_')[1] and x3.split('_')[1] == xT.split('_')[1] else -999999 
     
