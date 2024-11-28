@@ -333,12 +333,20 @@ std::string Engine::perform(const std::string &command) {
             for DPOP
             */
 
-            NodeDFS* node = obtainNodeFromName(dfs,iter->first);
+           /*
+
+           */
+
+            NodeDFS* node = fromNameToNodeDFS(iter->first,&dfs);
 
             std::string address = node->parent;
+            //Find and save the index of the variables of the father
+            std::vector<int> indexOfVariablesHandledByParentsAndPseudoParents = m.find(address)->second;
+            
             std::replace( address.begin(), address.end(), '%', '$');
             q+= "parent=" + address + "&";
 
+            
             //q+= "childrens=[";
             for (auto i : node->childrens)
             {
@@ -365,12 +373,23 @@ std::string Engine::perform(const std::string &command) {
             for (auto i : node->pseudoParents)
             {
                 address = i;
+
+                //Find and save the index of the variables of the pseudofather
+                std::vector<int> indexes = m.find(address)->second;
+                indexOfVariablesHandledByParentsAndPseudoParents.insert(indexOfVariablesHandledByParentsAndPseudoParents.end(),indexes.begin(),indexes.end());
+
                 std::replace( address.begin(), address.end(), '%', '$');
                 q+= "pseudoParent=" + address + "&";
             }
 
             //if(q.back() == ',') q.pop_back();
-            //q+= "]&";            
+            //q+= "]&";     
+
+            for (auto i: indexOfVariablesHandledByParentsAndPseudoParents)
+            {
+                q+= "indexP=" + std::to_string(i) + "&";
+            }
+                   
 
             if(q.back() == '&') q.pop_back();
             if(dataConstr.back() == '&') dataConstr.pop_back();

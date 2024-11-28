@@ -47,10 +47,11 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     std::vector<std::string> neighbors;
     bool maxOrMin;
     //datas for the DPOP algo
-    std::string parent;
+    std::string parent = "";
     std::vector<std::string> pseudoParents;
     std::vector<std::string> pseudoChildrens;
     std::vector<std::string> childrens;
+    std::vector<int> indexOfVariablesHandledByParentsAndPseudoParents;
 
     unsigned char tmp_buf[64];
     char str_buff[20];
@@ -139,6 +140,11 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
             std::replace( sub_query[1].begin(), sub_query[1].end(), '$', '%');
             pseudoParents.emplace_back(sub_query[1]);            
         }
+        else if (sub_query[0].compare("indexP") == 0)
+        {
+            indexOfVariablesHandledByParentsAndPseudoParents.emplace_back(stoi(sub_query[1]));
+        }
+        
         
         
         
@@ -212,6 +218,8 @@ void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap
     mgm->pseudoParents = pseudoParents;
     mgm->pseudoChildrens = pseudoChildrens;
     mgm->childrens = childrens;
+    mgm->counterMsgValue = 0;
+    mgm->indexOfVariablesHandledByParentsAndPseudoParents = indexOfVariablesHandledByParentsAndPseudoParents;
 
     //........................
 
@@ -278,8 +286,14 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     //If opt is the command START then starts the execution of the MGM algorithm in this Agent
     if (opt->second == "START")
     {
-        LOG_DBG("Starting MGM...");
-        mgm->executeAlgo();
+        //LOG_DBG("Starting MGM...");
+        //mgm->executeAlgo();
+
+        LOG_DBG("Starting Util phase of DPOP...");
+ 
+        mgm->dpopUtilLeaf(); //Must be executed in a thread!     
+
+        //mgm->dpopValue(); todo
 
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;        
@@ -314,6 +328,73 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;
 
+    }
+    else if (opt->second == "UTIL")
+    {
+        // get data with all the rows of the util table and save them
+        size_t data_len, offset, total;
+        const uint8_t *data;
+        coap_get_data_large(request, &data_len, &data, &offset, &total);       
+        //LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
+
+        std::vector<std::string> allRows = split(std::string(reinterpret_cast<const char *>(data), data_len),'$');
+
+        std::unordered_map<std::string, double> tableUtil;
+
+        for (auto row : allRows)
+        {
+            std::vector<std::string> variablesAndUtil = split(row,':');
+
+            tableUtil.insert({variablesAndUtil[0],std::stod(variablesAndUtil[1])});
+        }
+
+        //Save util Talbe
+        mgm->allUtilMsgFromChild.push_back(tableUtil);    
+
+        //From this point must be executed in a thread!
+
+        //Check if this node must send util messages to parent
+        //The parent mustn't execute the Util phase 
+        if(mgm->parent != "")
+            mgm->dpopUtilLeaf(); 
+
+        /*
+            If the node is a root and Util msg from children has been arrived 
+            then execute Value Phase        
+        */
+        if(mgm->parent == "" && mgm->childrens.size() == mgm->allUtilMsgFromChild.size())
+            mgm->dpopValue();
+
+        coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
+        return;          
+    }
+    else if (opt->second == "VALUE")
+    {
+        // get data with all the rows of the util table and save them
+        size_t data_len, offset, total;
+        const uint8_t *data;
+        coap_get_data_large(request, &data_len, &data, &offset, &total);       
+        //LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
+
+        std::vector<std::string> indexesAndGain = split(std::string(reinterpret_cast<const char *>(data), data_len),':');
+        std::vector<std::string> indexesAndValues = split(indexesAndGain[0],',');
+        
+        for (auto var : indexesAndValues)
+        {
+            std::vector<std::string> indexAndValue = split(var,'=');
+            std::string index = indexAndValue[0];
+            bool value = StringToBool(indexAndValue[1]);
+
+            if(mgm->allValuesMsg.find(index) != mgm->allValuesMsg.end())
+            {    
+                mgm->allValuesMsg.insert({index,value});
+                mgm->counterMsgValue++;
+            }    
+        }
+
+        if(mgm->counterMsgValue == mgm->pseudoParents.size() + 1)
+            mgm->dpopValue();
+        
     }
     else
     {
@@ -924,7 +1005,7 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
     
 }
 
-void MGM::getUtilMsgToParent()
+std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
 {
     std::vector<bool> valuesVariables = this->valuesVariables;
     std::vector<bool> currentValues;
@@ -934,11 +1015,15 @@ void MGM::getUtilMsgToParent()
     std::vector<bool> bestCurrentValues;
     std::vector<bool> bestParentValues;
 
+    //Table with the Util values to return
+    std::unordered_map<std::string, double> utilTable;
+
     int i = 0;
 
     for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
     {
         parentValues.push_back(false);
+        valuesVariables[index] = false;
         i++;
     }
 
@@ -946,10 +1031,11 @@ void MGM::getUtilMsgToParent()
     for (auto &index : indexOfVariablesHandled)
     {
         currentValues.push_back(false);
+        valuesVariables[index] = false;
         i++;
     }
 
-    long currentGain;
+    double currentGain;
     bool first = true; 
 
     //for loop to handle the values of the 
@@ -984,8 +1070,68 @@ void MGM::getUtilMsgToParent()
             }
 
 
-            long newGain;
+            double newGain;
             newGain = applyConstraint(this->query_map_constraint,valuesVariables, this->isMax);
+
+            /* 
+                Add the values of the util messages from childs and pseudo-child to the current gain
+            */
+
+            double increment = 0;
+
+            //loop on all the table (one table for each children or pseudoChildren)
+            for (auto table : this->allUtilMsgFromChild)
+            {   
+                //for each table
+                for (auto row : table)
+                {
+                    auto key = row.first;
+                    auto indexes = split(key,',');
+
+                    auto size = indexes.size();
+
+                    //All the values of the variables in the table must match with the current values
+                    int matchCount = 0;
+
+                    for (auto i : indexes)
+                    {
+                        auto indexAndValue = split(i,'=');
+
+                        int index = stoi(indexAndValue[0]);
+
+                        if(BoolToString(valuesVariables[index]) == indexAndValue[1])
+                            matchCount++;
+                    }
+                    
+                    if(matchCount == size)
+                        increment+= row.second;
+                }
+            }
+            //Apply increment of the utils msg on the new gain
+            newGain+=increment;
+
+            //built a row for the value table
+            i=0;
+            std::string keyV = "";
+            for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+            {
+                keyV+=std::to_string(index) + "=" + BoolToString(parentValues[i]) + ",";
+                i++;
+            }
+
+            i=0;
+
+            for (auto &index : indexOfVariablesHandled)
+            {
+                keyV+=std::to_string(index) + "=" + BoolToString(currentValues[i]) + ",";
+                i++;
+            }
+
+            if(keyV.back() == ',')
+                keyV.pop_back();
+
+            this->tableValue.insert({keyV,newGain});    
+            
             
             if (first)
             {
@@ -1055,12 +1201,170 @@ void MGM::getUtilMsgToParent()
                         
         }
 
-        // crea una riga della matrice dove ci sono i valori delle variabili dei padri e il miglior valore
-        std::string 
+        // crea una riga della matrice dove ci sono i valori delle variabili dei padri e pseudopadri e il miglior valore
+        std::string key = "";
 
+        //create a row of the Util table with the best values of the variables of the parents and pseudo-parents
 
+        //Create the string with the values of the variables of the parents and pseudo-parents
+        i=0;
+        for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+        {
+            key+= std::to_string(index) + "=" + BoolToString(bestParentValues[i]) + ",";
+            i++;
+        }
 
+        if(key.back() == ',')
+            key.pop_back();
+        
+        utilTable.insert({key,currentGain});
     }
+
+    return utilTable;
+}
+
+void MGM::dpopUtilLeaf()
+{
+    if (this->childrens.size() == this->allUtilMsgFromChild.size())
+    {
+        //Create Util table
+        std::unordered_map<std::string, double> tableUtil = this->getUtilMsgToParent();
+
+        //Create the message to send to parent
+        std::string agent;
+        agent = this->parent;
+
+        //If this is the root then no message must be sent
+        if(agent == "")
+            return;
+
+        //Create the query
+        request_t request;
+        std::string q = "opt=UTIL";
+
+        //Insert Table in the data of the message
+        std::string dataTable = "";
+
+        for (auto row = tableUtil.begin(); row != tableUtil.end(); row++)
+        {
+            dataTable+= row->first + ":" + std::to_string(row->second) + "$";
+        }
+            
+        if(dataTable.back() == '$');
+            dataTable.pop_back();
+
+        //Create the request and receive the response
+        std::vector<std::string> ipAndPort = split(agent, '@');
+
+        request.method = POST;
+        request.path = "MGM";
+        request.query = q.c_str();
+        request.dst_host = ipAndPort[0].c_str();
+        request.dst_port = ipAndPort[1].c_str();
+        request.data = reinterpret_cast<const uint8_t *>(dataTable.c_str());
+
+        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+        message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
+        
+    }
+    
+}
+
+void MGM::dpopValue()
+{
+    bool first = true;
+    std::string indexAndValuesToSend;
+    double bestGain;
+
+    for (auto row : this->tableValue)
+    {
+        std::vector<std::string> allIndexAndValues = split(row.first,',');
+        double gain = row.second;
+
+        //If this is not the root then there are value msgs from the parent to filter
+        if(this->parent != "")
+        {
+            int size = allIndexAndValues.size();
+            int matchCount = 0;
+
+            for (auto aIndexParent : this->allValuesMsg)
+            {
+                std::string stringToMatch = aIndexParent.first + "=" + BoolToString(aIndexParent.second);
+
+                if(std::find(allIndexAndValues.begin(),allIndexAndValues.end(),stringToMatch) != allIndexAndValues.end())
+                    matchCount++;
+            }
+            
+            if (matchCount != size)
+                continue;
+
+        }
+
+        if (first)
+        {
+            bestGain = gain;
+            indexAndValuesToSend = row.first;
+            first = false;
+        }
+        else if (this->isMax && gain > bestGain)
+        {
+            bestGain = gain;
+            indexAndValuesToSend = row.first;
+        }
+        else if( !this->isMax && gain < bestGain)
+        {
+            bestGain = gain;
+            indexAndValuesToSend = row.first;
+        }
+    }
+
+    //If this node is a leaf then save the best values with the best gains localy
+    if (this->childrens.size() + this->pseudoChildrens.size() == 0)
+    {
+        this->bestIndexAndValues = indexAndValuesToSend + ":" + std::to_string(bestGain);
+        this->done = true;
+        return;
+    }    
+
+    //Send the index and values with the best gain to the clidren and pseudo-childrens ...
+
+    //Create the messages to send to childrens and pseudo-childrens
+    //Create the query
+    request_t request;
+    std::string q = "opt=VALUE";
+
+    //Insert best values of the variables and the gain in the data of the message
+    std::string dataTable = "";
+
+    dataTable+= indexAndValuesToSend + ":" + std::to_string(bestGain);
+
+    //Create the requests and receive the responses
+
+    request.method = POST;
+    request.path = "MGM";
+    request.query = q.c_str();
+    request.data = reinterpret_cast<const uint8_t *>(dataTable.c_str());
+
+    for (auto child : this->childrens)
+    {
+        std::vector<std::string> ipAndPort = split(child, '@');
+        request.dst_host = ipAndPort[0].c_str();
+        request.dst_port = ipAndPort[1].c_str();
+
+        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+        message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
+    }
+
+    for (auto pseudoChild : this->pseudoChildrens)
+    {
+        std::vector<std::string> ipAndPort = split(pseudoChild, '@');
+        request.dst_host = ipAndPort[0].c_str();
+        request.dst_port = ipAndPort[1].c_str();
+
+        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+        message_t response = commAndRes->get_client()->send_message_and_wait_response(request);        
+    }
+    
 }
 
 MGM::~MGM()

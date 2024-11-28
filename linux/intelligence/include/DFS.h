@@ -27,6 +27,6 @@ std::unordered_map<std::string, std::vector<std::string>> obtainConstraintGraph(
 
 std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::string>> constraintGraph);
 
-NodeDFS* obtainNodeFromName(std::vector<NodeDFS> nodes,std::string name);
+NodeDFS * fromNameToNodeDFS(std::string name,std::vector<NodeDFS> *tree);
 
 #endif //EDDIE_ENGINE_H

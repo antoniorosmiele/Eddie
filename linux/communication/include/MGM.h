@@ -39,8 +39,17 @@ private:
     std::vector<std::string> pseudoParents;
     std::vector<std::string> pseudoChildrens;
     std::vector<std::string> childrens;
-    // Vector of all the util messages (example: {[1=true,2=false]:50, .....})
-    std::vector<std::unordered_map<std::string, double>> allUtilMsgFromChildAndPseudoChild;
+    // Vector of all the util messages (example: [{"1=true,2=false":50, .....}, ......]
+    std::vector<std::unordered_map<std::string, double>> allUtilMsgFromChild;
+    // Table of all possible values of the variables of the parent, pseudo parents and local (example: {"1=true,2=false":50, .....}
+    std::unordered_map<std::string, double> tableValue;
+    // Vector of all the value messages (example: {"1":true,"2":false, .....}
+    std::unordered_map<std::string, bool> allValuesMsg;
+    int counterMsgValue;
+    //results DPOP
+    //Has a value at the end of the phase value only for the leafs
+    std::string bestIndexAndValues;
+
 
     std::vector<int> indexOfVariablesHandledByParentsAndPseudoParents;
 
@@ -87,7 +96,7 @@ private:
     bool SendGainMessage(std::vector<std::string> allNeighbors, long gain);
     
     //For DPOP
-    void getUtilMsgToParent();
+    std::unordered_map<std::string, double> getUtilMsgToParent();
 
     double applyOp(double a, double b, char op);
     long applyConstraint(std::unordered_map<std::string, std::string> constraints,std::vector<bool> valuesVariables,bool isMax);
@@ -98,6 +107,8 @@ public:
     ~MGM();
     void executeAlgo();
     void mgmAlgo();
+    void dpopUtilLeaf();
+    void dpopValue();
     void saveSomeValuesOfVariables(std::unordered_map<std::string, std::string> values_map);
     void saveGainFromNeighbor(long gain);
     
