@@ -42,6 +42,22 @@ method_t method_from_string(const std::string &input) {
     else if (input == "PUT") return PUT;
     else return DELETE;
 }
+void printConstGraph(std::unordered_map<std::string, std::vector<std::string>> constrGraph)
+{
+    for (auto i : constrGraph)
+    {
+        LOG_DBG("name: %s",i.first.c_str());
+
+        LOG_DBG("Next nodes:");
+
+        for (auto j : i.second)
+        {
+            LOG_DBG("%s", j.c_str());
+        }
+        
+    }
+    
+}
 
 void printDFS(std::vector<NodeDFS> dfs)
 {
@@ -318,7 +334,9 @@ std::string Engine::perform(const std::string &command) {
 
         //Creation of the constraints graph and DFS tree for DPOP
         std::unordered_map<std::string, std::vector<std::string>> constrGraph = obtainConstraintGraph(constraints,constrsForNeighbor);
-
+        
+        printConstGraph(constrGraph);
+        
         std::vector<NodeDFS> dfs = obtainDFS(constrGraph);
 
         printDFS(dfs);
