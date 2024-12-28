@@ -9,6 +9,17 @@
 #include <map>
 #include <coap3/uri.h>
 
+inline const std::string  BoolToString(bool b)
+{
+  return b ? "true" : "false";
+}
+
+inline const bool  StringToBool(std::string s)
+{
+  return (s == "true") ? true : false;
+}
+
+
 void MGM::MGM_put(coap_resource_t *resource, coap_session_t *session, const coap_pdu_t *request, const coap_string_t *query, coap_pdu_t *response)
 {
     LOG_DBG("Handling message PUT for MGM");
@@ -603,15 +614,6 @@ void MGM::mgmAlgo()
     this->done = true;
         
 }
-inline const std::string  BoolToString(bool b)
-{
-  return b ? "true" : "false";
-}
-
-inline const bool  StringToBool(std::string s)
-{
-  return (s == "true") ? true : false;
-}
 
 void MGM::saveSomeValuesOfVariables(std::unordered_map<std::string, std::string> values_map)
 {
@@ -1027,7 +1029,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
         i++;
     }
 
-    int i = 0;
+    i = 0;
     for (auto &index : indexOfVariablesHandled)
     {
         currentValues.push_back(false);

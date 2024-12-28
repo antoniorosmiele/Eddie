@@ -46,7 +46,7 @@ bool checkNeighborsNotVisited(std::vector<NodeDFS> *tree,std::vector<std::string
 
     for (auto i : currentNeigh)
     {
-         if(!((std::find(tree->begin(), tree->end(), i))->visited))
+         if(!((fromNameToNodeDFS(i,tree))->visited))
             result = true;
     }
     
@@ -60,7 +60,8 @@ NodeDFS * fromNameToNodeDFS(std::string name,std::vector<NodeDFS> *tree)
     
     for (auto &i : *tree)
     {
-         if(i.nameNode == name)
+        std::string nameNode = i.nameNode;
+         if(nameNode == name)
             return &i;
     }
 }
@@ -69,8 +70,8 @@ NodeDFS * takeANeighNotVisited(std::vector<NodeDFS> *tree,std::vector<std::strin
 {
     for (auto i : currentNeigh)
     {
-         if(!((std::find(tree->begin(), tree->end(), i))->visited))
-            return &(*(std::find(tree->begin(), tree->end(), i)));
+         if(!((fromNameToNodeDFS(i,tree))->visited))
+            return (fromNameToNodeDFS(i,tree));
     }
         
 }
@@ -81,8 +82,8 @@ std::vector<NodeDFS*> takeAllNeighVisited(std::vector<NodeDFS> *tree,std::vector
 
     for (auto i : currentNeigh)
     {
-         if((std::find(tree->begin(), tree->end(), i))->visited)
-            results.push_back(&(*(std::find(tree->begin(), tree->end(), i))));        
+         if(((fromNameToNodeDFS(i,tree))->visited))
+            results.push_back(((fromNameToNodeDFS(i,tree))));        
     }
 
     return results;
@@ -149,5 +150,7 @@ std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::
 
 
     }
+
+    return results;
     
 }

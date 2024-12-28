@@ -43,6 +43,38 @@ method_t method_from_string(const std::string &input) {
     else return DELETE;
 }
 
+void printDFS(std::vector<NodeDFS> dfs)
+{
+    for (auto i : dfs)
+    {
+        LOG_DBG("name: %s",i.nameNode.c_str());
+
+        LOG_DBG("parent: %s", i.parent.c_str());
+
+        LOG_DBG("Childrens:");
+
+        for (auto child : i.childrens)
+        {
+            LOG_DBG("%s",child.c_str());
+        }
+
+        LOG_DBG("Pseudoparents:");
+
+        for (auto pParent : i.pseudoParents)
+        {
+            LOG_DBG("%s",pParent.c_str());
+        }
+
+        LOG_DBG("Pseudochildrens:");
+
+        for (auto pChild : i.pseudoChildrens)
+        {
+            LOG_DBG("%s",pChild.c_str());
+        }
+        
+    }
+}
+
 std::unordered_set<std::string> json_array_to_unordered_set(const Json::Value &values) {
     if (!values.isArray()) {
         return {};
@@ -289,6 +321,8 @@ std::string Engine::perform(const std::string &command) {
 
         std::vector<NodeDFS> dfs = obtainDFS(constrGraph);
 
+        printDFS(dfs);
+
         //Send requests to configure each agents
         request_t request;
         std::string q = "";
@@ -416,7 +450,7 @@ std::string Engine::perform(const std::string &command) {
 
         LOG_DBG("Setup completed:");
 
-        //return "Breakpoint";
+        return "Breakpoint";
 
         q = "opt=START";
 
