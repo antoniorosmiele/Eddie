@@ -1160,7 +1160,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
             {
                 if (newGain > currentGain)
                 {   
-                    LOG_DBG("New gain max: %ld",newGain);
+                    LOG_DBG("New gain max: %f",newGain);
                     currentGain = newGain;
 
                     i=0;
@@ -1182,7 +1182,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
             {
                 if (newGain < currentGain)
                 {
-                    LOG_DBG("New gain min: %ld",newGain);
+                    LOG_DBG("New gain min: %f",newGain);
                     currentGain = newGain;
 
                     i=0;

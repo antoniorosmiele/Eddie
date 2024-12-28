@@ -64,6 +64,8 @@ NodeDFS * fromNameToNodeDFS(std::string name,std::vector<NodeDFS> *tree)
          if(nameNode == name)
             return &i;
     }
+
+    return NULL;
 }
 
 NodeDFS * takeANeighNotVisited(std::vector<NodeDFS> *tree,std::vector<std::string> currentNeigh)
@@ -73,7 +75,8 @@ NodeDFS * takeANeighNotVisited(std::vector<NodeDFS> *tree,std::vector<std::strin
          if(!((fromNameToNodeDFS(i,tree))->visited))
             return (fromNameToNodeDFS(i,tree));
     }
-        
+
+    return NULL;   
 }
 
 std::vector<NodeDFS*> takeAllNeighVisited(std::vector<NodeDFS> *tree,std::vector<std::string> currentNeigh)
