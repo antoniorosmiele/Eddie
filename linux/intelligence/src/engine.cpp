@@ -87,6 +87,8 @@ void printDFS(std::vector<NodeDFS> dfs)
         {
             LOG_DBG("%s",pChild.c_str());
         }
+
+        LOG_DBG("");
         
     }
 }
@@ -333,12 +335,14 @@ std::string Engine::perform(const std::string &command) {
         }
 
         //Creation of the constraints graph and DFS tree for DPOP
+        //LOG_DBG("Creation ConstraintGraph");
         std::unordered_map<std::string, std::vector<std::string>> constrGraph = obtainConstraintGraph(constraints,constrsForNeighbor);
-        
+        LOG_DBG("ConstraintGraph created");
         printConstGraph(constrGraph);
-        
+
         std::vector<NodeDFS> dfs = obtainDFS(constrGraph);
 
+        LOG_DBG("DFS created \n");
         printDFS(dfs);
 
         //Send requests to configure each agents
@@ -393,10 +397,14 @@ std::string Engine::perform(const std::string &command) {
 
             std::string address = node->parent;
             //Find and save the index of the variables of the father
-            std::vector<int> indexOfVariablesHandledByParentsAndPseudoParents = m.find(address)->second;
+            std::vector<int> indexOfVariablesHandledByParentsAndPseudoParents; 
             
-            std::replace( address.begin(), address.end(), '%', '$');
-            q+= "parent=" + address + "&";
+            if(address != "")
+            {
+                indexOfVariablesHandledByParentsAndPseudoParents = m.find(address)->second;
+                std::replace( address.begin(), address.end(), '%', '$');
+                q+= "parent=" + address + "&";
+            }
 
             
             //q+= "childrens=[";
@@ -468,11 +476,37 @@ std::string Engine::perform(const std::string &command) {
 
         LOG_DBG("Setup completed:");
 
-        return "Breakpoint";
+        //return "Breakpoint";
 
         q = "opt=START";
 
+        //Case DPOP
         for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
+        {
+            NodeDFS* node = fromNameToNodeDFS(iter->first,&dfs);
+            //Only the leaf must start the algo with the Phase util
+            if(node->childrens.size() == 0)
+            {
+                auto ipAndPort = split(iter->first,'@');
+                request.method = POST;
+                request.path = "MGM";
+                request.query = q.c_str();
+                request.dst_host = ipAndPort[0].c_str();
+                request.dst_port = ipAndPort[1].c_str();
+
+                LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+                
+                message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
+
+                if (response.status_code == COAP_RESPONSE_CODE_BAD_REQUEST)
+                {
+                    return "Error in the query: check if there are the resource and constraint in h_constraints and o_function";
+                }                
+            }
+        }
+
+        //Case MGM
+        /*for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
         {
             auto ipAndPort = split(iter->first,'@');
             request.method = POST;
@@ -489,9 +523,9 @@ std::string Engine::perform(const std::string &command) {
             {
                 return "Error in the query: check if there are the resource and constraint in h_constraints and o_function";
             }
-        }
+        }*/
 
-        LOG_DBG("Algo MGM Started:");
+        LOG_DBG("Algo Started:");
 
         for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++)
             qGet += "neigh=" + neigh->first + "&";
