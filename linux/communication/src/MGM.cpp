@@ -347,40 +347,45 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     }
     else if (opt->second == "UTIL")
     {
-        // get data with all the rows of the util table and save them
-        size_t data_len, offset, total;
-        const uint8_t *data;
-        coap_get_data_large(request, &data_len, &data, &offset, &total);       
-        //LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
-
-        std::vector<std::string> allRows = split(std::string(reinterpret_cast<const char *>(data), data_len),'$');
-
-        std::unordered_map<std::string, double> tableUtil;
-
-        for (auto row : allRows)
+        
+        auto dpop_task = [mgm,request]() 
         {
-            std::vector<std::string> variablesAndUtil = split(row,':');
+            // get data with all the rows of the util table and save them
+            size_t data_len, offset, total;
+            const uint8_t *data;
+            coap_get_data_large(request, &data_len, &data, &offset, &total);       
+            //LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
 
-            tableUtil.insert({variablesAndUtil[0],std::stod(variablesAndUtil[1])});
-        }
+            std::vector<std::string> allRows = split(std::string(reinterpret_cast<const char *>(data), data_len),'$');
 
-        //Save util Talbe
-        mgm->allUtilMsgFromChild.push_back(tableUtil);    
+            std::unordered_map<std::string, double> tableUtil;
 
-        //From this point must be executed in a thread!
+            for (auto row : allRows)
+            {
+                std::vector<std::string> variablesAndUtil = split(row,':');
 
-        //Check if this node must send util messages to parent
-        //The parent mustn't execute the Util phase 
-        if(mgm->parent != "")
-            mgm->dpopUtilLeaf(); 
+                tableUtil.insert({variablesAndUtil[0],std::stod(variablesAndUtil[1])});
+            }
 
-        /*
-            If the node is a root and Util msg from children has been arrived 
-            then execute Value Phase        
-        */
-        if(mgm->parent == "" && mgm->childrens.size() == mgm->allUtilMsgFromChild.size())
-            mgm->dpopValue();
+            //Save util Talbe
+            mgm->allUtilMsgFromChild.push_back(tableUtil);    
 
+            //From this point must be executed in a thread!
+
+            //Check if this node must send util messages to parent
+            //The parent mustn't execute the Util phase 
+            if(mgm->parent != "")
+                mgm->dpopUtilLeaf(); 
+
+            /*
+                If the node is a root and Util msg from children has been arrived 
+                then execute Value Phase        
+            */
+            if(mgm->parent == "" && mgm->childrens.size() == mgm->allUtilMsgFromChild.size())
+                mgm->dpopValue();
+        };
+        
+        mgm->mgm_thread = std::thread(dpop_task);
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;          
     }
