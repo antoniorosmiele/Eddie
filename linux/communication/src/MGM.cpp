@@ -301,8 +301,13 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
         //mgm->executeAlgo();
 
         LOG_DBG("Starting Util phase of DPOP...");
- 
-        mgm->dpopUtilLeaf(); //Must be executed in a thread!     
+        auto mgm_task = [mgm]() 
+        {
+            mgm->dpopUtilLeaf();
+        };
+        
+        mgm->mgm_thread = std::thread(mgm_task);
+        mgm->done = false; //Says if the algo is finished and the results are ready                
 
         //mgm->dpopValue(); todo
 
