@@ -8,6 +8,7 @@
 #include <vector>
 #include <json/json.h>
 #include <unordered_map>
+#include "common.h"
 
 #ifndef EDDIE_DFS_H
 #define EDDIE_DFS_H

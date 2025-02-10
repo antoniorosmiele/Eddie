@@ -1,14 +1,34 @@
 
 #include "DFS.h"
 #include <algorithm>
+#include <iostream>
+
+void printVectorInt(std::vector<int> vec)
+{
+    for(int i: vec)
+        std::cout << i << ", ";
+}
+
+void printNodeAndConstraints(std::unordered_map<std::string, std::vector<int>> nodeAndConstraints)
+{
+    for(auto it = nodeAndConstraints.cbegin(); it != nodeAndConstraints.cend(); ++it)
+    {
+        std::cout << it->first << ": [";
+        printVectorInt(it->second);
+        std::cout << "]\n";
+    }    
+}
+
 
 std::unordered_map<std::string, std::vector<std::string>> obtainConstraintGraph(Json::Value constraints,std::unordered_map<std::string, std::vector<int>> nodeAndConstraints)
 {
     std::unordered_map<std::string, std::vector<std::string>> results;
 
+    //printNodeAndConstraints(nodeAndConstraints);
+
     for (std::unordered_map<std::string, std::vector<int>>::iterator iter = nodeAndConstraints.begin(); iter != nodeAndConstraints.end(); iter++)
     {
-        for (std::unordered_map<std::string, std::vector<int>>::iterator y = nodeAndConstraints.begin(); y != nodeAndConstraints.end(); iter++)
+        for (std::unordered_map<std::string, std::vector<int>>::iterator y = nodeAndConstraints.begin(); y != nodeAndConstraints.end(); y++)
         {
             std::vector<int> constrIter = iter->second;
             bool isNeighboor = false;
@@ -115,12 +135,15 @@ std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::
     {
 
         //When in a new node n of G, add it to the pseudo-tree
-        currentN->visited = true;
-
-        if (currentParent != NULL)
+        if(!currentN->visited)
         {
-            currentN->parent = currentParent->nameNode;
-            currentParent->childrens.push_back(currentN->nameNode);
+            currentN->visited = true;
+
+            if (currentParent != NULL)
+            {
+                currentN->parent = currentParent->nameNode;
+                currentParent->childrens.push_back(currentN->nameNode);
+            }
         }
 
         //If n has neighbors not yet visited
@@ -128,6 +151,7 @@ std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::
         {
             //then visit one unvisited neighbor of n
             currentParent = currentN;
+
             currentN = takeANeighNotVisited(&results,currentNeigh);
             currentNeigh = constraintGraph.find(currentN->nameNode)->second;
         }
@@ -137,18 +161,24 @@ std::vector<NodeDFS> obtainDFS(std::unordered_map<std::string, std::vector<std::
 
             for (auto i : takeAllNeighVisited(&results,currentNeigh))
             {
-                if (std::find(currentN->pseudoChildrens.begin(), currentN->pseudoChildrens.end(), i->nameNode) != currentN->pseudoChildrens.end())
+                //Lo pseudo arc va aggiunto se il vicino non è il padre o uno dei figli (to do) 
+                if (std::find(currentN->childrens.begin(), currentN->childrens.end(), i->nameNode) == currentN->childrens.end() 
+                && currentN->parent != i->nameNode 
+                &&  std::find(currentN->pseudoParents.begin(), currentN->pseudoParents.end(), i->nameNode) == currentN->pseudoParents.end()
+                &&  std::find(currentN->pseudoChildrens.begin(), currentN->pseudoChildrens.end(), i->nameNode) == currentN->pseudoChildrens.end())
                 {
-                    currentN->pseudoChildrens.push_back(i->nameNode);
-                    i->pseudoParents.push_back(currentN->nameNode);
+                    currentN->pseudoParents.push_back(i->nameNode);
+                    i->pseudoChildrens.push_back(currentN->nameNode);
                 }     
             }
 
             //backtrack to the parent of n
             currentN = currentParent;
-            currentNeigh = constraintGraph.find(currentN->nameNode)->second;
-            currentParent = fromNameToNodeDFS(currentN->parent,&results);
-            
+            if (currentN != NULL)
+            {
+                currentNeigh = constraintGraph.find(currentN->nameNode)->second;
+                currentParent = fromNameToNodeDFS(currentN->parent,&results);
+            }
         }
 
 
