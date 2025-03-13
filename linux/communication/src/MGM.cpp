@@ -395,7 +395,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
         size_t data_len, offset, total;
         const uint8_t *data;
         coap_get_data_large(request, &data_len, &data, &offset, &total);       
-        //LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
+        LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
 
         std::vector<std::string> indexesAndGain = split(std::string(reinterpret_cast<const char *>(data), data_len),':');
         std::vector<std::string> indexesAndValues = split(indexesAndGain[0],',');
