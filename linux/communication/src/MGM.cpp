@@ -1274,6 +1274,7 @@ void MGM::dpopUtilLeaf()
         request.dst_host = ipAndPort[0].c_str();
         request.dst_port = ipAndPort[1].c_str();
         request.data = reinterpret_cast<const uint8_t *>(dataTable.c_str());
+        request.data_length = dataTable.length();
 
         LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
         message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
