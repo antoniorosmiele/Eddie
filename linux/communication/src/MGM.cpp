@@ -1284,6 +1284,7 @@ void MGM::dpopUtilLeaf()
 
 void MGM::dpopValue()
 {
+    LOG_DBG("Start Phase Value");
     bool first = true;
     std::string indexAndValuesToSend;
     double bestGain;
@@ -1349,7 +1350,7 @@ void MGM::dpopValue()
     std::string dataTable = "";
 
     dataTable+= indexAndValuesToSend + ":" + std::to_string(bestGain);
-
+    LOG_DBG("dataTable=%s",dataTable.c_str());
     //Create the requests and receive the responses
 
     request.method = POST;
