@@ -1263,7 +1263,7 @@ void MGM::dpopUtilLeaf()
         }
             
         if(dataTable.back() == '$');
-            //dataTable.pop_back();
+            dataTable.pop_back();
 
         //Create the request and receive the response
         std::vector<std::string> ipAndPort = split(agent, '@');
