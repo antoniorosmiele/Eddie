@@ -354,7 +354,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
             size_t data_len, offset, total;
             const uint8_t *data;
             coap_get_data_large(request, &data_len, &data, &offset, &total);       
-            //LOG_DBG("data=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
+            LOG_DBG("dataUtilReceive=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
 
             std::vector<std::string> allRows = split(std::string(reinterpret_cast<const char *>(data), data_len),'$');
 
@@ -1277,6 +1277,7 @@ void MGM::dpopUtilLeaf()
         request.data_length = dataTable.length();
 
         LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+        LOG_DBG("data=%s",dataTable.c_str());
         message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
         
     }
@@ -1359,7 +1360,7 @@ void MGM::dpopValue()
     request.query = q.c_str();
     request.data = reinterpret_cast<const uint8_t *>(dataTable.c_str());
     request.data_length = dataTable.length();
-    
+
     for (auto child : this->childrens)
     {
         std::vector<std::string> ipAndPort = split(child, '@');
