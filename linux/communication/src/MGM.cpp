@@ -1358,7 +1358,8 @@ void MGM::dpopValue()
     request.path = "MGM";
     request.query = q.c_str();
     request.data = reinterpret_cast<const uint8_t *>(dataTable.c_str());
-
+    request.data_length = dataTable.length();
+    
     for (auto child : this->childrens)
     {
         std::vector<std::string> ipAndPort = split(child, '@');
