@@ -382,7 +382,18 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
                 then execute Value Phase        
             */
             if(mgm->parent == "" && mgm->childrens.size() == mgm->allUtilMsgFromChild.size())
+            {                
+                //Nel caso della root la tableUtil diventa subito la tableValue
+                for (auto table:mgm->allUtilMsgFromChild)
+                {
+                    for (auto row = table.begin(); row != table.end(); row++)
+                    {
+                        mgm->tableValue.insert({row->first,row->second}); 
+                    }
+                }
+                
                 mgm->dpopValue();
+            }    
         };
         
         mgm->mgm_thread = std::thread(dpop_task);
