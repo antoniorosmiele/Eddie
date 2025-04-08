@@ -417,12 +417,13 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
             std::string index = indexAndValue[0];
             bool value = StringToBool(indexAndValue[1]);
 
-            if(mgm->allValuesMsg.find(index) != mgm->allValuesMsg.end())
+            if(mgm->allValuesMsg.find(index) == mgm->allValuesMsg.end())
             {    
                 mgm->allValuesMsg.insert({index,value});
-                mgm->counterMsgValue++;
-            }    
+            }
         }
+
+        mgm->counterMsgValue++;
 
         if(mgm->counterMsgValue == mgm->pseudoParents.size() + 1)
             mgm->dpopValue();
