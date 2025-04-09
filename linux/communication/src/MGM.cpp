@@ -1311,6 +1311,10 @@ void MGM::dpopValue()
     std::string indexAndValuesToSend;
     double bestGain;
 
+    LOG_DBG("allValues:");
+    for (auto aIndexParent : this->allValuesMsg)
+        printf("%s,",(aIndexParent.first + "=" + BoolToString(aIndexParent.second)).c_str());
+        
     for (auto row : this->tableValue)
     {
         std::vector<std::string> allIndexAndValues = split(row.first,',');
