@@ -1319,7 +1319,7 @@ void MGM::dpopValue()
         //If this is not the root then there are value msgs from the parent to filter
         if(this->parent != "")
         {
-            int size = allIndexAndValues.size();
+            int size = this->allValuesMsg.size();
             int matchCount = 0;
 
             for (auto aIndexParent : this->allValuesMsg)
