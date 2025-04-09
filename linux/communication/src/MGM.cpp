@@ -430,6 +430,9 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
                 mgm->dpopValue();
         };    
 
+        if (mgm->mgm_thread1.joinable())
+            mgm->mgm_thread1.join();
+        
         mgm->mgm_thread1 = std::thread(dpop_task);
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;         
