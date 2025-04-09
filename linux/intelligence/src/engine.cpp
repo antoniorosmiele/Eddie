@@ -447,7 +447,7 @@ std::string Engine::perform(const std::string &command) {
 
             for (auto i: indexOfVariablesHandledByParentsAndPseudoParents)
             {
-                q+= "indexP=" + std::to_string(i) + "&";
+                q+= "indexP=" + std::to_string(i-1) + "&";
             }
                    
 
