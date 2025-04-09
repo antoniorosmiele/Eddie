@@ -402,15 +402,14 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     }
     else if (opt->second == "VALUE")
     {
-        auto dpop_task = [mgm,request]() 
-        {
-            // get data with all the rows of the util table and save them
-            size_t data_len, offset, total;
-            const uint8_t *data;
-            coap_get_data_large(request, &data_len, &data, &offset, &total);       
-            LOG_DBG("dataValue=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
-
-            std::vector<std::string> indexesAndGain = split(std::string(reinterpret_cast<const char *>(data), data_len),':');
+        size_t data_len, offset, total;
+        const uint8_t *data;
+        coap_get_data_large(request, &data_len, &data, &offset, &total);
+        LOG_DBG("dataValue=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str());
+        std::vector<std::string> indexesAndGain = split(std::string(reinterpret_cast<const char *>(data), data_len),':');
+        
+        auto dpop_task = [mgm,indexesAndGain]() 
+        {    
             std::vector<std::string> indexesAndValues = split(indexesAndGain[0],',');
             
             for (auto var : indexesAndValues)
@@ -430,7 +429,7 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
             if(mgm->counterMsgValue == mgm->pseudoParents.size() + 1)
                 mgm->dpopValue();
         };    
-        
+
         mgm->mgm_thread = std::thread(dpop_task);
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;         
