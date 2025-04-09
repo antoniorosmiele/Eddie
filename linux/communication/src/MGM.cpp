@@ -1381,7 +1381,7 @@ void MGM::dpopValue()
         request.dst_host = ipAndPort[0].c_str();
         request.dst_port = ipAndPort[1].c_str();
 
-        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+        LOG_DBG("Send Message to: %s@%s with query: %s and data: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str(),dataTable.c_str());
         message_t response = commAndRes->get_client()->send_message_and_wait_response(request);
     }
 
@@ -1391,7 +1391,7 @@ void MGM::dpopValue()
         request.dst_host = ipAndPort[0].c_str();
         request.dst_port = ipAndPort[1].c_str();
 
-        LOG_DBG("Send Message to: %s@%s with query: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str());
+        LOG_DBG("Send Message to: %s@%s with query: %s and data: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str(),dataTable.c_str());
         message_t response = commAndRes->get_client()->send_message_and_wait_response(request);        
     }
     
