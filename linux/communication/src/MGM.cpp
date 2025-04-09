@@ -402,32 +402,38 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     }
     else if (opt->second == "VALUE")
     {
-        // get data with all the rows of the util table and save them
-        size_t data_len, offset, total;
-        const uint8_t *data;
-        coap_get_data_large(request, &data_len, &data, &offset, &total);       
-        LOG_DBG("dataValue=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
-
-        std::vector<std::string> indexesAndGain = split(std::string(reinterpret_cast<const char *>(data), data_len),':');
-        std::vector<std::string> indexesAndValues = split(indexesAndGain[0],',');
-        
-        for (auto var : indexesAndValues)
+        auto dpop_task = [mgm,request]() 
         {
-            std::vector<std::string> indexAndValue = split(var,'=');
-            std::string index = indexAndValue[0];
-            bool value = StringToBool(indexAndValue[1]);
+            // get data with all the rows of the util table and save them
+            size_t data_len, offset, total;
+            const uint8_t *data;
+            coap_get_data_large(request, &data_len, &data, &offset, &total);       
+            LOG_DBG("dataValue=%s", std::string(reinterpret_cast<const char *>(data), data_len).c_str()); 
 
-            if(mgm->allValuesMsg.find(index) == mgm->allValuesMsg.end())
-            {    
-                mgm->allValuesMsg.insert({index,value});
+            std::vector<std::string> indexesAndGain = split(std::string(reinterpret_cast<const char *>(data), data_len),':');
+            std::vector<std::string> indexesAndValues = split(indexesAndGain[0],',');
+            
+            for (auto var : indexesAndValues)
+            {
+                std::vector<std::string> indexAndValue = split(var,'=');
+                std::string index = indexAndValue[0];
+                bool value = StringToBool(indexAndValue[1]);
+
+                if(mgm->allValuesMsg.find(index) == mgm->allValuesMsg.end())
+                {    
+                    mgm->allValuesMsg.insert({index,value});
+                }
             }
-        }
 
-        mgm->counterMsgValue++;
+            mgm->counterMsgValue++;
 
-        if(mgm->counterMsgValue == mgm->pseudoParents.size() + 1)
-            mgm->dpopValue();
+            if(mgm->counterMsgValue == mgm->pseudoParents.size() + 1)
+                mgm->dpopValue();
+        };    
         
+        mgm->mgm_thread = std::thread(dpop_task);
+        coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
+        return;         
     }
     else
     {
