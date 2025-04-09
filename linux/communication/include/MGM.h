@@ -70,6 +70,7 @@ private:
 
     //Threads
     std::thread mgm_thread;
+    std::thread mgm_thread1;
     std::atomic<bool> done;
 
     bool quit = false;
