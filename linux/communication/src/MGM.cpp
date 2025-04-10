@@ -1085,7 +1085,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
             valuesVariables[index] = parentValues[i];
             i++;
         }
-
+        first = true;
         for (int z = 0; z < pow(2,currentValues.size()); z++)
         {
             for (int n = 0; n < currentValues.size(); n++)
