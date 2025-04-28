@@ -468,9 +468,28 @@ void MGM::MGM_get(coap_resource_t *resource, coap_session_t *session, const coap
     std::vector<int> indexes = mgm->indexOfVariablesHandled;
     std::vector<bool> values = mgm->valuesVariables;
 
-    std::string responseStr = "";
+    std::string responseStr = mgm->bestIndexAndValues;
 
-    for (auto i : indexes)
+    std::string trueS = "true";
+    std::string one = "1";
+    std::string falseS = "false";
+    std::string zero = "0";
+
+    size_t pos = 0;
+    while ((pos = responseStr.find("true", pos)) != std::string::npos) 
+    {
+        responseStr.replace(pos, trueS.length(), one);
+        pos += one.length();
+    }
+
+    pos = 0;
+    while ((pos = responseStr.find("false", pos)) != std::string::npos) 
+    {
+        responseStr.replace(pos, falseS.length(), zero);
+        pos += zero.length();
+    }
+
+    /*for (auto i : indexes) For MGM
     {
         std::string value;
 
@@ -482,7 +501,7 @@ void MGM::MGM_get(coap_resource_t *resource, coap_session_t *session, const coap
         responseStr+= std::to_string(i) + "=" + value + "&";
     }
 
-    responseStr.pop_back();
+    responseStr.pop_back();*/
 
     coap_pdu_set_code(response, COAP_RESPONSE_CODE_CONTENT);
 
@@ -1362,7 +1381,8 @@ void MGM::dpopValue()
     //If this node is a leaf then save the best values with the best gains localy
     if (this->childrens.size() + this->pseudoChildrens.size() == 0)
     {
-        this->bestIndexAndValues = indexAndValuesToSend + ":" + std::to_string(bestGain);
+        std::replace( indexAndValuesToSend.begin(), indexAndValuesToSend.end(), ',', '&');
+        this->bestIndexAndValues = indexAndValuesToSend;
         this->done = true;
         return;
     }    
