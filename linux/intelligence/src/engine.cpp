@@ -528,8 +528,12 @@ std::string Engine::perform(const std::string &command) {
         LOG_DBG("Algo Started:");
 
         for (std::unordered_map<std::string, std::vector<int>>::iterator neigh = m.begin(); neigh != m.end(); neigh++)
-            qGet += "neigh=" + neigh->first + "&";
+        {
+            NodeDFS* node = fromNameToNodeDFS(neigh->first,&dfs);
 
+            if(node->childrens.size() == 0)//Case DPOP (only leaf)
+                qGet += "neigh=" + neigh->first + "&";
+        }
         qGet+= "time=" + std::to_string(SECONDS_TIMEOUT + 1);
 
         return qGet;
