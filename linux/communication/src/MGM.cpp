@@ -1357,7 +1357,7 @@ void MGM::dpopValue()
         }
     }
 
-    LOG_DBG("Phase Value: selected=%s with gain=%lf",indexAndValuesToSend.c_str(),bestGain);
+    LOG_DBG("\nPhase Value: selected=%s with gain=%lf",indexAndValuesToSend.c_str(),bestGain);
 
     //If this node is a leaf then save the best values with the best gains localy
     if (this->childrens.size() + this->pseudoChildrens.size() == 0)
