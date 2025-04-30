@@ -370,7 +370,7 @@ std::string Engine::perform(const std::string &command) {
                 auto c_name = constraints[constraintIndex].getMemberNames()[0].c_str();
                 auto c_content = constraints[constraintIndex][c_name].asString();
 
-                //LOG_DBG("name_const=%s, content=%s",c_name, c_content.c_str());
+                LOG_DBG("name_const=%s, content=%s",c_name, c_content.c_str());
                 dataConstr += std::string(c_name) + ":" + c_content + "&";
             }
 
