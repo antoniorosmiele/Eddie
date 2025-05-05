@@ -1083,6 +1083,20 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
         }
     }
 
+    //Print the shared constraint
+    std::string result;
+
+    for (const auto& pair : constraints_shared) {
+        result += pair.first + " ";
+    }
+
+    // Rimuove l'ultimo spazio (opzionale)
+    if (!result.empty()) {
+        result.pop_back();
+    }
+
+    LOG_DBG("Shared constraints: %s",result.c_str());
+
     for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
     {
         parentValues.push_back(false);
