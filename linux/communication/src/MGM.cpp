@@ -1071,7 +1071,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
 
     int i = 0;
 
-    //Obtain the shared constraints with parents and pseudo parents
+    //Obtain the shared constraints with parents and pseudo parents and
     std::unordered_map<std::string, std::string> constraints_shared;
 
     for (auto constr : this->query_map_constraint)
@@ -1079,8 +1079,14 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
         for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
         {
             if (constr.second.find("x" + std::to_string(index)) != std::string::npos)
-                constraints_shared.insert({constr.first,constr.second});
+                constraints_shared.insert({constr.first,constr.second});  
         }
+
+        for (auto &index : indexOfVariablesHandled)
+        {
+            if (constr.second.find("x" + std::to_string(index)) != std::string::npos)
+                constraints_shared.insert({constr.first,constr.second});  
+        }        
     }
 
     //Print the shared constraint
