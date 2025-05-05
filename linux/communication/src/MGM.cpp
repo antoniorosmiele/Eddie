@@ -1071,6 +1071,18 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
 
     int i = 0;
 
+    //Obtain the shared constraints with parents and pseudo parents
+    std::unordered_map<std::string, std::string> constraints_shared;
+
+    for (auto constr : this->query_map_constraint)
+    {
+        for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
+        {
+            if (constr.second.find("x" + std::to_string(index)) != std::string::npos)
+                constraints_shared.insert({constr.first,constr.second});
+        }
+    }
+
     for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
     {
         parentValues.push_back(false);
@@ -1122,7 +1134,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
 
 
             double newGain;
-            newGain = applyConstraint(this->query_map_constraint,valuesVariables, this->isMax);
+            newGain = applyConstraint(constraints_shared,valuesVariables, this->isMax);
 
             /* 
                 Add the values of the util messages from childs and pseudo-child to the current gain
