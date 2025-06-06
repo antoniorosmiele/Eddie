@@ -1,9 +1,9 @@
 
-Download eddie's archive from the link: https://gitlab.eclipse.org/eclipse/oniro-core/eddie
+Download eddie's archive from the link: https://github.com/antoniorosmiele/Eddie
 and then extract the archive
 
 Software prerequisite installation:
-cd eddie-main/
+cd Eddie/
 sudo apt install doxygen
 sudo apt install graphviz
 sudo apt install libjsoncpp-dev
