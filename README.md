@@ -17,7 +17,7 @@ on a unified pool of virtual resources
 - allow the user to compose a request to request specific types of resources
   with constraints on features of these resources through the definition of a DCOP problem. (Distributed constraint optimization) 
 
-- solve the DCOP problem using the MGM algorithm by finding if possible a local optimal selection of services and resources available in the network.
+- solve the DCOP problem using the DPOP algorithm by finding if possible the optimal selection of services and resources available in the network.
   Such a solution can be exploited for an efficient execution of any application or composite service required by the user.
 
 # 📦 Eddie - Installation and Build from Source
@@ -142,6 +142,80 @@ sudo make install
 
 Eddie is now installed on your system. You can execute it or include it in your own projects.
 
+---
+
+# 🚀 Eddie - Execution example
+
+This guide will walk you through executing **Eddie**.
+
+---
+##  1. Running virt\_server\_1 on Multiple Hosts
+
+To simulate a distributed environment, you need **4 hosts** running the `eddie-virt-server-1` executable:
+
+### Host Setup Overview:
+
+* **Host 1** → Publishes resource set **one**
+* **Host 2** → Publishes resource set **two**
+* **Host 3** → Publishes resource set **three**
+* **Host 4** → Runs the middleware **without any resources**
+
+### Command Examples:
+
+#### On Host 1:
+
+```bash
+eddie-virt-server-1 -e --one
+```
+
+#### On Host 2:
+
+```bash
+eddie-virt-server-1 -e --two
+```
+
+#### On Host 3:
+
+```bash
+eddie-virt-server-1 -e --three
+```
+
+#### On Host 4:
+
+```bash
+eddie-virt-server-1
+```
+
+> Make sure `eddie-virt-server-1` is built on each host. You must install and compile Eddie on each machine.
+
+---
+
+## 2. Running Applications on Host 4
+
+Once `virt_server_1` is running on all four hosts, you can execute one of the provided virtual client applications on **Host 4**. These applications simulate five different use cases. Each client:
+
+1. Performs a **FIND** request to discover available resources across the network.
+2. Issues a **SELECTION** request to the framework to filter and select resources based on specific **constraints**.
+
+### Available Applications:
+
+* `eddie-virt-client-1`
+* `eddie-virt-client-2`
+* `eddie-virt-client-3`
+* `eddie-virt-client-4`
+* `eddie-virt-client-5`
+
+### Example Command:
+
+```bash
+eddie-virt-client-1
+```
+
+> ℹ️ These clients is advisable to  be executed on **Host 4** to simulate an environment where there is a client used by a user that does not publish resources but merely acts as a user interface, but it is possible to run it on any host.
+
+Each client will demonstrate different behavior and constraints depending on its use case logic.
+
+> ⚠️ Note: It is necessary that on whichever host the client is executed that host must already be running an instance of `eddie-virt-server-1`.
 ---
 
 ## References
