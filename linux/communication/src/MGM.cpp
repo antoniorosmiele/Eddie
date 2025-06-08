@@ -1169,8 +1169,10 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent(std::vector<std:
             }
 
 
-            double newGain;
-            newGain = applyConstraint(constraints_shared,valuesVariables, this->isMax);
+            double newGain = 0;
+            
+            if(constraints_shared.size() != 0)
+                newGain = applyConstraint(constraints_shared,valuesVariables, this->isMax);
 
             /* 
                 Add the values of the util messages from childs and pseudo-child to the current gain
