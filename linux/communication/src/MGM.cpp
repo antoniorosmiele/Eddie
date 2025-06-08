@@ -303,13 +303,19 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
         LOG_DBG("Starting Util phase of DPOP...");
         auto mgm_task = [mgm]() 
         {
-            mgm->dpopUtilLeaf();
-        };
-        
-        mgm->mgm_thread = std::thread(mgm_task);
-        mgm->done = false; //Says if the algo is finished and the results are ready                
+            mgm->dpopUtilLeaf(std::vector<std::string>());
 
-        //mgm->dpopValue(); todo
+            /*
+                If the node is a root and there aren't children 
+                then execute Value Phase        
+            */
+            if(mgm->parent == "" && mgm->childrens.size() == 0)
+                mgm->dpopValue();             
+        };
+
+        mgm->done = false; //Says if the algo is finished and the results are ready 
+        mgm->mgm_thread = std::thread(mgm_task);
+               
 
         coap_pdu_set_code(response, COAP_RESPONSE_CODE_CREATED);
         return;        
@@ -347,8 +353,9 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
     }
     else if (opt->second == "UTIL")
     {
+        query_map.erase("opt");
         
-        auto dpop_task = [mgm,request]() 
+        auto dpop_task = [mgm,request,query_map]() 
         {
             // get data with all the rows of the util table and save them
             size_t data_len, offset, total;
@@ -367,15 +374,18 @@ void MGM::MGM_post(coap_resource_t *resource, coap_session_t *session, const coa
                 tableUtil.insert({variablesAndUtil[0],std::stod(variablesAndUtil[1])});
             }
 
+            std::vector<std::string> constraints_shared_in;
+
+            for (auto constr_name:query_map)
+                constraints_shared_in.push_back(constr_name.first);
+            
             //Save util Talbe
             mgm->allUtilMsgFromChild.push_back(tableUtil);    
 
             //From this point must be executed in a thread!
 
-            //Check if this node must send util messages to parent
-            //The parent mustn't execute the Util phase 
-            if(mgm->parent != "")
-                mgm->dpopUtilLeaf(); 
+            // Execute Util phaase and check if this node must send util messages to parent
+            mgm->dpopUtilLeaf(constraints_shared_in); 
 
             /*
                 If the node is a root and Util msg from children has been arrived 
@@ -1056,7 +1066,7 @@ long MGM::BestUnilateralGain(std::vector<bool> valuesVariables, std::vector<int>
     
 }
 
-std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
+std::unordered_map<std::string, double> MGM::getUtilMsgToParent(std::vector<std::string> constraints_shared_in,std::vector<std::string> *constraints_shared_out)
 {
     std::vector<bool> valuesVariables = this->valuesVariables;
     std::vector<bool> currentValues;
@@ -1071,23 +1081,29 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
 
     int i = 0;
 
-    //Obtain the shared constraints with parents and pseudo parents and
+    //Obtain the shared constraints with parents and pseudo parents and with this node
     std::unordered_map<std::string, std::string> constraints_shared;
 
     for (auto constr : this->query_map_constraint)
     {
         for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
         {
-            if (constr.second.find("x" + std::to_string(index)) != std::string::npos)
+            if (constr.second.find("x" + std::to_string(index)) != std::string::npos && find(constraints_shared_in.begin(), constraints_shared_in.end(), constr.first) == constraints_shared_in.end())
                 constraints_shared.insert({constr.first,constr.second});  
         }
 
         for (auto &index : indexOfVariablesHandled)
         {
-            if (constr.second.find("x" + std::to_string(index)) != std::string::npos)
+            if (constr.second.find("x" + std::to_string(index)) != std::string::npos && find(constraints_shared_in.begin(), constraints_shared_in.end(), constr.first) == constraints_shared_in.end())
                 constraints_shared.insert({constr.first,constr.second});  
         }        
     }
+
+    for (auto constr : constraints_shared)
+        constraints_shared_in.push_back(constr.first);
+
+    *constraints_shared_out = constraints_shared_in;
+    
 
     //Print the shared constraint
     std::string result;
@@ -1306,12 +1322,13 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent()
     return utilTable;
 }
 
-void MGM::dpopUtilLeaf()
+void MGM::dpopUtilLeaf(std::vector<std::string> constraints_shared_in)
 {
     if (this->childrens.size() == this->allUtilMsgFromChild.size())
     {
+        std::vector<std::string> constraints_shared_out;
         //Create Util table
-        std::unordered_map<std::string, double> tableUtil = this->getUtilMsgToParent();
+        std::unordered_map<std::string, double> tableUtil = this->getUtilMsgToParent(constraints_shared_in,&constraints_shared_out);
 
         //Create the message to send to parent
         std::string agent;
@@ -1323,7 +1340,13 @@ void MGM::dpopUtilLeaf()
 
         //Create the query
         request_t request;
-        std::string q = "opt=UTIL";
+        std::string q = "opt=UTIL&";
+
+        for (auto constr:constraints_shared_out)
+            q+= constr + "=1&";
+
+        q.pop_back();    
+        
 
         //Insert Table in the data of the message
         std::string dataTable = "";
@@ -1389,7 +1412,7 @@ void MGM::dpopValue()
                 continue;
 
         }
-
+        //Si devono aggiungere anche gli incrementi dei guadagni dei constraint non condivisi con i figli che non sono stati considerati nei nodi figli
         if (first)
         {
             bestGain = gain;

@@ -97,7 +97,7 @@ private:
     bool SendGainMessage(std::vector<std::string> allNeighbors, long gain);
     
     //For DPOP
-    std::unordered_map<std::string, double> getUtilMsgToParent();
+    std::unordered_map<std::string, double> getUtilMsgToParent(std::vector<std::string> constraints_shared_in,std::vector<std::string> *constraints_shared_out);
 
     double applyOp(double a, double b, char op);
     long applyConstraint(std::unordered_map<std::string, std::string> constraints,std::vector<bool> valuesVariables,bool isMax);
@@ -108,7 +108,7 @@ public:
     ~MGM();
     void executeAlgo();
     void mgmAlgo();
-    void dpopUtilLeaf();
+    void dpopUtilLeaf(std::vector<std::string> constraints_shared_in);
     void dpopValue();
     void saveSomeValuesOfVariables(std::unordered_map<std::string, std::string> values_map);
     void saveGainFromNeighbor(long gain);
