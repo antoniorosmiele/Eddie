@@ -367,11 +367,11 @@ std::string Engine::perform(const std::string &command) {
             //Save the constraint and type of optimization
             for (const auto &constraintIndex:constrsForNeighbor.find(iter->first)->second)//("Con_name=exp").....(max/min=type)
             {
-                auto c_name = constraints[constraintIndex].getMemberNames()[0].c_str();
+                auto c_name = constraints[constraintIndex].getMemberNames()[0];
                 auto c_content = constraints[constraintIndex][c_name].asString();
 
-                LOG_DBG("name_const=%s, content=%s",c_name, c_content.c_str());
-                dataConstr += std::string(c_name) + ":" + c_content + "&";
+                LOG_DBG("name_const=%s, content=%s",c_name.c_str(), c_content.c_str());
+                dataConstr += std::string(c_name.c_str()) + ":" + std::string(c_content) + "&";
             }
 
             q+= "max/min=" + constraints[0]["max/min"].asString() + "&";
@@ -464,6 +464,7 @@ std::string Engine::perform(const std::string &command) {
             request.data_length = dataConstr.length();
             
             LOG_DBG("Send Message to: %s@%s with query: %s and constrs: %s", ipAndPort[0].c_str(), ipAndPort[1].c_str(), q.c_str(),dataConstr.c_str());
+            LOG_DBG("Query lenght:%d", q.length());
             
             message_t response = eddie_endpoint->get_client()->send_message_and_wait_response(request);
 
@@ -484,6 +485,7 @@ std::string Engine::perform(const std::string &command) {
         for (std::unordered_map<std::string, std::vector<int>>::iterator iter = m.begin(); iter != m.end(); iter++)
         {
             NodeDFS* node = fromNameToNodeDFS(iter->first,&dfs);
+            request_t request;
             //Only the leaf must start the algo with the Phase util
             if(node->childrens.size() == 0)
             {
