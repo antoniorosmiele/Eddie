@@ -1122,17 +1122,20 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent(std::vector<std:
     for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
     {
         parentValues.push_back(false);
+        bestParentValues.push_back(false);
         valuesVariables[index] = false;
         i++;
-    }
+    } 
 
     i = 0;
     for (auto &index : indexOfVariablesHandled)
     {
         currentValues.push_back(false);
+        bestCurrentValues.push_back(false);
         valuesVariables[index] = false;
         i++;
     }
+
 
     double currentGain;
     bool first = true; 
@@ -1170,7 +1173,7 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent(std::vector<std:
 
 
             double newGain = 0;
-            
+
             if(constraints_shared.size() != 0)
                 newGain = applyConstraint(constraints_shared,valuesVariables, this->isMax);
 
@@ -1242,14 +1245,14 @@ std::unordered_map<std::string, double> MGM::getUtilMsgToParent(std::vector<std:
                 i=0;
                 for (auto &index : indexOfVariablesHandledByParentsAndPseudoParents)
                 {
-                    bestParentValues.push_back(parentValues[i]);
+                    bestParentValues[i] = parentValues[i];
                     i++;
                 }
 
                 i=0;
                 for (auto &index : indexOfVariablesHandled)
                 {
-                    bestCurrentValues.push_back(currentValues[i]);
+                    bestCurrentValues[i] = currentValues[i];
                     i++;
                 }
                 
